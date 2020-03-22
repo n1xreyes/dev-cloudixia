@@ -3,6 +3,11 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 
 import { AdminEffects } from './admin.effects';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 describe('AdminEffects', () => {
   let actions$: Observable<any>;
@@ -10,6 +15,12 @@ describe('AdminEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule, 
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireDatabaseModule,
+        AngularFireAuthModule
+      ],
       providers: [
         AdminEffects,
         provideMockActions(() => actions$)
