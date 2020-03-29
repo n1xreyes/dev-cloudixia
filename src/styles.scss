@@ -35,7 +35,7 @@ app-welcome {
   background-color: white;
 }
 
-mdb-card {
+app-marketplace, app-projects-list mdb-card {
   mdb-card-img img.img-fluid {
     height: 245px;
     object-fit: cover;

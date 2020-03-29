@@ -42,7 +42,7 @@ export class AuthEffects {
           return [
             new auth.RegisterCompleted(),
             new auth.LoginSuccess({ user }),
-            new auth.UpdateProfile({ displayName: payload.username, photoUrl: user.photoUrl }),
+            new auth.UpdateProfile({user}),
             new auth.SaveUser( { user })
           ];
         }),
@@ -80,22 +80,35 @@ export class AuthEffects {
     )
   );
 
+  // we update firebase first, and then the database
   @Effect()
   updateProfile$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.UPDATE_PROFILE),
     map((action: auth.UpdateProfile) => action.payload),
-    switchMap((payload: any) =>
-      this.authService.updateProfile(payload.displayName, payload.photoUrl).pipe(
+    switchMap((payload: {user: User}) =>
+      this.authService.updateProfile(payload.user.displayName, payload.user.photoUrl).pipe(
         map( () => {
           const currentUser: any = this.authService.getCurrentUser();
-            const updatedUser: any = {
+            const updatedUser: User = {
               uid: currentUser.uid || null,
               displayName: currentUser.displayName || null,
               email: currentUser.email || null,
               providerId: currentUser.providerData[0].providerId || null,
-              photoUrl: currentUser.photoURL || null
+              photoUrl: currentUser.photoURL || null,
+              phoneNumber: payload.user?.phoneNumber,
+              country: payload.user?.country,
+              street: payload.user?.street,
+              city: payload.user?.city,
+              province: payload.user?.province,
           };
-          return new auth.UpdateProfileSuccess( { user: updatedUser });
+          return updatedUser;
+        }),
+        switchMap((updatedUser: User) => {
+
+          return [
+            new auth.SaveUser( { user: updatedUser }),
+            new auth.UpdateProfileSuccess( { user: updatedUser })
+          ]
         }),
         catchError( (error) => of(new auth.AuthError(error)))
       )
@@ -143,6 +156,7 @@ export class AuthEffects {
     map( (action: auth.SaveUser) => action.payload),
     switchMap( (payload: any) => {
         return [
+          new auth.GetUserDetails(payload.user.uid),
           new auth.UpdateOnlineStatus({ uid: payload.user.uid, status: true }),
           new auth.CheckUserRole( {uid: payload.user.uid })
         ];
@@ -222,6 +236,31 @@ export class AuthEffects {
           }
         }),
         catchError(error => of(new auth.AuthError({ error })))
+      )
+    )
+  );
+
+  @Effect()
+  getUserDetails$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.GET_USER_DETAILS),
+    switchMap((payload: any) => this.authService.getDBUser(payload.uid).pipe(
+      map (userDetails => {
+        const currentUser: any = this.authService.getCurrentUser();
+            const updatedUser: User = {
+              uid: currentUser.uid || null,
+              displayName: currentUser.displayName || null,
+              email: currentUser.email || null,
+              providerId: currentUser.providerData[0].providerId || null,
+              photoUrl: currentUser.photoURL || null,
+              phoneNumber: userDetails.phoneNumber,
+              country: userDetails.country,
+              street: userDetails.street,
+              city: userDetails.city,
+              province: userDetails.province,
+          };
+
+          return new auth.UpdateProfileSuccess({user: updatedUser})
+      })
       )
     )
   );

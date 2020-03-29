@@ -19,12 +19,17 @@ export class MainProfileComponent implements OnInit {
   ngOnInit() {
     this.updateProfileForm = new FormGroup({
       displayName: new FormControl(this.user.displayName),
-      photoUrl: new FormControl(this.user.photoUrl)
+      photoUrl: new FormControl(this.user.photoUrl),
+      phoneNumber: new FormControl(this.user.phoneNumber),
+      country: new FormControl(this.user.country),
+      province: new FormControl(this.user.province),
+      city: new FormControl(this.user.city),
+      street: new FormControl(this.user.street),
     });
   }
 
   onProfileUpdate() {
-    this.profileUpdate.emit(this.updateProfileForm.value);
+    this.profileUpdate.emit({ user: this.updateProfileForm.value });
   }
 
 }

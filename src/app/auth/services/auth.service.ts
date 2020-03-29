@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { User } from '../models/user.model';
@@ -16,11 +16,11 @@ export class AuthService {
     return from(this.afAuth.auth.createUserWithEmailAndPassword(email, password));
   }
 
+  //update firebase auth
   updateProfile(displayName: string, photoUrl: string) {
     const userProfile = this.afAuth.auth.currentUser;
     if (userProfile) {
-      // userProfile.updateProfile({displayName: displayName, photoURL: photoUrl })
-      return <any>from(this.db.object('users/' + userProfile.uid).update({ displayName: displayName, photoUrl: photoUrl }))
+      return <any>from(userProfile.updateProfile({displayName: displayName, photoURL: photoUrl }));
     }
   }
 
@@ -49,9 +49,15 @@ export class AuthService {
     return from(this.afAuth.auth.signOut());
   }
 
+  // update user in db
   saveUser(user: User) {
     const users = this.db.object('users/' + user.uid);
     return users.set(user);
+  }
+
+  // get user in DB
+  getDBUser(uid: String): Observable<any> {
+    return this.db.object('users/' + uid).valueChanges();
   }
 
   updateOnlineStatus(uid: string, status: boolean) {

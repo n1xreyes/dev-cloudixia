@@ -25,6 +25,7 @@ export enum AuthActionTypes {
   UPDATE_USER_ROLE = '[Auth] Update user role',
 
   GET_USER = '[Auth] GET User',
+  GET_USER_DETAILS = '[Auth] GET User Details',
 
   AUTH_ERROR = '[Auth] Error'
 }
@@ -48,7 +49,7 @@ export class RegisterFailed implements Action {
 export class UpdateProfile implements Action {
   readonly type = AuthActionTypes.UPDATE_PROFILE;
 
-  constructor(public payload: { displayName: string, photoUrl: string }) {}
+  constructor(public payload: { user: User }) {}
 }
 
 export class UpdateProfileSuccess implements Action {
@@ -117,6 +118,12 @@ export class GetUser implements Action {
   readonly type = AuthActionTypes.GET_USER;
 }
 
+export class GetUserDetails implements Action {
+  readonly type = AuthActionTypes.GET_USER_DETAILS;
+
+  constructor(public uid: String) {}
+}
+
 export class AuthError implements Action {
   readonly type = AuthActionTypes.AUTH_ERROR;
 
@@ -139,5 +146,6 @@ export type AuthAction =
   | UpdateOnlineStatus
   | CheckUserRole
   | UpdateUserRole
+  | GetUserDetails
   | GetUser
   | AuthError;
