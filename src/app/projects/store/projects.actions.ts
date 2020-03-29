@@ -3,6 +3,7 @@ import { Project } from '../models/project.model';
 
 export enum ProjectsActionTypes {
   PROJECTS_QUERY = '[Projects] Projects query',
+  PROJECTS_QUERY_ALL = '[Projects] Projects query all',
   PROJECTS_LOADED = '[Projects] Projects loaded',
 
   PROJECT_ADDED = '[Projects] Project added',
@@ -15,6 +16,10 @@ export enum ProjectsActionTypes {
 
 export class ProjectsQuery implements Action {
   readonly type = ProjectsActionTypes.PROJECTS_QUERY;
+}
+
+export class ProjectsQueryAll implements Action {
+  readonly type = ProjectsActionTypes.PROJECTS_QUERY_ALL;
 }
 
 export class ProjectsLoaded implements Action {
@@ -49,6 +54,7 @@ export class ProjectsError implements Action {
 
 export type ProjectsActions =
   | ProjectsQuery
+  | ProjectsQueryAll
   | ProjectsLoaded
   | ProjectAdded
   | ProjectEdited

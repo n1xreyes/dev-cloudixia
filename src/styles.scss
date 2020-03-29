@@ -34,3 +34,16 @@ app-root {
 app-welcome {
   background-color: white;
 }
+
+mdb-card {
+  mdb-card-img img.img-fluid {
+    height: 245px;
+    object-fit: cover;
+  }
+
+  @media (min-width: 768px) {
+    mdb-card-body {
+      height: 200px;
+    }
+  }
+}

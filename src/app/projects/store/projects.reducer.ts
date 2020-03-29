@@ -5,6 +5,12 @@ import { projectsInitialState, ProjectsState } from './projects.state';
 export function projectsReducer(state = projectsInitialState, action: ProjectsActions): ProjectsState {
   switch (action.type) {
 
+    case ProjectsActionTypes.PROJECTS_QUERY_ALL: {
+      return Object.assign({}, state, {
+        loading: true,
+      });
+    }
+
     case ProjectsActionTypes.PROJECTS_QUERY: {
       return Object.assign({}, state, {
         loading: true,

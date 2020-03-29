@@ -44,6 +44,35 @@ export class ProjectsEffects {
     }),
   );
 
+  @Effect()
+  queryAll$ = this.actions$.pipe(
+    ofType(ProjectsActionTypes.PROJECTS_QUERY_ALL),
+    switchMap(([]: any) => {
+      return this.projectsService.getAllProjects()
+      .pipe(
+        map((data: any) => {
+          const projectsData: Project[] = [];
+          data.map((res: any) => {
+            const userKey = res.payload.key;
+            const userProjects = res.payload.val();
+            for (var prop in userProjects) {
+              if (Object.prototype.hasOwnProperty.call(userProjects, prop)) {
+                  projectsData.push({
+                    key: prop || userKey || null,
+                    title: userProjects[prop].title || null,
+                    description: userProjects[prop].description || null,
+                    photoUrl: userProjects[prop].photoUrl || null
+                  })
+              }
+            }
+          });
+          return (new fromProjects.ProjectsLoaded({ projects: projectsData }));
+        }),
+        catchError(error => of(new fromProjects.ProjectsError({ error })))
+      );
+    }),
+  );
+
   @Effect({ dispatch: false })
   added$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.PROJECT_ADDED),

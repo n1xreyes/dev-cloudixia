@@ -19,7 +19,8 @@ export class AuthService {
   updateProfile(displayName: string, photoUrl: string) {
     const userProfile = this.afAuth.auth.currentUser;
     if (userProfile) {
-      return <any>from(userProfile.updateProfile( { displayName: displayName, photoURL: photoUrl }));
+      // userProfile.updateProfile({displayName: displayName, photoURL: photoUrl })
+      return <any>from(this.db.object('users/' + userProfile.uid).update({ displayName: displayName, photoUrl: photoUrl }))
     }
   }
 

@@ -47,4 +47,8 @@ export class ProjectsService {
   delete(project: Project, userId: string) {
     return this.db.object(`projects/${userId}/` + project.key).remove();
   }
+
+  getAllProjects() {
+    return this.db.list('projects').snapshotChanges();
+  }
 }

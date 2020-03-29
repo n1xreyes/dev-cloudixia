@@ -10,14 +10,18 @@ import { AdminComponent } from './admin/containers/admin/admin.component';
 import { AdminGuard } from './admin/guard/admin.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, children: [
-    { path: '', component: MainComponent},
-    { path: 'projects', loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule), canActivate: [AuthGuard]},
-    { path: 'customers', loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule), canActivate: [AuthGuard]},
-    { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate: [AuthGuard] },
-    { path: 'charts', loadChildren: () => import('./charts/charts.module').then(m => m.ChartsDataModule), canActivate: [AuthGuard] },
-    { path: 'admin-panel', component: AdminComponent, canActivate: [AdminGuard]}
-  ]},
+  {
+    path: '', component: HomeComponent, children: [
+      { path: '', component: MainComponent },
+      { path: 'projects', loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule), canActivate: [AuthGuard] },
+      { path: 'customers', loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule), canActivate: [AuthGuard] },
+      { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate: [AuthGuard] },
+      { path: 'charts', loadChildren: () => import('./charts/charts.module').then(m => m.ChartsDataModule), canActivate: [AuthGuard] },
+      { path: 'admin-panel', component: AdminComponent, canActivate: [AdminGuard] }
+
+    ]
+  },
+  { path: 'marketplace', loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule) },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: '**', component: PageNotFoundComponent }
