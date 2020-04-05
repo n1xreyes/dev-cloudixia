@@ -44,6 +44,9 @@ app-marketplace, app-projects-list mdb-card {
   @media (min-width: 768px) {
     mdb-card-body {
       height: 200px;
+      mdb-card-text p {
+        height: 42px;
+      }
     }
   }
 }

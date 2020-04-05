@@ -15,6 +15,9 @@ import { MarketplaceEffects } from './store/marketplace.effects';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { MarketplaceRoutingModule } from './marketplace-routing';
+import { MarketplaceListingComponent } from './marketplace-listing/marketplace-listing.component';
+import { ListingOverviewCardComponent } from './listing-overview-card/listing-overview-card.component';
+import { ListingDetailsComponent } from './listing-details/listing-details.component';
 
 
 
@@ -34,7 +37,7 @@ import { MarketplaceRoutingModule } from './marketplace-routing';
     StoreModule.forFeature('marketplace', fromMarketplace.marketplaceReducer),
     EffectsModule.forFeature([MarketplaceEffects])
   ],
-  declarations: [MarketplaceComponent],
+  declarations: [MarketplaceComponent, MarketplaceListingComponent, ListingOverviewCardComponent, ListingDetailsComponent],
   exports: [MarketplaceComponent],
 })
 export class MarketplaceModule { }

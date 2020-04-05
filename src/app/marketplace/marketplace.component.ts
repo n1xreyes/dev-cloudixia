@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as fromProjects from './store/marketplace.actions';
+import * as fromMarketplace from './store/marketplace.actions';
 import { Store, select } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { Observable } from 'rxjs';
@@ -24,7 +24,7 @@ export class MarketplaceComponent implements OnInit {
       select(getProjects),
       map( (projects: Project[]) => {
         if (!projects) {
-          this.store.dispatch(new fromProjects.MarketplaceQueryAll());
+          this.store.dispatch(new fromMarketplace.MarketplaceQueryAll());
         }
         return projects;
       })
