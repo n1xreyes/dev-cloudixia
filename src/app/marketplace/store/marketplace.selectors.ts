@@ -5,15 +5,15 @@ export const getProjectsState = createFeatureSelector<MarketplaceState>('marketp
 
 export const getProjects = createSelector(
   getProjectsState,
-  projects => projects.projects
+  marketplace => marketplace.projects
 );
 
 export const getAllLoaded = createSelector(
   getProjectsState,
-  projects => projects.loading
+  marketplace => marketplace.loading
 );
 
 export const getError = createSelector(
   getProjectsState,
-  projects => projects.error
+  marketplace => marketplace.error
 );
