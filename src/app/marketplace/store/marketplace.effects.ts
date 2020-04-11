@@ -10,7 +10,7 @@ import { AppState } from '../../reducers/index';
 import { getUser } from '../../auth/store/auth.selectors';
 import { MarketplaceActionTypes } from './marketplace.actions';
 import { Listing } from 'src/app/shared/models/listing.model';
-import { MarketplaceService } from '../marketplace.service';
+import { MarketplaceService } from '../components/services/marketplace.service';
 
 @Injectable()
 export class MarketplaceEffects {

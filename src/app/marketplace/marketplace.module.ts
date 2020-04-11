@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MarketplaceComponent } from './marketplace.component';
+import { MarketplaceComponent } from './components/marketplace.component';
 import { StoreModule } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -15,9 +15,9 @@ import { MarketplaceEffects } from './store/marketplace.effects';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { MarketplaceRoutingModule } from './marketplace-routing';
-import { MarketplaceListingComponent } from './marketplace-listing/marketplace-listing.component';
-import { ListingOverviewCardComponent } from './listing-overview-card/listing-overview-card.component';
-import { ListingDetailsComponent } from './listing-details/listing-details.component';
+import { MarketplaceListingComponent } from './components/marketplace-listing/marketplace-listing.component';
+import { ListingOverviewCardComponent } from './components/listing-overview-card/listing-overview-card.component';
+import { ListingDetailsComponent } from './components/listing-details/listing-details.component';
 
 
 

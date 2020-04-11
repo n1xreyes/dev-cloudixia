@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MarketplaceComponent } from './marketplace.component';
-import { ListingDetailsComponent } from './listing-details/listing-details.component';
+import { MarketplaceComponent } from './components/marketplace.component';
+import { ListingDetailsComponent } from './components/listing-details/listing-details.component';
 
 const routes: Routes = [
   { path: '', component: MarketplaceComponent },

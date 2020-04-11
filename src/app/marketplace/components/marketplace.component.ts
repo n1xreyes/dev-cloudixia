@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import * as fromMarketplace from './store/marketplace.actions';
 import { Store, select } from '@ngrx/store';
-import { AppState } from '../reducers';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getAllLoaded, getProjects } from './store/marketplace.selectors';
-import { Listing } from '../shared/models/listing.model';
+import { getAllLoaded, getProjects } from '../store/marketplace.selectors';
+import { AppState } from 'src/app/reducers';
+import { Listing } from 'src/app/shared/models/listing.model';
+import * as fromMarketplace from '../store/marketplace.actions'
 
 @Component({
   selector: 'app-marketplace',
@@ -20,6 +20,7 @@ export class MarketplaceComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading$ = this.store.select(getAllLoaded);
+
     this.projects$ = this.store.pipe(
       select(getProjects),
       map( (projects: Listing[]) => {

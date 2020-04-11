@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { MDBModalService, MDBModalRef } from 'angular-bootstrap-md';
 import { AppState } from '../../reducers/index';
 import { Store, select } from '@ngrx/store';
-import * as fromProjects from './../store/projects.actions';
+import * as fromProjects from '../store/projects.actions';
 import { Observable } from 'rxjs';
 import { getProjects, getAllLoaded } from '../store/projects.selectors';
 import { take, map } from 'rxjs/operators';
 import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Listing } from 'src/app/shared/models/listing.model';
-import { ProjectModalComponent } from '../components/project-modal/project-modal.component';
+import { ProjectModalComponent } from './project-modal/project-modal.component';
 
 @Component({
   selector: 'app-projects',

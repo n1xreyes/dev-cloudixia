@@ -9,7 +9,7 @@ import { AdminGuard } from './admin/guard/admin.guard';
 
 const routes: Routes = [
   { path: '', loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule) },
-  { path: 'projects', loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule), canActivate: [AuthGuard] },
+  { path: 'projects', loadChildren: () => import('./manage-listings/projects.module').then(m => m.ProjectsModule), canActivate: [AuthGuard] },
   { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate: [AuthGuard] },
   { path: 'admin-panel', component: AdminComponent, canActivate: [AdminGuard] },
   { path: 'register', component: RegisterComponent },

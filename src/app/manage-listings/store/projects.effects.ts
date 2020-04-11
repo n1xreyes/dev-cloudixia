@@ -6,7 +6,7 @@ import { map, switchMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ProjectsService } from '../services/projects.service';
 
-import * as fromProjects from './../store/projects.actions';
+import * as fromProjects from './projects.actions';
 import { AppState } from '../../reducers/index';
 import { getUser } from '../../auth/store/auth.selectors';
 import { Listing } from 'src/app/shared/models/listing.model';

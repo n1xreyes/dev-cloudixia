@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProjectsComponent } from './containers/projects.component';
+import { ProjectsComponent } from './components/projects.component';
 import { StoreModule } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 import { ButtonsModule, InputsModule, CardsModule, WavesModule, IconsModule, ModalModule, InputUtilitiesModule } from 'angular-bootstrap-md';

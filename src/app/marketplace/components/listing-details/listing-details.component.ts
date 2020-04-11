@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Listing } from 'src/app/shared/models/listing.model';
 import { ActivatedRoute } from '@angular/router';
-import { MarketplaceService } from '../marketplace.service';
+import { MarketplaceService } from '../services/marketplace.service';
 
 @Component({
   selector: 'app-listing-details',
