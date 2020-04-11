@@ -9,11 +9,8 @@ ________
 * NgRx
 * Firebase
 
-# Most important features
-* NgRx state management
-* Real time updates with Firebase real time database
-* Admin panel - manage user content
-* Responsive design
+# Engineering & Architecture:
+https://docs.google.com/document/d/1JjbKwHIbmBIK6DXQgqN4EYKzfZK-b5zWE8ZuRlzOMDQ/edit#
 
 # Installation:
 
