@@ -1,5 +1,5 @@
 export interface Listing {
-    key?: any;
+    uid?: any;
     userId?: string;
     title?: string;
     description?: string;

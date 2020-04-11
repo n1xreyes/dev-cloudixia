@@ -93,7 +93,7 @@ export class AdminComponent implements OnInit {
           this.store.dispatch(
             new fromAdmin.DeleteUserProject({
               userId: this.selectedUser.key,
-              projectId: project.key
+              projectId: project.uid
             })
           );
         }

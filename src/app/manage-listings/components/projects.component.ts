@@ -25,7 +25,11 @@ export class ProjectsComponent implements OnInit {
     class: 'modal-dialog-centered'
   };
 
-  constructor(private store: Store<AppState>, private modalService: MDBModalService, private afAuth: AngularFireAuth) { }
+  constructor(
+    private store: Store<AppState>, 
+    private modalService: MDBModalService, 
+    private afAuth: AngularFireAuth
+  ) { }
 
   ngOnInit() {
     this.isLoading$ = this.store.select(getAllLoaded);

@@ -1,13 +1,13 @@
 <mdb-card>
   <!--Card image-->
-  <a [routerLink]="['/listing/' + listing.key]">
+  <a [routerLink]="['/listing/' + listing.uid]">
     <mdb-card-img *ngIf="listing.photoUrl" src="{{ listing.photoUrl }}" alt="Card image cap" class="waves-light"
       mdbWavesEffect></mdb-card-img>
   </a>
   <!-- <mdb-card-img *ngIf="!listing.photoUrl" src="https://mdbootstrap.com/img/Photos/Lightbox/Thumbnail/img%20(97).jpg" alt="Card image cap"></mdb-card-img> -->
   <!--Card content-->
   <mdb-card-body>
-    <a [routerLink]="['/listing/' + listing.key]">
+    <a [routerLink]="['/listing/' + listing.uid]">
       <!--Title-->
       <mdb-card-title>
         <h4>{{ listing.title }}</h4>

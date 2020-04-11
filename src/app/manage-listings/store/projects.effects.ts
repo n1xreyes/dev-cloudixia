@@ -19,54 +19,24 @@ export class ProjectsEffects {
     private projectsService: ProjectsService,
     private store: Store<AppState>) {}
 
+  // TODO: replace with a non-shitty way to do this instead of searching the entire effing database
   @Effect()
   query$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.PROJECTS_QUERY),
     withLatestFrom(this.store.pipe(select(getUser))),
     switchMap(([, user]: any) => {
-      return this.projectsService.get(user.uid)
+      return this.projectsService.getAllListings()
       .pipe(
         map((data: any) => {
-          const projectsData: Listing[] = data.map((res: any) => {
-            const key = res.payload.key;
-            const project: Listing = res.payload.val();
-            return {
-              key: key || null,
-              title: project.title || null,
-              description: project.description || null,
-              photoUrl: project.photoUrl || null
-            };
-          });
-          return (new fromProjects.ProjectsLoaded({ projects: projectsData }));
-        }),
-        catchError(error => of(new fromProjects.ProjectsError({ error })))
-      );
-    }),
-  );
 
-  @Effect()
-  queryAll$ = this.actions$.pipe(
-    ofType(ProjectsActionTypes.PROJECTS_QUERY_ALL),
-    switchMap(([]: any) => {
-      return this.projectsService.getAllProjects()
-      .pipe(
-        map((data: any) => {
-          const projectsData: Listing[] = [];
-          data.map((res: any) => {
-            const userKey = res.payload.key;
-            const userProjects = res.payload.val();
-            for (var prop in userProjects) {
-              if (Object.prototype.hasOwnProperty.call(userProjects, prop)) {
-                  projectsData.push({
-                    key: prop || userKey || null,
-                    title: userProjects[prop].title || null,
-                    description: userProjects[prop].description || null,
-                    photoUrl: userProjects[prop].photoUrl || null
-                  })
-              }
-            }
-          });
-          return (new fromProjects.ProjectsLoaded({ projects: projectsData }));
+          const listings: Listing[] = data.map((res: any) => {  
+            return Object.assign({}, res.payload.val())
+          }).filter( (project: Listing) => {
+            return project.userId == user.uid
+          })
+
+          return (new fromProjects.ProjectsLoaded({ projects: listings }));
+
         }),
         catchError(error => of(new fromProjects.ProjectsError({ error })))
       );
@@ -78,7 +48,18 @@ export class ProjectsEffects {
     ofType(ProjectsActionTypes.PROJECT_ADDED),
     map((action: fromProjects.ProjectDeleted) => action.payload),
     withLatestFrom(this.store.pipe(select(getUser))),
-    switchMap(([payload, user]: any) => this.projectsService.add(payload.project, user.uid))
+    switchMap(([payload, user]: any) => {
+      let project: Listing = {...payload.project}
+      project.userId = user.uid;
+
+      // fake data below
+      if (!project.photoUrl) project.photoUrl = "https://1m19tt3pztls474q6z46fnk9-wpengine.netdna-ssl.com/wp-content/themes/unbound/images/No-Image-Found-400x264.png"
+      project.price = '$' + Math.round(Math.random()*100) + '.' + Math.round(Math.random()*100)
+      project.description = '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
+      // end fake data
+
+      return this.projectsService.add(project)
+      })
   );
 
   @Effect({ dispatch: false })
@@ -86,7 +67,7 @@ export class ProjectsEffects {
     ofType(ProjectsActionTypes.PROJECT_DELETED),
     map((action: fromProjects.ProjectDeleted) => action.payload),
     withLatestFrom(this.store.pipe(select(getUser))),
-    switchMap(([payload, user]: any) => this.projectsService.delete(payload.project, user.uid))
+    switchMap(([payload]: any) => this.projectsService.delete(payload.project))
   );
 
   @Effect({ dispatch: false })
@@ -94,7 +75,9 @@ export class ProjectsEffects {
     ofType(ProjectsActionTypes.PROJECT_EDITED),
     map((action: fromProjects.ProjectEdited) => action.payload),
     withLatestFrom(this.store.pipe(select(getUser))),
-    switchMap(([payload, user]: any) => this.projectsService.update(payload.project, user.uid)
+    switchMap(([payload]: any) => {
+      return this.projectsService.updateListing(payload.project)
+    }
     )
   );
 

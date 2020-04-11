@@ -13,21 +13,17 @@ export class MarketplaceService {
   constructor(private db: AngularFireDatabase) { }
 
   add(listing: Listing) {
-    const listings = this.db.list(this.PREFIX)
-    return listings.push(listing);
+    const newKey = this.db.createPushId();
+    listing.uid = newKey
+    return this.db.list(this.PREFIX).set(listing.uid, listing);
   }
 
-  update(project: Listing, userId: string) {
-    return of(this.db.object(`${this.PREFIX}/${userId}/` + project.key)
-      .update({
-        title: project.title,
-        description: project.description,
-        photoUrl: project.photoUrl
-      }));
+  update(project: Listing) {
+    return of(this.db.object(`${this.PREFIX}/${project.uid}/`).update({...project}));
   }
 
   delete(listing: Listing) {
-    return this.db.object(`${this.PREFIX}/${listing.key}`).remove();
+    return this.db.object(`${this.PREFIX}/${listing.uid}`).remove();
   }
 
   getListing(listingId: string): Observable<SnapshotAction<any>> {
