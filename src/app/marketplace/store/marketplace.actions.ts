@@ -3,6 +3,7 @@ import { Project } from 'src/app/projects/models/project.model';
 
 export enum MarketplaceActionTypes {
   MARKETPLACE_QUERY_ALL = '[Marketplace] Marketplace query all',
+  MARKETPLACE_ADDED = '[Marketplace] Marketplace added one',
   MARKETPLACE_LOADED = '[Marketplace] Marketplace loaded',
   MARKETPLACE_ERROR = '[Marketplace] Marketplace error'
 }
@@ -17,6 +18,12 @@ export class MarketplaceLoaded implements Action {
   constructor(public payload: { projects: Project[] }) { }
 }
 
+export class MarketplaceAdded implements Action {
+  readonly type = MarketplaceActionTypes.MARKETPLACE_ADDED;
+
+  constructor(public payload: { project: Project}) {}
+}
+
 export class MarketplaceError implements Action {
   readonly type = MarketplaceActionTypes.MARKETPLACE_ERROR;
 
@@ -25,5 +32,6 @@ export class MarketplaceError implements Action {
 
 export type MarketplaceActions =
   | MarketplaceQueryAll
+  | MarketplaceAdded
   | MarketplaceLoaded
   | MarketplaceError;
