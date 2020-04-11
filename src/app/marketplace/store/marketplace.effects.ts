@@ -9,8 +9,8 @@ import * as fromMarketplace from './marketplace.actions'
 import { AppState } from '../../reducers/index';
 import { getUser } from '../../auth/store/auth.selectors';
 import { MarketplaceActionTypes } from './marketplace.actions';
-import { Project } from 'src/app/projects/models/project.model';
-import { MarketplaceService } from '../marketplace-service.service';
+import { Listing } from 'src/app/shared/models/listing.model';
+import { MarketplaceService } from '../marketplace.service';
 
 @Injectable()
 export class MarketplaceEffects {
@@ -29,10 +29,10 @@ export class MarketplaceEffects {
             return this.marketplaceService.getAllListings()
                 .pipe(
                     map((data: any) => {
-                        const projectsData: Project[] = [];
+                        const projectsData: Listing[] = [];
                         data.map((res: any) => {
                             const projectKey: string = res.payload.key;
-                            const project: Project = res.payload.val();
+                            const project: Listing = res.payload.val();
                             projectsData.push({
                                 key: projectKey || null,
                                 title: project.title || undefined,

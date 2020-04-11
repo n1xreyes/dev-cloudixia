@@ -3,13 +3,13 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ProjectsActionTypes } from './projects.actions';
 import { Store, select } from '@ngrx/store';
 import { map, switchMap, catchError, withLatestFrom } from 'rxjs/operators';
-import { Project } from '../models/project.model';
 import { of } from 'rxjs';
 import { ProjectsService } from '../services/projects.service';
 
 import * as fromProjects from './../store/projects.actions';
 import { AppState } from '../../reducers/index';
 import { getUser } from '../../auth/store/auth.selectors';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 @Injectable()
 export class ProjectsEffects {
@@ -27,9 +27,9 @@ export class ProjectsEffects {
       return this.projectsService.get(user.uid)
       .pipe(
         map((data: any) => {
-          const projectsData: Project[] = data.map((res: any) => {
+          const projectsData: Listing[] = data.map((res: any) => {
             const key = res.payload.key;
-            const project: Project = res.payload.val();
+            const project: Listing = res.payload.val();
             return {
               key: key || null,
               title: project.title || null,
@@ -51,7 +51,7 @@ export class ProjectsEffects {
       return this.projectsService.getAllProjects()
       .pipe(
         map((data: any) => {
-          const projectsData: Project[] = [];
+          const projectsData: Listing[] = [];
           data.map((res: any) => {
             const userKey = res.payload.key;
             const userProjects = res.payload.val();

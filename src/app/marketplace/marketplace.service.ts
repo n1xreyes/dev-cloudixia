@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AngularFireDatabase, SnapshotAction } from '@angular/fire/database';
 import { Observable, of } from 'rxjs';
-import { Project } from '../projects/models/project.model';
+import { Listing } from '../shared/models/listing.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +12,12 @@ export class MarketplaceService {
 
   constructor(private db: AngularFireDatabase) { }
 
-  add(listing: Project, listingKey: string) {
+  add(listing: Listing, listingKey: string) {
     const listings = this.db.database.ref(`${this.PREFIX}`).child(`${listingKey}`)
     return listings.set(listing);
   }
 
-  update(project: Project, userId: string) {
+  update(project: Listing, userId: string) {
     return of(this.db.object(`${this.PREFIX}/${userId}/` + project.key)
       .update({
         title: project.title,
@@ -26,7 +26,7 @@ export class MarketplaceService {
       }));
   }
 
-  delete(listing: Project) {
+  delete(listing: Listing) {
     return this.db.object(`${this.PREFIX}/${listing.key}`).remove();
   }
 

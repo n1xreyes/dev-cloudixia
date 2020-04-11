@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
-import { Project } from '../../../projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 @Component({
   selector: 'app-projects-list',
@@ -8,21 +8,21 @@ import { Project } from '../../../projects/models/project.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectsListComponent implements OnInit {
-  @Input() projects: Project[];
+  @Input() projects: Listing[];
   @Input() editable = true;
-  @Output() projectDeleted = new EventEmitter<Project>();
-  @Output() projectEdited = new EventEmitter<Project>();
+  @Output() projectDeleted = new EventEmitter<Listing>();
+  @Output() projectEdited = new EventEmitter<Listing>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  onProjectDelete(project: Project) {
+  onProjectDelete(project: Listing) {
     this.projectDeleted.emit(project);
   }
 
-  onProjectEdit(project: Project) {
+  onProjectEdit(project: Listing) {
     this.projectEdited.emit(project);
   }
 

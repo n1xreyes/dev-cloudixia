@@ -4,7 +4,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import * as fromAdmin from './../store/admin.actions';
 import { switchMap, map, catchError, mergeMap } from 'rxjs/operators';
 import { AdminService } from '../services/admin.service';
-import { Project } from '../../projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 import { of } from 'rxjs';
 
 
@@ -48,9 +48,9 @@ export class AdminEffects {
     mergeMap( (payload: any) => this.adminService.getUserProjects(payload.uid)
       .pipe(
         map((data: any) => {
-          const projectsData: Project[] = data.map((res: any) => {
+          const projectsData: Listing[] = data.map((res: any) => {
             const key = res.payload.key;
-            const project: Project = res.payload.val();
+            const project: Listing = res.payload.val();
             return {
               key: key || null,
               title: project.title || null,

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MDBModalService, MDBModalRef } from 'angular-bootstrap-md';
-import { Project } from '../models/project.model';
 import { AppState } from '../../reducers/index';
 import { Store, select } from '@ngrx/store';
 import * as fromProjects from './../store/projects.actions';
@@ -8,8 +7,9 @@ import { Observable } from 'rxjs';
 import { getProjects, getAllLoaded } from '../store/projects.selectors';
 import { take, map } from 'rxjs/operators';
 import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
-import { ProjectModalComponent } from '../../shared/components/project-modal/project-modal.component';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Listing } from 'src/app/shared/models/listing.model';
+import { ProjectModalComponent } from '../components/project-modal/project-modal.component';
 
 @Component({
   selector: 'app-projects',
@@ -17,7 +17,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit {
-  projects$: Observable<Project[] | null>;
+  projects$: Observable<Listing[] | null>;
   isLoading$: Observable<boolean>;
   modalRef: MDBModalRef;
 
@@ -31,7 +31,7 @@ export class ProjectsComponent implements OnInit {
     this.isLoading$ = this.store.select(getAllLoaded);
     this.projects$ = this.store.pipe(
       select(getProjects),
-      map( (projects: Project[]) => {
+      map( (projects: Listing[]) => {
         if (this.user && !projects) {
           this.store.dispatch(new fromProjects.ProjectsQuery());
         }
@@ -49,24 +49,24 @@ export class ProjectsComponent implements OnInit {
 
     this.modalRef.content.heading = 'Add new project';
 
-    this.modalRef.content.projectData.pipe(take(1)).subscribe( (projectData: Project) => {
+    this.modalRef.content.projectData.pipe(take(1)).subscribe( (projectData: Listing) => {
       this.store.dispatch(new fromProjects.ProjectAdded({ project: projectData }));
     });
   }
 
-  openEditProjectModal(project: Project) {
+  openEditProjectModal(project: Listing) {
     this.modalRef = this.modalService.show(ProjectModalComponent, this.modalConfig);
 
     this.modalRef.content.heading = 'Edit project';
     const projectCopy = {...project };
     this.modalRef.content.project = projectCopy;
 
-    this.modalRef.content.projectData.pipe(take(1)).subscribe( (projectData: Project) => {
+    this.modalRef.content.projectData.pipe(take(1)).subscribe( (projectData: Listing) => {
       this.store.dispatch(new fromProjects.ProjectEdited({ project: projectData }));
     });
   }
 
-  openConfirmModal(project: Project) {
+  openConfirmModal(project: Listing) {
     this.modalRef = this.modalService.show(ConfirmModalComponent, this.modalConfig);
 
     this.modalRef.content.confirmation.pipe(take(1)).subscribe( (confirmation: boolean) => {
@@ -76,11 +76,11 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  onProjectDelete(project: Project) {
+  onProjectDelete(project: Listing) {
     this.openConfirmModal(project);
   }
 
-  onProjectEdit(project: Project) {
+  onProjectEdit(project: Listing) {
     this.openEditProjectModal(project);
   }
 

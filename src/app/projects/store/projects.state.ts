@@ -1,7 +1,7 @@
-import { Project } from '../models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 export interface ProjectsState {
-  projects: Project[] | null;
+  projects: Listing[] | null;
   loading: boolean;
   error: any;
 }

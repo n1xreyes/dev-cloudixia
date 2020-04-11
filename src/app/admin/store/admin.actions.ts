@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Project } from '../../projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 export enum AdminActionTypes {
   GET_USERS_LIST = '[Admin] Get Users List',
@@ -40,7 +40,7 @@ export class DeleteUserProject implements Action {
 export class UserProjectsLoaded implements Action {
   readonly type = AdminActionTypes.USERS_PROJECTS_LOADED;
 
-  constructor(public payload: { uid: string, userProjects: Project[] }) {}
+  constructor(public payload: { uid: string, userProjects: Listing[] }) {}
 }
 
 export class AddAdminPrivileges implements Action {

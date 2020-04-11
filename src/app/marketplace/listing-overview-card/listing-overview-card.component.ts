@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Project } from 'src/app/projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 @Component({
   selector: 'app-listing-overview-card',
@@ -8,7 +8,7 @@ import { Project } from 'src/app/projects/models/project.model';
 })
 export class ListingOverviewCardComponent implements OnInit {
 
-  @Input() listing: Project;
+  @Input() listing: Listing;
   price: string;
   constructor() { }
 
@@ -16,7 +16,7 @@ export class ListingOverviewCardComponent implements OnInit {
     this.price = this.getPrice();
   }
 
-  log(text: Project) {
+  log(text: Listing) {
     console.log(text)
   }
 

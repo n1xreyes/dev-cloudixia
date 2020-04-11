@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Project } from '../models/project.model';
-import { environment } from '../../../environments/environment';
+import { Listing } from 'src/app/shared/models/listing.model';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { of } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -9,8 +8,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
   providedIn: 'root'
 })
 export class ProjectsService {
-  url = environment.firebase.databaseURL;
-
   constructor(private db: AngularFireDatabase, private afAuth: AngularFireAuth) { }
 
   get userId() {
@@ -19,14 +16,14 @@ export class ProjectsService {
     }
   }
 
-  add(project: Project, userId: string) {
+  add(project: Listing, userId: string) {
     const projects = this.db.list(`projects/${userId}`);
     return projects.push(project);
   }
 
-  addProjects(projects: Project[]) {
+  addProjects(projects: Listing[]) {
     const userId = this.userId;
-    projects.forEach( (project: Project) => {
+    projects.forEach( (project: Listing) => {
       this.db.list(`projects/${userId}`).push(project);
     });
   }
@@ -35,7 +32,7 @@ export class ProjectsService {
     return this.db.list(`projects/${userId}`).snapshotChanges();
   }
 
-  update(project: Project, userId: string) {
+  update(project: Listing, userId: string) {
     return of(this.db.object(`projects/${userId}/` + project.key)
       .update({
         title: project.title,
@@ -44,7 +41,7 @@ export class ProjectsService {
       }));
   }
 
-  delete(project: Project, userId: string) {
+  delete(project: Listing, userId: string) {
     return this.db.object(`projects/${userId}/` + project.key).remove();
   }
 

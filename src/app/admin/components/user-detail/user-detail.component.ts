@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { User } from '../../../auth/models/user.model';
-import { Project } from '../../../projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 @Component({
   selector: 'app-user-detail',
@@ -10,11 +10,11 @@ import { Project } from '../../../projects/models/project.model';
 })
 export class UserDetailComponent implements OnInit {
   @Input() user: User;
-  @Input() projects: Project[];
+  @Input() projects: Listing[];
   @Input() userProjectsLoading: boolean;
   @Output() detailsClosed = new EventEmitter<any>();
   @Output() projectsLoad = new EventEmitter<any>();
-  @Output() projectDeleted = new EventEmitter<Project>();
+  @Output() projectDeleted = new EventEmitter<Listing>();
   @Output() addAdmin = new EventEmitter<any>();
   @Output() removeAdmin = new EventEmitter<any>();
 
@@ -32,7 +32,7 @@ export class UserDetailComponent implements OnInit {
     this.projectsLoad.emit();
   }
 
-  onProjectDelete(project: Project) {
+  onProjectDelete(project: Listing) {
     this.projectDeleted.emit(project);
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MDBModalRef } from 'angular-bootstrap-md';
 import { Subject } from 'rxjs';
-import { Project } from '../../../projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -18,8 +18,8 @@ export class ProjectModalComponent implements OnInit {
   description: string;
   photoUrl: string;
 
-  projectData: Subject<Project> = new Subject();
-  project: Project = {};
+  projectData: Subject<Listing> = new Subject();
+  project: Listing = {};
 
   constructor(public modalRef: MDBModalRef) {}
 

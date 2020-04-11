@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Project } from 'src/app/projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 @Component({
   selector: 'app-marketplace-listing',
@@ -8,7 +8,7 @@ import { Project } from 'src/app/projects/models/project.model';
 })
 export class MarketplaceListingComponent implements OnInit {
 
-  @Input() listings: Project[];
+  @Input() listings: Listing[];
   constructor() { }
 
   ngOnInit(): void {

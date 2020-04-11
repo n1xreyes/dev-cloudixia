@@ -11,25 +11,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
   
   projects = [
     {
-      title: 'Project 1',
+      title: 'Listing 1',
       description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
       photoUrl:
         'https://mdbootstrap.com/img/Photos/Lightbox/Thumbnail/img%20(97).jpg'
     },
     {
-      title: 'Project 2',
+      title: 'Listing 2',
       description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
       photoUrl:
         'https://mdbootstrap.com/img/Photos/Lightbox/Thumbnail/img%20(98).jpg'
     },
     {
-      title: 'Project 3',
+      title: 'Listing 3',
       description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
       photoUrl:
         'https://mdbootstrap.com/img/Photos/Lightbox/Thumbnail/img%20(99).jpg'
     },
     {
-      title: 'Project 4',
+      title: 'Listing 4',
       description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
       photoUrl:
         'https://mdbootstrap.com/img/Photos/Lightbox/Thumbnail/img%20(95).jpg'

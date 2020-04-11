@@ -1,0 +1,38 @@
+{
+    "-M32iys_Lt7qMDMn4dxm" : {
+      "uid": "-M32iys_Lt7qMDMn4dxm",
+      "ownerId": "FziWFv2KoseJ7Z2QE8beXMhK7vE3",
+      "price": "$ 123.50",
+      "categories": ["this cat", "and this one"],
+      "state": "ACTIVE",
+      "description" : "I will do your front-end development.  I have 6 years experience building enterprise apps in NG.",
+      "photoUrl" : "https://media-exp1.licdn.com/dms/image/C5603AQEzq6ZSjWBG4w/profile-displayphoto-shrink_800_800/0?e=1590624000&v=beta&t=fpx9q9fV8IGcE7JNDJiAgJiL-dT0MMqCosZfhjODvl0",
+      "title" : "I do all the Front end development"
+    },
+    "-M4X7R5gRGuodTUhKQRc" : {
+      "uid": "-M4X7R5gRGuodTUhKQRc",
+      "ownerId": "FziWFv2KoseJ7Z2QE8beXMhK7vE3",
+      "price": "$ 123.50",
+      "categories": ["this cat", "and this one"],
+      "state": "ACTIVE",
+      "description" : "I do cheap front end development for every prog language",
+      "photoUrl" : "https://vehiclecheck.ca/wp-content/themes/enfold/pagetemplates/images/noPhotoFound.png",
+      "title" : "Back end developer for hire!",
+      "userId" : "UL7Z5HtbnRTEQVzBWLxY216vyPB2"
+    },
+    "-M4X8QQ0udzQbvFpzFYY" : {
+      "uid": "-M4X8QQ0udzQbvFpzFYY",
+      "ownerId": "FziWFv2KoseJ7Z2QE8beXMhK7vE3",
+      "price": "$ 123.50",
+      "categories": ["this cat", "and this one"],
+      "state": "PENDING",
+      "description" : "hello this is my new service that I am offering for $5.90",
+      "photoUrl" : "https://vehiclecheck.ca/wp-content/themes/enfold/pagetemplates/images/noPhotoFound.png",
+      "title" : "I Will code your website",
+      "userId" : "UL7Z5HtbnRTEQVzBWLxY216vyPB2"
+    }
+  }
+
+
+  // Possible States: "ACTIVE", "PENDING", "DISABLED"
+  

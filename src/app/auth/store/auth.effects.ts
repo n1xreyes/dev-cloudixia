@@ -7,14 +7,12 @@ import { map, switchMap, catchError, tap, take } from 'rxjs/operators';
 
 import * as auth from './../store/auth.actions';
 import { User } from '../models/user.model';
-import { GravatarService } from '../../shared/services/gravatar.service';
 
 @Injectable()
 export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
-    private gravatarService: GravatarService,
     private router: Router,
   ) {}
 
@@ -25,7 +23,7 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.register(payload.email, payload.password).pipe(
         map((res: any) => {
-          const gravatarUrl = this.gravatarService.getUserGravatar(res.user.email);
+          const gravatarUrl = "https://www.gravatar.com/avatar/da_eff";
           const user = {
             uid: res.user.uid,
             displayName: payload.username || res.user.displayName,

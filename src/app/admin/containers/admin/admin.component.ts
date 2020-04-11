@@ -11,7 +11,7 @@ import {
   getUsersListLoading,
   getUserProjectsLoading,
 } from '../../store/admin.selectors';
-import { Project } from '../../../projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 import { User } from '../../../auth/models/user.model';
 import { map, delay, take } from 'rxjs/operators';
 import { MDBModalService, MDBModalRef } from 'angular-bootstrap-md';
@@ -29,7 +29,7 @@ export class AdminComponent implements OnInit {
   ) {}
 
   users$: Observable<any>;
-  userProjects$: Observable<Project[]>;
+  userProjects$: Observable<Listing[]>;
   usersListLoading$: Observable<boolean>;
   userProjectsLoading$: Observable<boolean>;
   selectedUser$: Observable<any>;
@@ -80,7 +80,7 @@ export class AdminComponent implements OnInit {
     this.selectedUser = null;
   }
 
-  openProjectConfirmModal(project: Project) {
+  openProjectConfirmModal(project: Listing) {
     this.modalRef = this.modalService.show(
       ConfirmModalComponent,
       this.modalConfig
@@ -100,7 +100,7 @@ export class AdminComponent implements OnInit {
       });
   }
 
-  onProjectDelete(project: Project) {
+  onProjectDelete(project: Listing) {
     this.openProjectConfirmModal(project);
   }
 

@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Project } from 'src/app/projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 export enum MarketplaceActionTypes {
   MARKETPLACE_QUERY_ALL = '[Marketplace] Marketplace query all',
@@ -15,13 +15,13 @@ export class MarketplaceQueryAll implements Action {
 export class MarketplaceLoaded implements Action {
   readonly type = MarketplaceActionTypes.MARKETPLACE_LOADED;
 
-  constructor(public payload: { projects: Project[] }) { }
+  constructor(public payload: { projects: Listing[] }) { }
 }
 
 export class MarketplaceAdded implements Action {
   readonly type = MarketplaceActionTypes.MARKETPLACE_ADDED;
 
-  constructor(public payload: { project: Project}) {}
+  constructor(public payload: { project: Listing}) {}
 }
 
 export class MarketplaceError implements Action {

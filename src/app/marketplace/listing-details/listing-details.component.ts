@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Project } from 'src/app/projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 import { ActivatedRoute } from '@angular/router';
-import { MarketplaceService } from '../marketplace-service.service';
+import { MarketplaceService } from '../marketplace.service';
 
 @Component({
   selector: 'app-listing-details',
@@ -10,7 +10,7 @@ import { MarketplaceService } from '../marketplace-service.service';
 })
 export class ListingDetailsComponent implements OnInit {
 
-  listing: Project;  // should be async to pick up changes? or will confuse users?
+  listing: Listing;  // should be async to pick up changes? or will confuse users?
   isLoading: boolean = true;
 
   constructor(

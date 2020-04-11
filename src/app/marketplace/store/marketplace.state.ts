@@ -1,7 +1,7 @@
-import { Project } from '../../projects/models/project.model';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 export interface MarketplaceState {
-    projects: Project[] | null;
+    projects: Listing[] | null;
     loading: boolean;
     error: any;
   }

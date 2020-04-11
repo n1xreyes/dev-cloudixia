@@ -8,17 +8,12 @@ import {
   InputUtilitiesModule,
   IconsModule
 } from 'angular-bootstrap-md';
-import { ProjectModalComponent } from './components/project-modal/project-modal.component';
+
 import { FormsModule } from '@angular/forms';
-import { ProjectComponent } from './components/project/project.component';
-import { ProjectsListComponent } from './components/projects-list/projects-list.component';
 
 @NgModule({
   declarations: [
     ConfirmModalComponent,
-    ProjectModalComponent,
-    ProjectsListComponent,
-    ProjectComponent,
   ],
   imports: [
     CommonModule,
@@ -29,11 +24,10 @@ import { ProjectsListComponent } from './components/projects-list/projects-list.
     ButtonsModule,
     CardsModule
   ],
-  exports: [ProjectsListComponent, ProjectComponent],
+  exports: [],
   providers: [],
   entryComponents: [
-    ConfirmModalComponent,
-    ProjectModalComponent
+    ConfirmModalComponent
   ]
 })
 export class SharedModule {}

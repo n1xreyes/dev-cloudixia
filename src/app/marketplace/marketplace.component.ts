@@ -3,9 +3,9 @@ import * as fromMarketplace from './store/marketplace.actions';
 import { Store, select } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { Observable } from 'rxjs';
-import { Project } from '../projects/models/project.model';
 import { map } from 'rxjs/operators';
 import { getAllLoaded, getProjects } from './store/marketplace.selectors';
+import { Listing } from '../shared/models/listing.model';
 
 @Component({
   selector: 'app-marketplace',
@@ -13,7 +13,7 @@ import { getAllLoaded, getProjects } from './store/marketplace.selectors';
   styleUrls: ['./marketplace.component.css']
 })
 export class MarketplaceComponent implements OnInit {
-  projects$: Observable<Project[] | null>;
+  projects$: Observable<Listing[] | null>;
   isLoading$: Observable<boolean>;
 
   constructor(private store: Store<AppState>) { }
@@ -22,7 +22,7 @@ export class MarketplaceComponent implements OnInit {
     this.isLoading$ = this.store.select(getAllLoaded);
     this.projects$ = this.store.pipe(
       select(getProjects),
-      map( (projects: Project[]) => {
+      map( (projects: Listing[]) => {
         if (!projects) {
           this.store.dispatch(new fromMarketplace.MarketplaceQueryAll());
         }
