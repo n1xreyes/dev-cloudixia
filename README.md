@@ -12,6 +12,11 @@ ________
 # Engineering & Architecture:
 https://docs.google.com/document/d/1JjbKwHIbmBIK6DXQgqN4EYKzfZK-b5zWE8ZuRlzOMDQ/edit#
 
+# Building and Deploying to GH pages
+
+## build_and_deploy_to_gh.sh
+Hacky - but it works
+
 # Installation:
 
 **Firebase configuration:**
