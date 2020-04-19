@@ -1,16 +1,23 @@
 import { Injectable } from '@angular/core';
 
 import { AngularFireDatabase, SnapshotAction } from '@angular/fire/database';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import { Listing } from 'src/app/shared/models/listing.model';
+import algoliasearch, { SearchIndex } from 'algoliasearch';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MarketplaceService {
   PREFIX = 'listings'
+  index: SearchIndex;
 
-  constructor(private db: AngularFireDatabase) { }
+  constructor(private db: AngularFireDatabase) {
+    // Create Algolia Reference
+    this.index = algoliasearch(environment.algolia.appId, environment.algolia.apiKey)
+      .initIndex(environment.algolia.indexName)
+  }
 
   add(listing: Listing) {
     const newKey = this.db.createPushId();
@@ -19,7 +26,7 @@ export class MarketplaceService {
   }
 
   update(project: Listing) {
-    return of(this.db.object(`${this.PREFIX}/${project.uid}/`).update({...project}));
+    return of(this.db.object(`${this.PREFIX}/${project.uid}/`).update({ ...project }));
   }
 
   delete(listing: Listing) {
@@ -31,7 +38,13 @@ export class MarketplaceService {
   }
 
   // to replace with algolia
-  getAllListings() {    
+  getAllListings() {
     return this.db.list(this.PREFIX).snapshotChanges();
   }
+
+  textSearch(query: string) {
+    // Algolia API
+    return from(this.index.search(query));
+  }
+
 }

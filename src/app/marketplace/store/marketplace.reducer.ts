@@ -5,7 +5,7 @@ import { marketplaceInitialState, MarketplaceState } from './marketplace.state';
 export function marketplaceReducer(state = marketplaceInitialState, action: MarketplaceActions): MarketplaceState {
   switch (action.type) {
 
-    case MarketplaceActionTypes.MARKETPLACE_QUERY_ALL: {
+    case MarketplaceActionTypes.MARKETPLACE_SEARCH: {
       return Object.assign({}, state, {
         loading: true,
       });
@@ -13,7 +13,7 @@ export function marketplaceReducer(state = marketplaceInitialState, action: Mark
 
     case MarketplaceActionTypes.MARKETPLACE_LOADED: {
       return Object.assign({}, state, {
-        projects: action.payload.projects,
+        listings: action.payload.listings,
         loading: false,
       });
     }

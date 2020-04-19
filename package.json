@@ -25,6 +25,7 @@
     "@ngrx/effects": "^9.0.0",
     "@ngrx/store": "^9.0.0",
     "@ngrx/store-devtools": "^9.0.0",
+    "algoliasearch": "^4.1.0",
     "angular-bootstrap-md": "^9.0.0",
     "core-js": "^3.5.0",
     "express": "^4.16.4",

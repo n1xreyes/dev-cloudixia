@@ -1,13 +1,13 @@
 import { Listing } from 'src/app/shared/models/listing.model';
 
 export interface MarketplaceState {
-    projects: Listing[] | null;
+    listings: Listing[] | null;
     loading: boolean;
     error: any;
   }
   
   export const marketplaceInitialState: MarketplaceState = {
-    projects: null,
+    listings: null,
     loading: false,
     error: null
   };
