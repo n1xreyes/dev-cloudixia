@@ -3,9 +3,10 @@ import { Store } from '@ngrx/store';
 import { AppState } from './reducers';
 import { Observable } from 'rxjs';
 import { User } from './auth/models/user.model';
-import { getUser, getIsLoggedIn, getIsLoading, getIsAdmin } from './auth/store/auth.selectors';
+import { getUser, getIsLoggedIn, getIsLoading, getIsAdmin, getLanguage } from './auth/store/auth.selectors';
 
 import * as fromAuth from './auth/store/auth.actions';
+import { Language } from './auth/models/language.enum';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,7 @@ export class AppComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   isLoading$: Observable<boolean>;
   isAdmin$: Observable<boolean>;
+  language$: Observable<Language>;
 
   constructor(private store: Store<AppState>) {}
 
@@ -27,6 +29,7 @@ export class AppComponent implements OnInit {
     this.isLoggedIn$ = this.store.select(getIsLoggedIn);
     this.isLoading$ = this.store.select(getIsLoading);
     this.isAdmin$ = this.store.select(getIsAdmin);
+    this.language$ = this.store.select(getLanguage);
   }
 
   onLogout(user: User) {

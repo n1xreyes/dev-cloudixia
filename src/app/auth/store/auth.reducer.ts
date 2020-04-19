@@ -47,6 +47,12 @@ export function authReducer(state = authInitialState, action: AuthAction): AuthS
       });
     }
 
+    case AuthActionTypes.LANGUAGE_CHANGE: {
+      return Object.assign({}, state, {
+        language: action.payload.language
+      });
+    }
+
     default:
       return state;
   }

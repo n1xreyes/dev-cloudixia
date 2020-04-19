@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { User } from '../models/user.model';
+import { Language } from '../models/language.enum';
 
 export enum AuthActionTypes {
   REGISTER_REQUESTED = '[Auth] REGISTER Requested',
@@ -17,6 +18,8 @@ export enum AuthActionTypes {
 
   LOGOUT_REQUESTED = '[Auth] LOGOUT requested',
   LOGOUT_COMPLETED = '[Auth] LOGOUT completed',
+
+  LANGUAGE_CHANGE = "[Auth] Language switched",
 
   SAVE_USER = '[Auth] Save user',
   UPDATE_ONLINE_STATUS = '[Auth] Update online status',
@@ -90,6 +93,13 @@ export class LogoutCompleted implements Action {
   readonly type = AuthActionTypes.LOGOUT_COMPLETED;
 }
 
+
+export class LanguageChange implements Action {
+  readonly type = AuthActionTypes.LANGUAGE_CHANGE;
+
+  constructor(public payload: { language: Language }) {}
+}
+
 export class SaveUser implements Action {
   readonly type = AuthActionTypes.SAVE_USER;
 
@@ -142,6 +152,7 @@ export type AuthAction =
   | SocialLogin
   | LogoutRequested
   | LogoutCompleted
+  | LanguageChange
   | SaveUser
   | UpdateOnlineStatus
   | CheckUserRole

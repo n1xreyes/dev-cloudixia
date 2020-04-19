@@ -1,0 +1,41 @@
+<div class="modal-content">
+
+    <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">Update your local settings</h4>
+    </div>
+
+    <div class="modal-body">
+        <form #projectForm="ngForm">
+
+            <label for="language">Language</label>
+            <div class="md-form mt-0">
+                <select class="browser-default custom-select" [(ngModel)]="formLanguage" name="formLanguage">
+                    <option *ngFor="let language of languageOptions" [ngValue]="language.value">{{language.label}}
+                    </option>
+                </select>
+
+            </div>
+
+           
+            <label for="currency">Currency</label>
+            <div class="md-form mt-0">
+                <select class="browser-default custom-select" [(ngModel)]="formCurrency" name="formCurrency">
+                    <!-- <option *ngFor="let language of languageOptions" [ngValue]="language.value">{{language.label}}
+                    </option> -->
+                    <option selected>Under construction</option>
+                </select>
+
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" mdbBtn color="white" class="black-text waves-light" aria-label="Close"
+            (click)="modalRef.hide()" mdbWavesEffect>Close</button>
+        <button type="button" mdbBtn color="primary" class="relative waves-light" mdbWavesEffect
+            (click)="onSave()">Save!</button>
+    </div>
+</div>

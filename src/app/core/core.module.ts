@@ -13,6 +13,8 @@ import {
 import { RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { LocalizationModalComponent } from './header/localization-modal/localization-modal.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -22,13 +24,15 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     RouterModule,
     DropdownModule.forRoot(),
     CardsModule,
-    ButtonsModule
+    ButtonsModule,
+    FormsModule,
   ],
   declarations: [
     HeaderComponent,
     FooterComponent,
     DashboardComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    LocalizationModalComponent
   ],
   exports: [
     HeaderComponent,

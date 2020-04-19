@@ -8,6 +8,10 @@ export const getUser = createSelector(
   auth => auth.user
 );
 
+export const getLanguage = createSelector(
+  getAuthState,
+  auth => auth.language
+)
 export const getIsLoggedIn = createSelector(
   getAuthState,
   auth => auth.isLoggedIn
