@@ -1,14 +1,15 @@
 <div class="white px-4 section-header">
-    <h3>Marketplace</h3>
-    <p class="pt-3">Hire a professional today! Find The Perfect Freelance Services For Your Business</p>
+    <h3 translate>marketplace.componentHeader</h3>
+    <p class="pt-3" translate>marketplace.componentSubHeading</p>
 
     <form (submit)="smashTheSearch()" class="form-inline md-form mr-auto mb-4">
-        <input [(ngModel)]="query" name="query" class="close form-control mr-sm-2" type="text" placeholder="Search for a service"
+        <input [(ngModel)]="query" name="query" class="close form-control mr-sm-2" type="text" 
+        placeholder="{{ 'marketplace.mainSearchDescription' | translate }}"
             aria-label="Search">
 
         <button mdbBtn size="sm" color="blue" rounded="true" class="my-0 waves-light" mdbWavesEffect type="submit"
-            (click)="smashTheSearch()">
-            Search
+            (click)="smashTheSearch()" translate>
+            marketplace.mainSearch
         </button>
 
     </form>
@@ -17,11 +18,6 @@
 
 <div class="container-fluid pb-5">
     <div class="py-5">
-        <!-- TODO: This isLoading Async pipe throws a random error when the template is switched 
-        
-        ERROR Error: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'undefined'. Current value: 'false'. It seems like the view has been created after its parent and its children have been dirty checked. Has it been created in a change detection hook?
-    
-        -->
         <app-marketplace-listing *ngIf="!(isLoading$ | async)" [listings]="listings$ | async"></app-marketplace-listing>
 
         <div #loading *ngIf="isLoading$ | async" class="d-flex justify-content-center align-items-center"

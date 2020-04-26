@@ -1,3 +1,5 @@
+import { Language } from "../../shared/models/language.enum";
+
 export interface User {
   uid: string;
   displayName: string;
@@ -12,4 +14,5 @@ export interface User {
   isNewUser?: boolean;
   isAdmin?: boolean;
   isOnline?: boolean;
+  language?: Language;
 }

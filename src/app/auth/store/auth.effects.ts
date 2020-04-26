@@ -7,6 +7,8 @@ import { map, switchMap, catchError, tap, take } from 'rxjs/operators';
 
 import * as auth from './../store/auth.actions';
 import { User } from '../models/user.model';
+import { Language } from '../../shared/models/language.enum';
+import { LanguageService } from 'src/app/shared/language.service';
 
 @Injectable()
 export class AuthEffects {
@@ -14,6 +16,7 @@ export class AuthEffects {
     private actions$: Actions,
     private authService: AuthService,
     private router: Router,
+    private languageService: LanguageService
   ) {}
 
   @Effect()
@@ -78,7 +81,17 @@ export class AuthEffects {
     )
   );
 
-  // we update firebase first, and then the database
+  @Effect({dispatch: false})
+  updateLanguage$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.LANGUAGE_CHANGE),
+    map( (action: auth.LanguageChange) => action.payload),
+    map( (payload: {language: Language}) => {  
+      this.languageService.setLanguage(payload.language);
+    })
+  );
+
+  // we update database.  don't care about firebase except for the uid.
+  // Firebase handles authentication - userinfo we retrieve from DB
   @Effect()
   updateProfile$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.UPDATE_PROFILE),
@@ -151,7 +164,7 @@ export class AuthEffects {
   @Effect()
   loginSuccess$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.LOGIN_SUCCESS),
-    map( (action: auth.SaveUser) => action.payload),
+    map( (action: auth.LoginSuccess) => action.payload),
     switchMap( (payload: any) => {
         return [
           new auth.GetUserDetails(payload.user.uid),
@@ -170,23 +183,23 @@ export class AuthEffects {
         map( (res: any) => {
           const user = {
             uid: res.user.uid,
-            displayName: res.user.displayName,
-            email: res.user.email,
-            providerId: res.additionalUserInfo.providerId,
-            photoUrl: res.user.photoURL,
-            isNewUser: res.additionalUserInfo.isNewUser
           };
           return user;
         }),
         switchMap( (user: User) => {
           if (user.isNewUser) {
             return [
+              new auth.GetUserDetails(user.uid),
               new auth.LoginSuccess({ user }),
               new auth.SaveUser({ user }),
               new auth.CheckUserRole({ uid: user.uid })
             ];
           } else {
-            return [new auth.LoginSuccess({ user }), new auth.CheckUserRole({ uid: user.uid })];
+            return [
+              new auth.LoginSuccess({ user }), 
+              new auth.CheckUserRole({ uid: user.uid }),
+              new auth.GetUserDetails(user.uid)
+            ];
           }
         }),
         tap(() => this.router.navigateByUrl('')),
@@ -242,25 +255,13 @@ export class AuthEffects {
   getUserDetails$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.GET_USER_DETAILS),
     switchMap((payload: any) => this.authService.getDBUser(payload.uid).pipe(
-      map (userDetails => {
-        const currentUser: any = this.authService.getCurrentUser();
-            const updatedUser: User = {
-              uid: currentUser.uid || null,
-              displayName: currentUser.displayName || null,
-              email: currentUser.email || null,
-              providerId: currentUser.providerData[0].providerId || null,
-              photoUrl: currentUser.photoURL || null,
-              phoneNumber: userDetails.phoneNumber,
-              country: userDetails.country,
-              street: userDetails.street,
-              city: userDetails.city,
-              province: userDetails.province,
-          };
-
-          return new auth.UpdateProfileSuccess({user: updatedUser})
+      map (userDetails => userDetails),
+      switchMap((user: User)=> {
+          return [
+            new auth.UpdateProfileSuccess({user: user})
+          ]
       })
-      )
-    )
+    ))
   );
 
   @Effect()

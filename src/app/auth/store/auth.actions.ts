@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { User } from '../models/user.model';
-import { Language } from '../models/language.enum';
+import { Language } from '../../shared/models/language.enum';
 
 export enum AuthActionTypes {
   REGISTER_REQUESTED = '[Auth] REGISTER Requested',

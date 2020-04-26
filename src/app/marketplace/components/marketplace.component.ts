@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, delay } from 'rxjs/operators';
 import { getAllLoaded, GetListings } from '../store/marketplace.selectors';
 import { AppState } from 'src/app/reducers';
 import { Listing } from 'src/app/shared/models/listing.model';
@@ -22,7 +22,9 @@ export class MarketplaceComponent implements OnInit {
   constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.isLoading$ = this.store.select(getAllLoaded);
+    this.isLoading$ = this.store.select(getAllLoaded).pipe(
+      delay(0)
+    ) // sets an initial delay so the front end will stop bitching
 
     this.listings$ = this.store.pipe(
       select(GetListings),

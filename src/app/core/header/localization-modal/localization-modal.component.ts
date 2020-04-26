@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Language } from 'src/app/auth/models/language.enum';
+import { Language } from 'src/app/shared/models/language.enum';
 import { MDBModalRef } from 'angular-bootstrap-md';
 import { NgForm } from '@angular/forms';
 
@@ -36,6 +36,6 @@ export class LocalizationModalComponent implements OnInit {
   languageOptions = [
     { value: Language.ARABIC, label: 'عربى' },
     { value: Language.ENGLISH, label: 'English' },
-    ];
+  ];
 
 }

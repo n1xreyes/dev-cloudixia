@@ -1,5 +1,5 @@
 import { User } from '../models/user.model';
-import { Language } from '../models/language.enum';
+import { Language } from '../../shared/models/language.enum';
 
 export interface AuthState {
   user: User | null;
@@ -15,6 +15,6 @@ export const authInitialState: AuthState = {
   isAdmin: false,
   isLoggedIn: false,
   isLoading: true,
-  language: Language.ENGLISH,
+  language: Language.ARABIC,
   error: null
 };

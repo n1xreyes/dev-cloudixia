@@ -6,7 +6,7 @@ import { User } from './auth/models/user.model';
 import { getUser, getIsLoggedIn, getIsLoading, getIsAdmin, getLanguage } from './auth/store/auth.selectors';
 
 import * as fromAuth from './auth/store/auth.actions';
-import { Language } from './auth/models/language.enum';
+import { Language } from './shared/models/language.enum';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +22,8 @@ export class AppComponent implements OnInit {
   isAdmin$: Observable<boolean>;
   language$: Observable<Language>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(
+    private store: Store<AppState>) {}
 
   ngOnInit() {
     this.user$ = this.store.select(getUser);

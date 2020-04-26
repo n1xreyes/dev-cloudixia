@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { User } from '../../auth/models/user.model';
-import { Language } from 'src/app/auth/models/language.enum';
+import { Language } from 'src/app/shared/models/language.enum';
 import { Store } from '@ngrx/store';
 import { AuthState } from 'src/app/auth/store/auth.state';
 import * as fromAuth from 'src/app/auth/store/auth.actions';

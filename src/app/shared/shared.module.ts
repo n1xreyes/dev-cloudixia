@@ -10,6 +10,7 @@ import {
 } from 'angular-bootstrap-md';
 
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -22,9 +23,12 @@ import { FormsModule } from '@angular/forms';
     IconsModule,
     FormsModule,
     ButtonsModule,
-    CardsModule
+    CardsModule,
+    TranslateModule
   ],
-  exports: [],
+  exports: [
+    TranslateModule
+  ],
   providers: [],
   entryComponents: [
     ConfirmModalComponent

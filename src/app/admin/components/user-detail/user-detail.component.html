@@ -34,18 +34,19 @@
 
     <hr class="my-5">
 
+    <h3>TODO: </h3>
     <div class="d-flex flex-row align-items-center">
       <h4 class="mr-3">Projects</h4>
       <button mdbBtn color="primary" size="sm" (click)="loadProjects()">Load user projects</button>
     </div>
 
-    <div *ngIf="userProjectsLoading" class="d-flex justify-content-center align-items-center" style="margin-top: 50px">
+    <!-- <div *ngIf="userProjectsLoading" class="d-flex justify-content-center align-items-center" style="margin-top: 50px">
       <div class="spinner-grow text-primary" role="status" style="width: 4rem; height: 4rem;">
         <span class="sr-only">Loading...</span>
       </div>
-    </div>
+    </div> -->
 
-    <app-projects-list *ngIf="!userProjectsLoading && projects" [editable]="false" [projects]="projects" (projectDeleted)="onProjectDelete($event)"></app-projects-list>
+    <!-- <app-projects-list *ngIf="!userProjectsLoading && projects" [editable]="false" [projects]="projects" (projectDeleted)="onProjectDelete($event)"></app-projects-list> -->
 
     <hr class="my-5">
 

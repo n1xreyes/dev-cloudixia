@@ -52,7 +52,7 @@ export class AuthService {
   // update user in db
   saveUser(user: User) {
     const users = this.db.object('users/' + user.uid);
-    return users.set(user);
+    return users.update(user);
   }
 
   // get user in DB
