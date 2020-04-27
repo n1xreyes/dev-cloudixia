@@ -1,25 +1,61 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProfileUserComponent } from './profile-user.component';
+import { MainProfileComponent } from '../main-profile/main-profile.component';
+import { StoreModule } from '@ngrx/store';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
+
+import { Component } from '@angular/core';
+import { User } from 'src/app/auth/models/user.model';
 
 describe('ProfileUserComponent', () => {
-  let component: ProfileUserComponent;
-  let fixture: ComponentFixture<ProfileUserComponent>;
+  let hostComponent: TestHostComponent;
+  let hostFixture: ComponentFixture<TestHostComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProfileUserComponent ]
-    })
-    .compileComponents();
+      declarations: [
+        TestHostComponent,
+        MainProfileComponent
+      ],
+      imports: [
+        StoreModule.forRoot({}),
+        MDBBootstrapModule.forRoot()
+      ],
+      providers: []
+    }).compileComponents();
   }));
 
+  let mockUser: User = {
+    uid: "12345",
+    displayName: "Robotron",
+    email: "myadmin@php.com",
+    providerId: "email",
+    photoUrl: "https://miro.medium.com/max/4000/1*KUy_KKExZrSpBuv9XfyBgA.png"
+}
+
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProfileUserComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    hostFixture = TestBed.createComponent(TestHostComponent);
+    hostComponent = hostFixture.componentInstance;
+    hostComponent.bootstrap(mockUser)
+    hostFixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+
+  it('should create the profile user component', async(() => {
+    expect(hostFixture.nativeElement.querySelector("mdb-card")).toBeTruthy();
+  }));
 });
+
+
+@Component({
+  selector: `host-component`,
+  template: `<app-main-profile [user]="user"></app-main-profile>`
+})
+class TestHostComponent {
+  user: User
+
+  bootstrap(user: User) {
+    this.user = user;
+  }
+
+}

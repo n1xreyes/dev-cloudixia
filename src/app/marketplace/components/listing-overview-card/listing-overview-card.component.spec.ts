@@ -1,25 +1,59 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListingOverviewCardComponent } from './listing-overview-card.component';
+import { Component } from '@angular/core';
+import { Listing } from 'src/app/shared/models/listing.model';
+import { StoreModule } from '@ngrx/store';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 describe('ListingOverviewCardComponent', () => {
-  let component: ListingOverviewCardComponent;
-  let fixture: ComponentFixture<ListingOverviewCardComponent>;
+  let hostComponent: TestHostComponent;
+  let hostFixture: ComponentFixture<TestHostComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ListingOverviewCardComponent ]
-    })
-    .compileComponents();
+        declarations: [
+            TestHostComponent,
+            ListingOverviewCardComponent
+        ],
+        imports: [
+            StoreModule.forRoot({}),
+            MDBBootstrapModule.forRoot()
+        ],
+        providers: [
+
+        ]
+    }).compileComponents();
+
+
+    let mockListing: Listing = {
+      title: "mockListingTitle"
+  }
+
+    beforeEach(() => {
+        hostFixture = TestBed.createComponent(TestHostComponent);
+        hostComponent = hostFixture.componentInstance;
+        hostComponent.bootstrap(mockListing)
+        hostFixture.detectChanges();
+    });
+
+    it('should create', () => {    
+      expect(hostComponent).toBeTruthy();
+    });
+
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ListingOverviewCardComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
 });
+
+@Component({
+  selector: `host-component`,
+  template: `<app-listing-overview-card [listing]="listing" ></app-listing-overview-card>`
+})
+class TestHostComponent {
+  listing: Listing;
+  
+  bootstrap(listing: Listing) {
+    this.listing = listing;
+  }
+
+}

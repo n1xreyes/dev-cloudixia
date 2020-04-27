@@ -55,7 +55,7 @@ describe('HeaderComponent', () => {
         expect(items[4].innerText).toEqual("Register")
     }));
 
-    fdescribe("with authenticated user", () => {
+    describe("with authenticated user", () => {
         let mockUser: User = {
             uid: "12345",
             displayName: "Robotron",

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectModalComponent } from './project-modal.component';
+import { MDBModalRef } from 'angular-bootstrap-md';
+import { FormsModule } from '@angular/forms';
 
 describe('ProjectModalComponent', () => {
   let component: ProjectModalComponent;
@@ -8,7 +10,16 @@ describe('ProjectModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProjectModalComponent ]
+      declarations: [ ProjectModalComponent ],
+      imports: [
+        FormsModule
+      ],
+      providers: [
+        {
+          provide: MDBModalRef,
+          useValue: {}
+        }
+      ]
     })
     .compileComponents();
   }));
