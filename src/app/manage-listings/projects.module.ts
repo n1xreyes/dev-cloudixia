@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProjectsComponent } from './components/projects.component';
 import { StoreModule } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
-import { ButtonsModule, InputsModule, CardsModule, WavesModule, IconsModule, ModalModule, InputUtilitiesModule } from 'angular-bootstrap-md';
+import { ButtonsModule, InputsModule, CardsModule, WavesModule, IconsModule, ModalModule, InputUtilitiesModule, BadgeModule } from 'angular-bootstrap-md';
 
 import * as fromProjects from './store/projects.reducer';
 import { EffectsModule } from '@ngrx/effects';
@@ -28,6 +28,7 @@ import { ProjectsListComponent } from './components/projects-list/projects-list.
     HttpClientModule,
     FormsModule,
     ButtonsModule,
+    BadgeModule,
     InputsModule,
     WavesModule,
     IconsModule,
