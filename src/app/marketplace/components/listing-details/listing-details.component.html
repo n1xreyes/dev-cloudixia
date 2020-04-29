@@ -1,6 +1,6 @@
 <div *ngIf="!isLoading" class="white px-4 section-header">
 
-    <h3>{{ listing.title }}</h3>
+    <center><h3>{{ listing.title }}</h3>
 
     <div class="row mb-3">
         <div class="col-md-12">
@@ -12,10 +12,14 @@
     <p class="pt-3">{{ listing.description }}</p>
 
 
-    <div class="text-left">
+    <div style="padding-bottom: 5%;">
         <a mdbBtn color="secondary" mdbWavesEffect [routerLink]="[ '/' ]">Back</a>
         <a mdbBtn color="primary" mdbWavesEffect (click)="onDelete()">Continue ($5.90)</a>
-      </div>
+    </div>
+      
+
+    </center>
+    
 
 </div>
 
