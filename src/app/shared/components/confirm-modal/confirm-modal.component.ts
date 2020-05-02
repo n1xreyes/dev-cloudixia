@@ -10,13 +10,17 @@ import { Subject } from 'rxjs';
 export class ConfirmModalComponent implements OnInit {
 
   confirmation: Subject<boolean> = new Subject();
+  heading: string;
+  description: string;
+  confirmBtnColor: string;
+  confirmBtnText: string;
 
   constructor(public modalRef: MDBModalRef) { }
 
   ngOnInit() {
   }
 
-  onDelete() {
+  onConfirm() {
     this.confirmation.next(true);
     this.modalRef.hide();
   }
