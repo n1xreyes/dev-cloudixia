@@ -15,11 +15,7 @@
   <app-user-detail
     *ngIf="selectedUser"
     [user]="selectedUser$ | async"
-    [projects]="userProjects$ | async"
-    [userProjectsLoading]="userProjectsLoading$ | async"
     (detailsClosed)="onDetailsClose()"
-    (projectsLoad)="onProjectsLoad()"
-    (projectDeleted)="onProjectDelete($event)"
     (addAdmin)="addAdminPrivileges($event)"
     (removeAdmin)="removeAdminPrivileges($event)"></app-user-detail>
 </div>

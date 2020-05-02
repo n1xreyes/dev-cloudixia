@@ -5,6 +5,7 @@ export enum ProjectsActionTypes {
   PROJECTS_QUERY = '[Projects] Projects query',
   PROJECTS_QUERY_ALL = '[Projects] Projects query all',
   PROJECTS_LOADED = '[Projects] Projects loaded',
+  PROJECT_CHANGED = '[Projects] Projects changed',
 
   PROJECT_ADDED = '[Projects] Listing added',
 
@@ -26,6 +27,12 @@ export class ProjectsLoaded implements Action {
   readonly type = ProjectsActionTypes.PROJECTS_LOADED;
 
   constructor(public payload: { projects: Listing[] }) {}
+}
+
+export class ProjectChanged implements Action {
+  readonly type = ProjectsActionTypes.PROJECT_CHANGED;
+
+  constructor(public payload: { project: Listing, action: string }) {}
 }
 
 export class ProjectAdded implements Action {
@@ -56,6 +63,7 @@ export type ProjectsActions =
   | ProjectsQuery
   | ProjectsQueryAll
   | ProjectsLoaded
+  | ProjectChanged
   | ProjectAdded
   | ProjectEdited
   | ProjectDeleted

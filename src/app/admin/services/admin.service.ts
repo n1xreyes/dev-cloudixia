@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { from, Subject } from 'rxjs';
+import { from, Observable } from 'rxjs';
+import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
 
-  constructor(private db: AngularFireDatabase) { }
-
-  selectedUser = new Subject();
-  selectedUser$ = this.selectedUser.asObservable();
+  constructor(private db: AngularFireDatabase, private marketplaceService: MarketplaceService) { }
 
   getUsersList() {
     const usersRef = this.db.list('users');
@@ -26,8 +24,12 @@ export class AdminService {
     return this.db.object('admins/' + uid).valueChanges();
   }
 
-  deleteUserProject(uid: string, projectId: string) {
-    return from(this.db.object(`projects/${uid}/` + projectId).remove());
+  deletePendingUserProject(listingId: string): Observable<void> {
+    return from(this.marketplaceService.deletePending({ uid: listingId }))
+  }
+
+  approveUserProject(listingId: string): Observable<void> {
+    return from(this.marketplaceService.approve(listingId))
   }
 
   addAdminPrivileges(uid: string) {

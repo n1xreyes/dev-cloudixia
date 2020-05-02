@@ -17,25 +17,25 @@ export function adminReducer(state = adminInitialState, action: AdminActions): A
       });
     }
 
-    case AdminActionTypes.GET_USER_PROJECTS: {
-      return Object.assign({}, state, {
-        userProjectsLoading: true
-      });
-    }
-
-    case AdminActionTypes.USERS_PROJECTS_LOADED: {
-      return Object.assign({}, state, {
-        userProjects: {...state.userProjects, [action.payload.uid]: action.payload.userProjects},
-        userProjectsLoading: false
-      });
-    }
-
     case AdminActionTypes.ADMIN_ERROR: {
       return Object.assign({}, state, {
         error: action.payload.error
       });
     }
 
+    case AdminActionTypes.GET_PENDING_LISTINGS: {
+      return Object.assign({}, state, {
+        pendingListLoading: true
+      })
+    }
+
+    case AdminActionTypes.PENDING_LISTINGS_FETCHED: {
+      return Object.assign({}, state, {
+        pendingListLoading: false,
+        pendingListings: action.payload.pendingListings
+      })
+    }
+    
     default:
       return state;
   }

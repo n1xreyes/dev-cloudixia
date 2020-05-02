@@ -18,19 +18,12 @@ export const getSelectedUser = createSelector(
   (usersList: any, uid: string) => usersList.filter( (user: any) => user.uid === uid)[0]
 );
 
-export const getUserProjects = createSelector(
+export const getPendingListingLoading = createSelector(
   getAdminState,
-  (admin: any, uid: string) => {
-    if (admin.userProjects.hasOwnProperty(uid)) {
-      return admin.userProjects[uid];
-    } else {
-      return null;
-    }
-  }
+  admin => admin.pendingListingLoading
 );
 
-export const getUserProjectsLoading = createSelector(
+export const getPendingListings = createSelector(
   getAdminState,
-  admin => admin.userProjectsLoading
+  admin => admin.pendingListings
 );
-

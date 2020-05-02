@@ -23,6 +23,11 @@
       <li *ngIf="isLoggedIn && !isLoading && isAdmin" class="nav-item">
         <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/admin-panel" routerLinkActive="active" mdbWavesEffect>Admin panel</a>
       </li>
+
+      <li *ngIf="isLoggedIn && !isLoading && isAdmin" class="nav-item">
+        <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/listing-approval" routerLinkActive="active" mdbWavesEffect>Listing Approval</a>
+      </li>
+
     </ul>
     <!-- Links -->
 

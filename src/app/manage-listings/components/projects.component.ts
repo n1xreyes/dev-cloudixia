@@ -73,6 +73,11 @@ export class ProjectsComponent implements OnInit {
   openConfirmModal(project: Listing) {
     this.modalRef = this.modalService.show(ConfirmModalComponent, this.modalConfig);
 
+    this.modalRef.content.heading = 'Delete Listing?';
+    this.modalRef.content.description = 'Are you sure you want to delete this item?';
+    this.modalRef.content.confirmBtnColor = 'red';
+    this.modalRef.content.confirmBtnText = 'Delete';
+    
     this.modalRef.content.confirmation.pipe(take(1)).subscribe( (confirmation: boolean) => {
       if (confirmation) {
         this.store.dispatch(new fromProjects.ProjectDeleted({ project }));

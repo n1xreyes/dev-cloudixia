@@ -1,4 +1,4 @@
-<mdb-card>
+<mdb-card *ngIf="project">
   <!--Card image-->
   <mdb-card-img *ngIf="project.photoUrl" src="{{ project.photoUrl }}" alt="Card image cap" class="waves-light"
     mdbWavesEffect></mdb-card-img>
@@ -8,11 +8,21 @@
 
     <!--Title-->
     <mdb-card-title>
-      <h4>{{ project.title }}</h4>
+      <h4>{{ project.title }}</h4>  
     </mdb-card-title>
+    
+    <span class="mr-2 float-left hey-you">
+      <mdb-badge *ngIf="project.state !== 'PENDING'" color="green">Active</mdb-badge>
+      <mdb-badge *ngIf="project.state === 'PENDING'" color="purple">Pending</mdb-badge>
+    </span>
+    
 
     <!--Text-->
-    <mdb-card-text> {{ project.description }}
+    <mdb-card-text> 
+      {{ project.description }}
+    </mdb-card-text>
+    <mdb-card-text> 
+      {{ project.price }}
     </mdb-card-text>
 
     <div class="text-left">

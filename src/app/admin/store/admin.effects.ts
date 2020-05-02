@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 
 import * as fromAdmin from './../store/admin.actions';
-import { switchMap, map, catchError, mergeMap } from 'rxjs/operators';
+import { switchMap, map, catchError } from 'rxjs/operators';
 import { AdminService } from '../services/admin.service';
 import { Listing } from 'src/app/shared/models/listing.model';
 import { of } from 'rxjs';
+import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 
 
 @Injectable()
 export class AdminEffects {
 
-  constructor(private actions$: Actions, private adminService: AdminService) {}
+  constructor(private actions$: Actions, private adminService: AdminService, private marketplaceService: MarketplaceService) {}
 
   @Effect()
   getUsersList$ = this.actions$.pipe(
@@ -20,19 +21,7 @@ export class AdminEffects {
       .pipe(
         map( (users: any) => {
           const usersList: any[] = users.map((res: any) => {
-            const key = res.payload.key;
-            const user: any = res.payload.val();
-            return {
-              key: key,
-              uid: user.uid,
-              displayName: user.displayName,
-              email: user.email,
-              providerId: user.providerId,
-              photoUrl: user.photoUrl,
-              isNewUser: user.isNewUser,
-              isAdmin: user.isAdmin,
-              isOnline: user.isOnline
-            };
+            return { ...res.payload.val() };
           });
           return (new fromAdmin.UsersListFetched({ usersList }));
         }),
@@ -41,37 +30,24 @@ export class AdminEffects {
     )
   );
 
-  @Effect()
-  getUserProjects$ = this.actions$.pipe(
-    ofType(fromAdmin.AdminActionTypes.GET_USER_PROJECTS),
-    map((action: fromAdmin.GetUserProjects) => action.payload),
-    mergeMap( (payload: any) => this.adminService.getUserProjects(payload.uid)
+  @Effect({ dispatch: false })
+  deleteUserProject$ = this.actions$.pipe(
+    ofType(fromAdmin.AdminActionTypes.DELETE_PENDING_USER_PROJECT),
+    map( (action: fromAdmin.DeletePendingUserProject) => action.payload),
+    switchMap((payload: any) => this.adminService.deletePendingUserProject(payload.listingUID)
       .pipe(
-        map((data: any) => {
-          const projectsData: Listing[] = data.map((res: any) => {
-            const key = res.payload.key;
-            const project: Listing = res.payload.val();
-            return {
-              key: key || null,
-              title: project.title || null,
-              description: project.description || null,
-              photoUrl: project.photoUrl || null
-            };
-          });
-          return (new fromAdmin.UserProjectsLoaded({ uid: payload.uid, userProjects: projectsData }));
-        }),
-        catchError(error => of(new fromAdmin.AdminError({ error })))
+        catchError((error: any) => of(new fromAdmin.AdminError({ error })))
       )
     )
   );
 
   @Effect({ dispatch: false })
-  deleteUserProject$ = this.actions$.pipe(
-    ofType(fromAdmin.AdminActionTypes.DELETE_USER_PROJECT),
-    map( (action: fromAdmin.DeleteUserProject) => action.payload),
-    switchMap( (payload: any) => this.adminService.deleteUserProject(payload.userId, payload.projectId)
+  approveUserProject$ = this.actions$.pipe(
+    ofType(fromAdmin.AdminActionTypes.APPROVE_USER_PROJECT),
+    map((action: fromAdmin.ApproveUserProject) => action.payload),
+    switchMap((payload: any) => this.adminService.approveUserProject(payload.listingUID)
       .pipe(
-        catchError( (error: any) => of(new fromAdmin.AdminError({ error })))
+        catchError((error: any) => of(new fromAdmin.AdminError({ error })))
       )
     )
   );
@@ -97,4 +73,21 @@ export class AdminEffects {
       )
     )
   );
+
+  @Effect()
+  getPendingListings$ = this.actions$.pipe(
+    ofType(fromAdmin.AdminActionTypes.GET_PENDING_LISTINGS),
+    switchMap(() =>
+      this.marketplaceService.getPendingSearches()
+        .pipe(
+          map((data: any) => {
+            const listingsData: Listing[] = data.map((res: any) => {
+              return { ...res.payload.val() };
+            });
+            return (new fromAdmin.PendingListingsFetched({ pendingListings: listingsData }));
+          }),
+      catchError((error: any) => of(new fromAdmin.AdminError({ error })))
+    ))
+  )
+
 }
