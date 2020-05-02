@@ -9,11 +9,11 @@ import { Listing } from 'src/app/shared/models/listing.model';
 export class ListingOverviewCardComponent implements OnInit {
 
   @Input() listing: Listing;
-  price: string;
+
   constructor() { }
 
   ngOnInit(): void {
-    this.price = this.getPrice();
+
   }
 
   log(text: Listing) {
@@ -23,11 +23,6 @@ export class ListingOverviewCardComponent implements OnInit {
   // will this be an async call?
   getListingUser(){
     return Math.floor((Math.random() * 1000) + 1) > 50 ? 'Sedky' : 'Rami'
-  }
-
-  // will this be an async call?
-  getPrice() {
-    return '' + Math.floor((Math.random() * 1000) + 1) + '.' + Math.floor((Math.random() * 100))
   }
 
   onViewClick() {

@@ -12,9 +12,16 @@ import { AdminEffects } from './store/admin.effects';
 import { CollapseModule, CardsModule, ButtonsModule, BadgeModule, IconsModule, DropdownModule } from 'angular-bootstrap-md';
 import { SharedModule } from '../shared/shared.module';
 import { UserDetailComponent } from './components/user-detail/user-detail.component';
+import { ListingApprovalComponent } from './components/listing-approval/listing-approval.component';
 
 @NgModule({
-  declarations: [AdminComponent, UsersListComponent, UserComponent, UserDetailComponent],
+  declarations: [
+    AdminComponent, 
+    UsersListComponent, 
+    UserComponent, 
+    UserDetailComponent, 
+    ListingApprovalComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,

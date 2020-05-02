@@ -8,6 +8,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { StoreRootModule, StoreModule } from '@ngrx/store';
 
 describe('AdminEffects', () => {
   let actions$: Observable<any>;
@@ -16,6 +17,8 @@ describe('AdminEffects', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        StoreModule.forRoot({}),
+        StoreRootModule,
         RouterTestingModule, 
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule,

@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MarketplaceComponent } from './marketplace.component';
 import { StoreModule } from '@ngrx/store';
 import { TranslateTestingModule } from 'ngx-translate-testing';
+import * as fromMarket from '../store/marketplace.reducer';
 
 describe('MarketplaceComponent', () => {
   let component: MarketplaceComponent;
@@ -11,7 +12,9 @@ describe('MarketplaceComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [MarketplaceComponent],
-      imports: [StoreModule.forRoot({}),
+      imports: [
+        StoreModule.forFeature('marketplace', fromMarket.marketplaceReducer),
+        StoreModule.forRoot({}),
         TranslateTestingModule.withTranslations("en", {'marketplace.componentHeader': 'Marketplace'})]
     })
       .compileComponents();

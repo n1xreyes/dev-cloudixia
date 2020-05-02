@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { StoreModule } from '@ngrx/store';
+import { projectsReducer } from './projects.reducer';
 
 describe('ProjectsEffects', () => {
   let actions$: Observable<any>;
@@ -20,6 +21,7 @@ describe('ProjectsEffects', () => {
         provideMockActions(() => actions$)
       ],
       imports: [
+        StoreModule.forFeature('projects', projectsReducer),
         StoreModule.forRoot({}),
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule,

@@ -26,6 +26,8 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    singleRun: false
+    singleRun: false,
+    browserDisconnectTimeout: 99999999,
+    browserNoActivityTimeout: 99999999
   });
 };

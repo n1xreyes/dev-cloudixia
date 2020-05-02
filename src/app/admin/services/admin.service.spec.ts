@@ -6,10 +6,13 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
+import { StoreRootModule, StoreModule } from '@ngrx/store';
 
 describe('AdminService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [
+      StoreModule.forRoot({}),
+      StoreRootModule,
       RouterTestingModule, 
       AngularFireModule.initializeApp(environment.firebase),
       AngularFireDatabaseModule,

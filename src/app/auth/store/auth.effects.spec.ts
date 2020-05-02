@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { StoreModule } from '@ngrx/store';
 import { RouterModule } from '@angular/router';
 import { TranslateTestingModule } from 'ngx-translate-testing';
+import { authReducer } from './auth.reducer';
 
 describe('AuthEffects', () => {
   let actions$: Observable<any>;
@@ -18,6 +19,7 @@ describe('AuthEffects', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        StoreModule.forFeature('auth', authReducer),
         StoreModule.forRoot({}),
         RouterModule.forRoot([], {}),
         AngularFireModule.initializeApp(environment.firebase),
