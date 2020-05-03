@@ -1,4 +1,4 @@
-<div [ngStyle]="{'direction': (language$ | async) === 'ar' ? 'rtl' : 'ltr'}">
+<div [ngClass]="{'rtl': (language$ | async) === 'ar'}">
 
   <header>
     <app-header [user]="user$ | async" [isLoggedIn]="isLoggedIn$ | async" [isLoading]="isLoading$ | async"

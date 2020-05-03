@@ -5,6 +5,7 @@ import { HeaderComponent } from './header.component';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { Component } from '@angular/core';
 import { User } from 'src/app/auth/models/user.model';
+import { Language } from 'src/app/shared/models/language.enum';
 describe('HeaderComponent', () => {
     let hostComponent: TestHostComponent;
     let hostFixture: ComponentFixture<TestHostComponent>;
@@ -44,15 +45,15 @@ describe('HeaderComponent', () => {
         let items = hostFixture.nativeElement.querySelectorAll(".nav-item")
 
         // Hard coding because easier to test for
-        expect(items[0].innerText.includes("Marketplace")).toBeTruthy();
+        expect(items[0].innerText.includes("header.links.marketplace")).toBeTruthy();
 
-        expect(items[1].classList.contains("fa-globe-africa")).toBeTruthy();
+        expect(items[1].innerText).toEqual("Become a Freelancer")
 
-        expect(items[2].innerText).toEqual("Become a Freelancer")
+        expect(items[2].innerText).toEqual("Login")
 
-        expect(items[3].innerText).toEqual("Login")
+        expect(items[3].innerText).toEqual("Register")
 
-        expect(items[4].innerText).toEqual("Register")
+        expect(items[4].firstElementChild.firstElementChild.classList.contains("fa-globe-africa")).toBeTruthy();
     }));
 
     describe("with authenticated user", () => {
@@ -75,41 +76,35 @@ describe('HeaderComponent', () => {
             let items = hostFixture.nativeElement.querySelectorAll(".nav-item")
     
             // Hard coding because easier to test for
-            expect(items[0].innerText.includes("Marketplace")).toBeTruthy();
+            expect(items[0].innerText.includes("header.links.marketplace")).toBeTruthy();
     
-            expect(items[1].innerText).toEqual("Your Listings")
+            expect(items[1].innerText).toEqual("header.links.yourListings")
 
-            expect(items[2].classList.contains("fa-globe-africa")).toBeTruthy();    
+            expect(items[2].firstElementChild.firstElementChild.classList.contains("fa-globe-africa")).toBeTruthy();
+
+            expect(items[3].classList.contains("avatar-dropdown")).toBeTruthy(); 
         }));
 
-        it('should show photoUrl of user', async(() => {
-            expect(hostFixture.nativeElement.querySelector(".nav-item.avatar-dropdown a img")).toBeTruthy()
+        it('should show user favicon', async(() => {
+            expect(hostFixture.nativeElement.querySelector(".nav-item.avatar-dropdown a i.fa-user")).toBeTruthy()
         }))
 
-        it('should show photoUrl of user', async(() => {
-            let noPhotoUrlUser = Object.assign({}, mockUser)
-            noPhotoUrlUser.photoUrl = '';
-
-            hostComponent.bootstrap(noPhotoUrlUser, false, true)
-            hostFixture.detectChanges();
-
-            // no image to show
-            expect(hostFixture.nativeElement.querySelector(".nav-item.avatar-dropdown a img")).toEqual(null)
-            // shows icon instead
-            expect(hostFixture.nativeElement.querySelector(".nav-item.avatar-dropdown a i")).toBeTruthy()
-
-        }))
-
-        it('should show admin url', async(() => {
+        it('should show admin urls', async(() => {
             hostComponent.makeAdmin()
             hostFixture.detectChanges();
 
             let items = hostFixture.nativeElement.querySelectorAll(".nav-item")
     
-            expect(items[2].innerText.includes("Admin panel")).toBeTruthy();
-            expect(items[3].innerText.includes("Admin panel")).toBeFalsy(); // sanity check
-
+            expect(items[2].innerText).toEqual("header.links.adminPanel");
+            expect(items[3].innerText).toEqual("header.links.listingApproval");
         }))
+
+        it('should apply the right css based on language', () => {
+            expect(hostFixture.nativeElement.querySelector(".navbar-nav.nav-flex-icons.ml-auto")).toBeTruthy()
+            hostComponent.makeLanguage(Language.ARABIC);
+            hostFixture.detectChanges()
+            expect(hostFixture.nativeElement.querySelector(".navbar-nav.nav-flex-icons.mr-auto")).toBeTruthy()
+        })
 
     })
 
@@ -118,18 +113,23 @@ describe('HeaderComponent', () => {
 
 @Component({
     selector: `host-component`,
-    template: `<app-header [user]="user" [isLoggedIn]="isLoggedIn" [isLoading]="isLoading" [isAdmin]="isAdmin"></app-header>`
+    template: `<app-header [user]="user" [isLoggedIn]="isLoggedIn" [isLoading]="isLoading" [isAdmin]="isAdmin" [language]=language></app-header>`
   })
   class TestHostComponent {
     user: User;
     isLoading: boolean;
     isLoggedIn: boolean;
     isAdmin: boolean;
+    language: Language;
 
     bootstrap(user: User, isLoading: boolean, isLoggedIn: boolean) {
       this.user = user;
       this.isLoading = isLoading;
       this.isLoggedIn = isLoggedIn;
+    }
+
+    makeLanguage(lang: Language) {
+        this.language = lang;
     }
 
     makeAdmin() {

@@ -15,6 +15,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { LocalizationModalComponent } from './header/localization-modal/localization-modal.component';
 import { FormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { FormsModule } from '@angular/forms';
     CardsModule,
     ButtonsModule,
     FormsModule,
+    SharedModule
   ],
   declarations: [
     HeaderComponent,

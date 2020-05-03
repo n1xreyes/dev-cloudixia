@@ -2,5 +2,13 @@
     "marketplace.componentHeader": "Marketplace",
     "marketplace.componentSubHeading": "Hire a professional today! Find The Perfect Freelance Services For Your Business",
     "marketplace.mainSearch": "Search",
-    "marketplace.mainSearchDescription": "Search For A Service"
+    "marketplace.mainSearchDescription": "Search For A Service",
+    "header": {
+        "links": {
+            "marketplace": "Marketplace",
+            "yourListings": "Your Listings",
+            "adminPanel": "Admin",
+            "listingApproval": "Approve Listings"
+        }
+    }
 }

@@ -2,5 +2,13 @@
     "marketplace.componentHeader": "المتجر",
     "marketplace.componentSubHeading": "استأجر محترف اليوم! البحث عن خدمات مستقلة مثالية لعملك" ,
     "marketplace.mainSearch": "بحث",
-    "marketplace.mainSearchDescription": "ابحث عن خدمة"
+    "marketplace.mainSearchDescription": "ابحث عن خدمة",
+    "header": {
+        "links": {
+            "marketplace": "المتجر",
+            "yourListings": "خدماتك",
+            "adminPanel": "مشرف",
+            "listingApproval": "خدمة جديدة"
+        }
+    }
 }

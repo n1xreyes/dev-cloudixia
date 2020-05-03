@@ -4,7 +4,7 @@
     mdbWavesEffect></mdb-card-img>
   <!-- <mdb-card-img *ngIf="!project.photoUrl" src="https://mdbootstrap.com/img/Photos/Lightbox/Thumbnail/img%20(97).jpg" alt="Card image cap"></mdb-card-img> -->
   <!--Card content-->
-  <mdb-card-body>
+  <mdb-card-body style="height:auto">
 
     <!--Title-->
     <mdb-card-title>
@@ -15,14 +15,14 @@
       <mdb-badge *ngIf="project.state !== 'PENDING'" color="green">Active</mdb-badge>
       <mdb-badge *ngIf="project.state === 'PENDING'" color="purple">Pending</mdb-badge>
     </span>
+    <br>
     
-
     <!--Text-->
     <mdb-card-text> 
       {{ project.description }}
     </mdb-card-text>
     <mdb-card-text> 
-      {{ project.price }}
+      $ {{ project.price }}
     </mdb-card-text>
 
     <div class="text-left">
