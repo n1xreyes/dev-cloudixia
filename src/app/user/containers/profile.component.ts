@@ -4,7 +4,7 @@ import { User } from '../../auth/models/user.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/index';
 import { getUser } from '../../auth/store/auth.selectors';
-import * as fromAuth from './../../auth/store/auth.actions';
+import * as fromAuth from '../../auth/store/auth.actions';
 
 @Component({
   selector: 'app-profile',
