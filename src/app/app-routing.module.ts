@@ -11,7 +11,7 @@ import { ListingApprovalComponent } from './admin/components/listing-approval/li
 const routes: Routes = [
   { path: '', loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule) },
   { path: 'projects', loadChildren: () => import('./manage-listings/projects.module').then(m => m.ProjectsModule), canActivate: [AuthGuard] },
-  { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate: [AuthGuard] },
+  { path: 'profile', loadChildren: () => import('./user/profile.module').then(m => m.ProfileModule), canActivate: [AuthGuard] },
   { path: 'admin-panel', component: AdminComponent, canActivate: [AdminGuard] },
   { path: 'listing-approval', component: ListingApprovalComponent, canActivate: [AdminGuard] },
   { path: 'register', component: RegisterComponent },
