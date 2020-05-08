@@ -57,12 +57,12 @@ export class AdminComponent implements OnInit {
   }
 
   addAdminPrivileges(user: any) {
-    this.store.dispatch(new fromAdmin.AddAdminPrivileges({ userId: user.key }));
+    this.store.dispatch(new fromAdmin.AddAdminPrivileges({ userId: user.uid }));
   }
 
   removeAdminPrivileges(user: any) {
     this.store.dispatch(
-      new fromAdmin.RemoveAdminPrivileges({ userId: user.key })
+      new fromAdmin.RemoveAdminPrivileges({ userId: user.uid })
     );
   }
 }

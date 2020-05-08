@@ -15,11 +15,6 @@ export class AdminService {
     return usersRef.snapshotChanges();
   }
 
-  getUserProjects(uid: string) {
-    const projectsRef = this.db.list('projects/' + uid);
-    return projectsRef.snapshotChanges();
-  }
-
   checkAdminRole(uid: string) {
     return this.db.object('admins/' + uid).valueChanges();
   }
