@@ -6,7 +6,7 @@ import { ProfileComponent } from './containers/profile.component';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { MainProfileComponent } from './components/main-profile/main-profile.component';
 import { ProfileUserComponent } from './components/profile-user/profile-user.component';
-import { MessagesComponent } from './components/messages/messages.component';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -16,9 +16,10 @@ import { MessagesComponent } from './components/messages/messages.component';
     ButtonsModule,
     InputsModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
-  declarations: [ProfileComponent, MainProfileComponent, ProfileUserComponent, MessagesComponent],
+  declarations: [ProfileComponent, MainProfileComponent, ProfileUserComponent],
   exports: [ProfileComponent]
 })
 export class ProfileModule { }

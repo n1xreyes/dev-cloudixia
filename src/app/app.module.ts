@@ -25,6 +25,8 @@ import { ModalModule } from 'angular-bootstrap-md';
 import {TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { LanguageService } from './shared/language.service';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ToastrModule} from 'ngx-toastr';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +43,8 @@ import { LanguageService } from './shared/language.service';
     AngularFirestoreModule,
     AngularFireDatabaseModule,
     CoreModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     StoreModule.forRoot(reducers, {
       runtimeChecks: {
         strictStateImmutability: true,

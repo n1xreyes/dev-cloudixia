@@ -4,6 +4,7 @@
       <div class="avatar" style="margin-top: -60px">
           <img *ngIf="user.photoUrl" src="{{ user.photoUrl }}" height="96" width="96" class="rounded-circle z-depth-0" alt="avatar image">
       </div>
+      <app-image-upload></app-image-upload>
 
       <h3 *ngIf="user.displayName" class="mt-4">{{ user.displayName }}</h3>
       <h3 *ngIf="!user.displayName" class="mt-4">Anonymous user</h3>

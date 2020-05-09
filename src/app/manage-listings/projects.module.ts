@@ -20,7 +20,6 @@ import { ProjectsListComponent } from './components/projects-list/projects-list.
 @NgModule({
   imports: [
     InputUtilitiesModule,
-
     CommonModule,
     ModalModule,
     SharedModule,

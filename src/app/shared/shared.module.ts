@@ -11,10 +11,13 @@ import {
 
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { ImageUploadComponent } from './components/image-upload/image-upload.component';
+import {ImageUploadService} from './components/image-upload/image-upload.service';
 
 @NgModule({
   declarations: [
     ConfirmModalComponent,
+    ImageUploadComponent,
   ],
   imports: [
     CommonModule,
@@ -26,12 +29,16 @@ import { TranslateModule } from '@ngx-translate/core';
     CardsModule,
     TranslateModule
   ],
-  exports: [
-    TranslateModule
-  ],
-  providers: [],
+    exports: [
+        TranslateModule,
+        ImageUploadComponent
+    ],
+  providers: [
+    ImageUploadService
+    ],
   entryComponents: [
-    ConfirmModalComponent
+    ConfirmModalComponent,
+    ImageUploadComponent
   ]
 })
 export class SharedModule {}
