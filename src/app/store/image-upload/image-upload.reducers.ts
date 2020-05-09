@@ -1,18 +1,13 @@
 import * as fromActions from 'src/app/store/image-upload/image-upload.actions';
 import {HttpErrorResponse} from '@angular/common/http';
 
-export interface HttpState {
+export interface ImageUploadState {
     isRequesting: boolean;
     error?: HttpErrorResponse;
 }
 
-export interface ImageUploadState extends HttpState {
-    progress: number;
-}
-
 export const INITIAL_STATE: ImageUploadState = {
     isRequesting: false,
-    progress: 0,
 };
 
 export function imageUploadReducer(
@@ -22,19 +17,11 @@ export function imageUploadReducer(
             return {
                 ...state,
                 isRequesting: true,
-                progress: 0,
-            };
-        case fromActions.UPLOAD_IMAGE_PROGRESS:
-            return {
-                ...state,
-                isRequesting: true,
-                progress: action.percent,
             };
         case fromActions.UPLOAD_IMAGE_RESPONSE:
             return {
                 ...state,
                 isRequesting: false,
-                progress: 100,
             };
         case fromActions.UPLOAD_IMAGE_ERROR:
             return {

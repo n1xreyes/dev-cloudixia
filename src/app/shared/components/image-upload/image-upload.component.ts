@@ -23,7 +23,6 @@ export class ImageUploadComponent implements OnInit {
   readonly maxFileSize = 10000000; // 10MB
 
   selectedFile: File;
-  progress: number;
   isRequesting: boolean;
   fileSizeError = false;
 
@@ -34,8 +33,7 @@ export class ImageUploadComponent implements OnInit {
         select('imageUpload'),
     ).subscribe((state: ImageUploadState) => {
       this.isRequesting = state.isRequesting;
-      this.progress = state.progress;
-      if (this.progress === 100 && !this.isRequesting || state.error) {
+      if (!this.isRequesting || state.error) {
         this.clearSelection();
       }
     });
@@ -74,10 +72,6 @@ export class ImageUploadComponent implements OnInit {
 
   uploadFile() {
     this.store.dispatch(new UploadImageRequest(this.selectedFile));
-  }
-
-  uploadInProgress(): boolean {
-    return this.progress > 0 && this.progress < 100;
   }
 
 }
