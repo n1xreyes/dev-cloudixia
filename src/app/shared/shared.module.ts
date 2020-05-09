@@ -12,7 +12,11 @@ import {
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageUploadComponent } from './components/image-upload/image-upload.component';
-import {ImageUploadService} from './components/image-upload/image-upload.service';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import * as fromImageUpload from '../store/image-upload/image-upload.reducers';
+import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
+
 
 @NgModule({
   declarations: [
@@ -27,15 +31,15 @@ import {ImageUploadService} from './components/image-upload/image-upload.service
     FormsModule,
     ButtonsModule,
     CardsModule,
-    TranslateModule
+    TranslateModule,
+    StoreModule.forFeature('imageUpload', fromImageUpload.imageUploadReducer),
+    EffectsModule.forFeature([ImageUploadEffects])
   ],
     exports: [
         TranslateModule,
         ImageUploadComponent
     ],
-  providers: [
-    ImageUploadService
-    ],
+  providers: [],
   entryComponents: [
     ConfirmModalComponent,
     ImageUploadComponent

@@ -19,7 +19,7 @@ export function buildFormData(file: File) {
 }
 
 @Injectable()
-export class FileUploadEffects {
+export class ImageUploadEffects {
 
     // @ts-ignore
     @Effect()
@@ -56,7 +56,10 @@ export class FileUploadEffects {
     @Effect()
     uploadError: Observable<Action> = this.actions.pipe(
         ofType(fromActions.UPLOAD_IMAGE_ERROR),
-        map(() => this.toastr.error('Something went wrong', 'Upload failed'))
+        map((err: any) => {
+        console.log('error', err);
+            this.toastr.error('Something went wrong', 'Upload failed');
+        })
     );
 
     constructor(private actions: Actions, private http: HttpClient, private toastr: ToastrService) { }
