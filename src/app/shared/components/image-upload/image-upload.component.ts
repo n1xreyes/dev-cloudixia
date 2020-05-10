@@ -1,8 +1,11 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {AppState} from '../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {ImageUploadState} from '../../../store/image-upload/image-upload.reducers';
 import {UploadImageRequest} from '../../../store/image-upload/image-upload.actions';
+import {User} from '../../../auth/models/user.model';
+import {FileMetadataModel} from '../../models/file-metadata.model';
+import {Listing} from '../../models/listing.model';
 
 
 interface HTMLInputEvent extends Event {
@@ -19,10 +22,14 @@ export class ImageUploadComponent implements OnInit {
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
   // tslint:disable-next-line:max-line-length
-  readonly acceptedFileType: string = '.pdf,.jpg,.jpeg,.tiff,.gif,.png';
+  readonly acceptedFileType: string = '.jpg,.jpeg,.tiff,.gif,.png';
   readonly maxFileSize = 10000000; // 10MB
 
+  @Input() userInfo: User;
+  @Input() listingInfo: Listing;
+  @Input() isProfilePic: boolean;
   selectedFile: File;
+  fileMetaData: FileMetadataModel;
   isRequesting: boolean;
   fileSizeError = false;
 
@@ -37,6 +44,8 @@ export class ImageUploadComponent implements OnInit {
         this.clearSelection();
       }
     });
+
+    this.fileMetaData = this.buildFileMetadata(this.isProfilePic);
   }
 
   clearSelection() {
@@ -71,7 +80,23 @@ export class ImageUploadComponent implements OnInit {
   }
 
   uploadFile() {
-    this.store.dispatch(new UploadImageRequest(this.selectedFile));
+    this.store.dispatch(new UploadImageRequest(this.selectedFile, this.fileMetaData));
+  }
+
+  buildFileMetadata(isProfilePic: boolean): FileMetadataModel {
+    let fileName: string;
+    if (isProfilePic) {
+      fileName = 'profile_' + this.userInfo.uid;
+    } else {
+      fileName = 'listing_' + this.listingInfo.uid;
+    }
+    // tslint:disable-next-line:no-unused-expression
+    const fileMetadata: FileMetadataModel = {
+      fileName: fileName
+    };
+
+    // @ts-ignore
+    return fileMetadata;
   }
 
 }
