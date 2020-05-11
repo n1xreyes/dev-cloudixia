@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="button-box my-3 p-4">
+    <div class="button-box col">
         <input #fileInput class="d-none" type="file" (change)="fileSelectionChanged($event)" [accept]="acceptedFileType">
         <div *ngIf="!selectedFile && !isRequesting">
             <div class="d-flex flex-column align-items-center">
@@ -21,6 +21,11 @@
             <button class="btn btn-primary d-flex align-items-center" (click)="uploadFile()">
                 <span>Upload</span>
             </button>
+        </div>
+        <div *ngIf="isRequesting" class="d-flex justify-content-center align-items-center">
+            <div class="spinner-grow text-primary" role="status" style="width: 4rem; height: 4rem;">
+                <span class="sr-only">Uploading...</span>
+            </div>
         </div>
     </div>
 </div>

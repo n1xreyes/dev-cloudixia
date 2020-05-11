@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { User } from '../../../auth/models/user.model';
+import {User, UserProfile} from '../../../auth/models/user.model';
 
 @Component({
   selector: 'app-profile-user',
@@ -22,11 +22,16 @@ export class ProfileUserComponent implements OnInit {
   }
 
   setUserPhotoUrl(url: string) {
-    const updatedUser: User = {
-    ...this.user,
-    photoUrl: url
+    const updatedUserProfile: UserProfile = {
+      ...this.user.userProfile,
+      photoUrl: url
     };
-    this.photoUrlUpdated.emit({user: { updatedUser }});
+
+    const updatedUser = {
+    ...this.user,
+    userProfile: updatedUserProfile
+    };
+    this.photoUrlUpdated.emit({user: updatedUser} );
   }
 
 }
