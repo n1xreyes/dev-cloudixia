@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit {
   }
 
   updateProfile(userData: any) {
-    this.store.dispatch(new fromAuth.UpdateProfile(userData));
+    this.store.dispatch(new fromAuth.SaveUser(userData));
   }
 
   logoutUser(user: User) {

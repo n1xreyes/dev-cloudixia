@@ -33,7 +33,6 @@ describe('HeaderComponent', () => {
     });
 
     it('should create the header component', async(() => {
-        console.log(hostFixture.nativeElement.querySelector("app-header"))
         expect(hostFixture.nativeElement.querySelector("mdb-navbar links")).toBeTruthy();
     }));
 
@@ -59,10 +58,12 @@ describe('HeaderComponent', () => {
     describe("with authenticated user", () => {
         let mockUser: User = {
             uid: "12345",
-            displayName: "Robotron",
             email: "myadmin@php.com",
             providerId: "email",
-            photoUrl: "https://miro.medium.com/max/4000/1*KUy_KKExZrSpBuv9XfyBgA.png"
+            userProfile: {
+                displayName: "Robotron",
+                photoUrl: "https://miro.medium.com/max/4000/1*KUy_KKExZrSpBuv9XfyBgA.png"
+            }
         }
 
         // Inject a mock authenticated user

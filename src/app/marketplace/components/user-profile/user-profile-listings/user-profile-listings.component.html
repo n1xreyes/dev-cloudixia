@@ -1,0 +1,5 @@
+<div class="marketplace-list row d-flex flex-wrap fadeIn animated">
+    <div class="listing col-12 col-md-12 col-lg-6 mt-3" *ngFor="let listing of listings">
+      <app-listing-overview-card [listing]="listing" ></app-listing-overview-card>
+    </div>
+</div>

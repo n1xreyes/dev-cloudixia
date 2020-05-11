@@ -18,8 +18,9 @@ import { MarketplaceRoutingModule } from './marketplace-routing';
 import { MarketplaceListingComponent } from './components/marketplace-listing/marketplace-listing.component';
 import { ListingOverviewCardComponent } from './components/listing-overview-card/listing-overview-card.component';
 import { ListingDetailsComponent } from './components/listing-details/listing-details.component';
-
-
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UserProfileUserComponent } from './components/user-profile/user-profile-user/user-profile-user.component';
+import { UserProfileListingsComponent } from './components/user-profile/user-profile-listings/user-profile-listings.component';
 
 @NgModule({
   imports: [
@@ -37,7 +38,7 @@ import { ListingDetailsComponent } from './components/listing-details/listing-de
     StoreModule.forFeature('marketplace', fromMarketplace.marketplaceReducer),
     EffectsModule.forFeature([MarketplaceEffects])
   ],
-  declarations: [MarketplaceComponent, MarketplaceListingComponent, ListingOverviewCardComponent, ListingDetailsComponent],
+  declarations: [MarketplaceComponent, MarketplaceListingComponent, ListingOverviewCardComponent, ListingDetailsComponent, UserProfileComponent, UserProfileUserComponent, UserProfileListingsComponent],
   exports: [MarketplaceComponent],
 })
 export class MarketplaceModule { }

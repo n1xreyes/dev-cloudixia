@@ -8,6 +8,11 @@
         "$user": {
           ".write": "auth.uid == $user || root.child('admins').child(auth.uid).val() === true",
           ".read": "auth.uid == $user || root.child('admins').child(auth.uid).val() === true",
+            
+          "userProfile": {
+            ".read": true
+          }
+          
         }
       },
 
@@ -17,9 +22,9 @@
           ".read": "auth.uid == $admin || root.child('admins').child(auth.uid).val() === true"
         }
       },
-        
+
       "listings": {
-        ".read": "true",
+        ".read": "false",
         ".write": "root.child('admins').child(auth.uid).val() === true",
         ".indexOn": ["userId"],
         "$listing": {

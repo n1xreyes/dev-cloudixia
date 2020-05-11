@@ -67,17 +67,21 @@ describe('AdminComponent', () => {
   let mockUsers: User[] = [
     {
       uid: '12345',
-      displayName: 'sedky',
       email: 'myemail@yahoo.com',
-      photoUrl: 'myphoto',
-      providerId: 'email'
+      providerId: 'email',
+      userProfile: {
+        displayName: 'sedky',
+        photoUrl: 'myphoto',  
+      }
     },
     {
       uid: '67890',
-      displayName: 'rami',
       email: 'rami@yahoo.com',
-      photoUrl: 'ramiphoto',
-      providerId: 'email'
+      providerId: 'email',
+      userProfile: {
+        photoUrl: 'ramiphoto',
+        displayName: 'rami',
+      }
     }
   ]
 

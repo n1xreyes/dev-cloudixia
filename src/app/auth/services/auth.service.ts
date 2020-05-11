@@ -12,19 +12,11 @@ export class AuthService {
 
   constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase) { }
 
-  register(email: string, password: string) {
+  registerWithEmail(email: string, password: string) {
     return from(this.afAuth.auth.createUserWithEmailAndPassword(email, password));
   }
 
-  //update firebase auth
-  updateProfile(displayName: string, photoUrl: string) {
-    const userProfile = this.afAuth.auth.currentUser;
-    if (userProfile) {
-      return <any>from(userProfile.updateProfile({displayName: displayName, photoURL: photoUrl }));
-    }
-  }
-
-  login(email: string, password: string) {
+  loginWithEmail(email: string, password: string) {
     return from(this.afAuth.auth.signInWithEmailAndPassword(email, password));
   }
 
@@ -73,9 +65,5 @@ export class AuthService {
 
   getAuthState() {
     return this.afAuth.authState;
-  }
-
-  getCurrentUser() {
-    return this.afAuth.auth.currentUser;
   }
 }

@@ -23,6 +23,19 @@ export function projectsReducer(state = projectsInitialState, action: ProjectsAc
         loading: false,
       });
     }
+    
+    case ProjectsActionTypes.MY_PENDING_LISTINGS_QUERY: {
+      return Object.assign({}, state, {
+        pendingLoading: true,
+      });
+    }
+
+    case ProjectsActionTypes.MY_PENDING_LISTINGS_LOADED: {
+      return Object.assign({}, state, {
+        pendingListings: action.payload.projects,
+        pendingLoading: false,
+      });
+    }
 
     case ProjectsActionTypes.PROJECT_CHANGED: {
       let newState = Object.assign({}, state);

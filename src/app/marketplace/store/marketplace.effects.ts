@@ -27,6 +27,7 @@ export class MarketplaceEffects {
                         const projectsData: Listing[] = [];
 
                         // Algolia "SearchResponse" object, not actually a 'Listing"
+                        // But it's stored the same, so we can map it.
                         data.hits.map( (listing: Listing) => {
                             projectsData.push(listing)
                         });

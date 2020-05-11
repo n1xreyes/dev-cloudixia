@@ -19,10 +19,18 @@
           <!-- Form -->
           <form [formGroup]="registerForm" class="text-center" style="color: #757575;">
 
-            <!-- Username -->
+            <!-- First Name -->
             <div class="md-form">
-              <input type="text" id="username" class="form-control" formControlName="username" mdbInput>
-              <label for="username">Username</label>
+              <input type="text" id="firstName" class="form-control" formControlName="firstName" mdbInput>
+              <label for="firstName">First Name</label>
+              <mdb-error *ngIf="firstName && firstName.invalid && (firstName.dirty || firstName.touched)">First name is required</mdb-error>
+            </div>
+
+            <!-- Last Name -->
+            <div class="md-form">
+              <input type="text" id="lastName" class="form-control" formControlName="lastName" mdbInput>
+              <label for="lastName">Last Name</label>
+              <mdb-error *ngIf="lastName && lastName.invalid && (lastName.dirty || lastName.touched)">Last name is required</mdb-error>
             </div>
 
             <!-- Email -->
@@ -48,6 +56,18 @@
             <p>Already have an account?
               <a routerLink="/login">Log In</a>
             </p>
+
+            <!-- Social login -->
+            <p>or register with:</p>
+            <a type="button" class="mr-4" (click)="onFacebookLogin('facebook')">
+              <mdb-icon fab icon="facebook-f"></mdb-icon>
+            </a>
+            <a type="button" class="mr-4" (click)="onTwitterLogin('twitter')">
+              <mdb-icon fab icon="twitter"></mdb-icon>
+            </a>
+            <a type="button" (click)="onGoogleLogin('google')">
+              <mdb-icon fab icon="google-plus-g"></mdb-icon>
+            </a>
 
           </form>
           <!-- Form -->

@@ -7,16 +7,21 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { Component } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { Listing } from 'src/app/shared/models/listing.model';
+import { projectsReducer } from '../store/projects.reducer';
 
 describe('ProjectsComponent', () => {
-  let component: ProjectsComponent;
-  let fixture: ComponentFixture<ProjectsComponent>;
+  let hostComponent: TestHostComponent;
+  let hostFixture: ComponentFixture<TestHostComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProjectsComponent ],
+      declarations: [ ProjectsComponent, TestHostComponent ],
       imports: [
         StoreModule.forRoot({}),
+        StoreModule.forFeature('projects', projectsReducer),
         MDBBootstrapModule.forRoot(),
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule,
@@ -29,13 +34,53 @@ describe('ProjectsComponent', () => {
     .compileComponents();
   }));
 
+  let mockListings: Listing[] = [{
+    title: 'my listing'
+  }]
+
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProjectsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    hostFixture = TestBed.createComponent(TestHostComponent);
+    hostComponent = hostFixture.componentInstance;
+    hostComponent.bootstrap(of(mockListings), of(false), of(mockListings), of(false))
+    hostFixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should create the project component', async(() => {
+    console.log(hostComponent)//for non-used fail
+    expect(hostFixture.nativeElement.querySelector("app-projects")).toBeTruthy();
+  }));
+
+  it('should show the pending listings title', async(() => {
+    expect(hostFixture.nativeElement.querySelector("app-projects h2").innerText).toEqual("Pending Listings");
+  }));
+
 });
+
+@Component({
+  selector: `host-component`,
+  template: `<app-projects 
+    [projects$]=projects$
+    [isLoading$]=isLoading$
+    [pendingListings$]=pendingListings$
+    [isPendingLoading$]=isPendingLoading$
+  ></app-projects>`
+})
+class TestHostComponent {
+  projects$: Observable<Listing[] | null>;
+  isLoading$: Observable<boolean>;
+  pendingListings$: Observable<Listing[] | null>;
+  isPendingLoading$: Observable<boolean>;
+
+  bootstrap(
+    projects$: Observable<Listing[]>, 
+    isLoading$: Observable<boolean>, 
+    pendingListings$: Observable<Listing[]>, 
+    isPendingLoading$: Observable<boolean>, 
+    ) {
+    this.projects$ = projects$
+    this.isLoading$ = isLoading$
+    this.pendingListings$ = pendingListings$
+    this.isPendingLoading$ = isPendingLoading$
+  }
+
+}
