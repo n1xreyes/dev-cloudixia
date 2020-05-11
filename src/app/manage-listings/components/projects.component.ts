@@ -4,7 +4,7 @@ import { AppState } from '../../reducers/index';
 import { Store, select } from '@ngrx/store';
 import * as fromProjects from '../store/projects.actions';
 import { Observable } from 'rxjs';
-import { getProjects, getAllLoaded } from '../store/projects.selectors';
+import { getProjects, getAllLoaded, getPendingListings, getPendingLoaded } from '../store/projects.selectors';
 import { take, map } from 'rxjs/operators';
 import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -19,6 +19,8 @@ import { ProjectModalComponent } from './project-modal/project-modal.component';
 export class ProjectsComponent implements OnInit {
   projects$: Observable<Listing[] | null>;
   isLoading$: Observable<boolean>;
+  pendingListings$: Observable<Listing[] | null>;
+  isPendingLoading$: Observable<boolean>;
   modalRef: MDBModalRef;
 
   modalConfig = {
@@ -40,6 +42,17 @@ export class ProjectsComponent implements OnInit {
           this.store.dispatch(new fromProjects.ProjectsQuery());
         }
         return projects;
+      })
+    );
+
+    this.isPendingLoading$ = this.store.select(getPendingLoaded);
+    this.pendingListings$ = this.store.pipe(
+      select(getPendingListings),
+      map( (listings: Listing[]) => {
+        if (this.user && !listings) {
+          this.store.dispatch(new fromProjects.MyPendingListingsQuery());
+        }
+        return listings;
       })
     );
   }

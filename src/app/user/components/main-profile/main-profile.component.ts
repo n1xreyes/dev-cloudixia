@@ -1,6 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { User } from '../../../auth/models/user.model';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Language } from 'src/app/shared/models/language.enum';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/reducers';
+import { getLanguage } from 'src/app/auth/store/auth.selectors';
 
 @Component({
   selector: 'app-main-profile',
@@ -11,25 +16,38 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class MainProfileComponent implements OnInit {
   @Input() user: User;
   @Output() profileUpdate = new EventEmitter<any>();
+  language$: Observable<Language>;
 
   updateProfileForm: FormGroup;
 
-  constructor() { }
+  constructor(private store: Store<AppState>) { }
 
+  // Todo: need to "select a photo" once image store is complete
   ngOnInit() {
     this.updateProfileForm = new FormGroup({
-      displayName: new FormControl(this.user.displayName),
-      photoUrl: new FormControl(this.user.photoUrl),
-      phoneNumber: new FormControl(this.user.phoneNumber),
+      photoUrl: new FormControl(this.user.userProfile.photoUrl),
       country: new FormControl(this.user.country),
-      province: new FormControl(this.user.province),
       city: new FormControl(this.user.city),
       street: new FormControl(this.user.street),
+      poBox: new FormControl(this.user.poBox),
     });
+
+    this.language$ = this.store.select(getLanguage);
   }
 
   onProfileUpdate() {
-    this.profileUpdate.emit({ user: this.updateProfileForm.value });
+    let changes = {
+      userProfile: {
+        photoUrl: this.updateProfileForm.value.photoUrl
+      },
+      country: this.updateProfileForm.value.country,
+      city: this.updateProfileForm.value.city,
+      street: this.updateProfileForm.value.street,
+      poBox: this.updateProfileForm.value.poBox,
+    };
+    
+
+    this.profileUpdate.emit({ user: changes });
   }
 
 }

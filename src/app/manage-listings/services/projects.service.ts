@@ -15,10 +15,6 @@ export class ProjectsService {
     return this.marketplaceService.add(project);
   }
 
-  getUserListings(userId: string) {
-    this.marketplaceService.getUserListings(userId)
-  }
-
   delete(listing: Listing) {
     if (listing.state === ListingState.PENDING) {
       return this.marketplaceService.deletePending(listing);

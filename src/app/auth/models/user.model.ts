@@ -1,18 +1,22 @@
-import { Language } from "../../shared/models/language.enum";
-
 export interface User {
   uid: string;
-  displayName: string;
   email: string;
-  providerId: string;
-  photoUrl: string;
-  phoneNumber?: string;
-  country?: string;
-  province?: string;
-  city?: string;
+  firstName?: string;
+  lastName?: string;
   street?: string;
-  isNewUser?: boolean;
+  city?: string;
+  poBox?: string;
+  country?: string;
+  isSeller?: boolean;
   isAdmin?: boolean;
   isOnline?: boolean;
-  language?: Language;
+  providerId: string;
+  isNewUser?: boolean;
+  userProfile: UserProfile;
+}
+
+export interface UserProfile {
+  photoUrl: string;
+  displayName: string;
+  listings?: object;
 }

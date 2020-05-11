@@ -13,12 +13,6 @@ export function authReducer(state = authInitialState, action: AuthAction): AuthS
       });
     }
 
-    case AuthActionTypes.UPDATE_PROFILE_SUCCESS: {
-      return Object.assign({}, state, {
-        user: action.payload.user,
-      });
-    }
-
     case AuthActionTypes.UPDATE_USER_ROLE: {
       return Object.assign({}, state, {
         isAdmin: action.payload.isAdmin

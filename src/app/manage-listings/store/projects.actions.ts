@@ -4,6 +4,10 @@ import { Listing } from 'src/app/shared/models/listing.model';
 export enum ProjectsActionTypes {
   PROJECTS_QUERY = '[Projects] Projects query',
   PROJECTS_QUERY_ALL = '[Projects] Projects query all',
+
+  MY_PENDING_LISTINGS_QUERY = '[Listings] Querying My pending listings',
+  MY_PENDING_LISTINGS_LOADED = '[Listings] My Pending Listings Loaded',
+
   PROJECTS_LOADED = '[Projects] Projects loaded',
   PROJECT_CHANGED = '[Projects] Projects changed',
 
@@ -25,6 +29,16 @@ export class ProjectsQueryAll implements Action {
 
 export class ProjectsLoaded implements Action {
   readonly type = ProjectsActionTypes.PROJECTS_LOADED;
+
+  constructor(public payload: { projects: Listing[] }) {}
+}
+
+export class MyPendingListingsQuery implements Action {
+  readonly type = ProjectsActionTypes.MY_PENDING_LISTINGS_QUERY;
+}
+
+export class PendingListingsLoaded implements Action {
+  readonly type = ProjectsActionTypes.MY_PENDING_LISTINGS_LOADED;
 
   constructor(public payload: { projects: Listing[] }) {}
 }
@@ -63,6 +77,8 @@ export type ProjectsActions =
   | ProjectsQuery
   | ProjectsQueryAll
   | ProjectsLoaded
+  | MyPendingListingsQuery
+  | PendingListingsLoaded
   | ProjectChanged
   | ProjectAdded
   | ProjectEdited

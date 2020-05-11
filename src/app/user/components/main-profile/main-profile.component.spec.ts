@@ -5,6 +5,10 @@ import { Component } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { User } from 'src/app/auth/models/user.model';
+import { Language } from 'src/app/shared/models/language.enum';
+import { Observable, of } from 'rxjs';
+import { authReducer } from 'src/app/auth/store/auth.reducer';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('MainProfileComponent', () => {
   let hostComponent: TestHostComponent;
@@ -17,8 +21,10 @@ describe('MainProfileComponent', () => {
         MainProfileComponent
       ],
       imports: [
+        StoreModule.forFeature('auth', authReducer),
         StoreModule.forRoot({}),
-        MDBBootstrapModule.forRoot()
+        MDBBootstrapModule.forRoot(),
+        ReactiveFormsModule
       ],
       providers: []
     }).compileComponents();
@@ -26,10 +32,16 @@ describe('MainProfileComponent', () => {
 
   let mockUser: User = {
     uid: "12345",
-    displayName: "Robotron",
     email: "myadmin@php.com",
     providerId: "email",
-    photoUrl: "https://miro.medium.com/max/4000/1*KUy_KKExZrSpBuv9XfyBgA.png"
+    country: 'canada',
+    street: '123',
+    poBox: '12566',
+    city: 'jeddah',
+    userProfile: {
+      displayName: "Robotron",
+      photoUrl: "https://miro.medium.com/max/4000/1*KUy_KKExZrSpBuv9XfyBgA.png"
+    }
   }
 
   beforeEach(() => {
@@ -43,17 +55,29 @@ describe('MainProfileComponent', () => {
     expect(hostFixture.nativeElement.querySelector("mdb-card")).toBeTruthy();
   }));
 
+  it('should pull the current user info into the update form', async(() => {
+    let formInputs = hostFixture.nativeElement.querySelectorAll("mdb-card .md-form input")
+
+    expect(formInputs[0].value).toEqual(mockUser.userProfile.photoUrl)
+    expect(formInputs[1].value).toEqual(mockUser.country)
+    expect(formInputs[2].value).toEqual(mockUser.poBox)
+    expect(formInputs[3].value).toEqual(mockUser.city)
+    expect(formInputs[4].value).toEqual(mockUser.street)
+  }));
+
 });
 
 @Component({
   selector: `host-component`,
-  template: `<app-main-profile [user]="user"></app-main-profile>`
+  template: `<app-main-profile [language$]="language" [user]="user"></app-main-profile>`
 })
 class TestHostComponent {
   user: User
+  language$: Observable<Language>
 
   bootstrap(user: User) {
     this.user = user;
+    this.language$ = of(Language.ENGLISH)
   }
 
 }

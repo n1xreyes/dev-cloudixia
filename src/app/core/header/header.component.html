@@ -35,7 +35,7 @@
     <!-- Anonymous User Actions -->
     <ul class="navbar-nav" *ngIf="!isLoggedIn && !isLoading">
       <li class="nav-item waves-light">
-        <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/register" mdbWavesEffect>Become a Freelancer</a>
+        <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/implement-me" mdbWavesEffect>Become a Freelancer</a>
       </li>
       <li class="nav-item waves-light">
         <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/login" mdbWavesEffect>Login</a>
@@ -58,8 +58,8 @@
           <i class="fa-lg fas fa-user"></i>
         </a>
         <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-primary" role="menu">
-          <div *ngIf="user.displayName" class="text-center py-2 px-2">{{ user.displayName }}</div>
-          <div *ngIf="!user.displayName" class="text-center py-2 px-2">Anonymous user</div>
+          <div *ngIf="user && user.userProfile && user.userProfile.displayName" class="text-center py-2 px-2">{{ user.userProfile.displayName }}</div>
+          <div *ngIf="!user || !user.userProfile || !user.userProfile.displayName" class="text-center py-2 px-2">Anonymous user</div>
           <div class="divider dropdown-divider"></div>
           <a class="dropdown-item text-center waves-light" routerLink="/profile" mdbWavesEffect (click)="navbar.hide()">Profile</a>
           <a class="dropdown-item text-center waves-light" mdbWavesEffect (click)="onLogout(); navbar.hide()">Logout</a>

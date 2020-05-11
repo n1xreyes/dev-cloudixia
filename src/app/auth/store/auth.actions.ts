@@ -3,12 +3,11 @@ import { User } from '../models/user.model';
 import { Language } from '../../shared/models/language.enum';
 
 export enum AuthActionTypes {
-  REGISTER_REQUESTED = '[Auth] REGISTER Requested',
+  EMAIL_REGISTER_REQUESTED = '[Auth] EMAIL REGISTER Requested',
+  SOCIAL_REGISTER_REQUESTED = '[Auth] SOCIAL REGISTER Requested',
+  REGISTER_SUCCESS = '[Auth] REGISTER Success',
   REGISTER_COMPLETED = '[Auth] REGISTER Completed',
   REGISTER_FAILED = '[Auth] REGISTER Failed',
-
-  UPDATE_PROFILE = '[Auth] Update profile',
-  UPDATE_PROFILE_SUCCESS = '[Auth] Update profile success',
 
   LOGIN_REQUESTED = '[Auth] LOGIN Requested',
   LOGIN_SUCCESS = '[Auth] LOGIN Success',
@@ -24,7 +23,7 @@ export enum AuthActionTypes {
   SAVE_USER = '[Auth] Save user',
   UPDATE_ONLINE_STATUS = '[Auth] Update online status',
 
-  CHECK_USER_ROLE = '[Auth] Check user role',
+  CHECK_ADMIN_ROLE = '[Auth] Check admin role',
   UPDATE_USER_ROLE = '[Auth] Update user role',
 
   GET_USER = '[Auth] GET User',
@@ -33,10 +32,22 @@ export enum AuthActionTypes {
   AUTH_ERROR = '[Auth] Error'
 }
 
-export class RegisterRequested implements Action {
-  readonly type = AuthActionTypes.REGISTER_REQUESTED;
+export class EmailRegisterRequested implements Action {
+  readonly type = AuthActionTypes.EMAIL_REGISTER_REQUESTED;
 
-  constructor(public payload: { username: string, email: string; password: string }) {}
+  constructor(public payload: { firstName: string, lastName: string, email: string; password: string }) {}
+}
+
+export class SocialRegisterRequested implements Action {
+  readonly type = AuthActionTypes.SOCIAL_REGISTER_REQUESTED;
+
+  constructor(public payload: { authProvider: string }) {}
+}
+
+export class RegisterSuccess implements Action {
+  readonly type = AuthActionTypes.REGISTER_SUCCESS;
+
+  constructor(public payload: {user: User}) {}
 }
 
 export class RegisterCompleted implements Action {
@@ -47,18 +58,6 @@ export class RegisterFailed implements Action {
   readonly type = AuthActionTypes.REGISTER_FAILED;
 
   constructor(public payload: { error: any }) {}
-}
-
-export class UpdateProfile implements Action {
-  readonly type = AuthActionTypes.UPDATE_PROFILE;
-
-  constructor(public payload: { user: User }) {}
-}
-
-export class UpdateProfileSuccess implements Action {
-  readonly type = AuthActionTypes.UPDATE_PROFILE_SUCCESS;
-
-  constructor(public payload: { user: User }) {}
 }
 
 export class LoginRequested implements Action {
@@ -112,8 +111,8 @@ export class UpdateOnlineStatus implements Action {
   constructor(public payload: { uid: string, status: boolean }) {}
 }
 
-export class CheckUserRole implements Action {
-  readonly type = AuthActionTypes.CHECK_USER_ROLE;
+export class CheckAdminRole implements Action {
+  readonly type = AuthActionTypes.CHECK_ADMIN_ROLE;
 
   constructor(public payload: { uid: string }) {}
 }
@@ -141,11 +140,11 @@ export class AuthError implements Action {
 }
 
 export type AuthAction =
-  | RegisterRequested
+  | EmailRegisterRequested
+  | SocialRegisterRequested
+  | RegisterSuccess
   | RegisterCompleted
   | RegisterFailed
-  | UpdateProfile
-  | UpdateProfileSuccess
   | LoginRequested
   | LoginSuccess
   | LoginFailed
@@ -155,7 +154,7 @@ export type AuthAction =
   | LanguageChange
   | SaveUser
   | UpdateOnlineStatus
-  | CheckUserRole
+  | CheckAdminRole
   | UpdateUserRole
   | GetUserDetails
   | GetUser
