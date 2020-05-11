@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {AppState} from '../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {ImageUploadState} from '../../../store/image-upload/image-upload.reducers';
@@ -6,6 +6,8 @@ import {UploadImageRequest} from '../../../store/image-upload/image-upload.actio
 import {User} from '../../../auth/models/user.model';
 import {FileMetadataModel} from '../../models/file-metadata.model';
 import {Listing} from '../../models/listing.model';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 
 interface HTMLInputEvent extends Event {
@@ -17,7 +19,7 @@ interface HTMLInputEvent extends Event {
   templateUrl: './image-upload.component.html',
   styleUrls: ['./image-upload.component.scss']
 })
-export class ImageUploadComponent implements OnInit {
+export class ImageUploadComponent implements OnInit, OnDestroy {
 
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
@@ -28,24 +30,32 @@ export class ImageUploadComponent implements OnInit {
   @Input() userInfo: User;
   @Input() listingInfo: Listing;
   @Input() isProfilePic: boolean;
+  @Output() photoUrlGenerated: EventEmitter<any> = new EventEmitter();
   selectedFile: File;
   fileMetaData: FileMetadataModel;
   isRequesting: boolean;
   fileSizeError = false;
+  destroyed: Subject<boolean> = new Subject<boolean>();
 
   constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
     this.store.pipe(
         select('imageUpload'),
+        takeUntil(this.destroyed)
     ).subscribe((state: ImageUploadState) => {
-      this.isRequesting = state.isRequesting;
-      if (!this.isRequesting || state.error) {
-        this.clearSelection();
+      if (state) {
+        this.isRequesting = state.isRequesting;
+        if (!this.isRequesting || state.error) {
+          this.clearSelection();
+        }
+
+        if (state.url) {
+          // @ts-ignore
+          this.urlGenerated(state.url.URL);
+        }
       }
     });
-
-    this.fileMetaData = this.buildFileMetadata(this.isProfilePic);
   }
 
   clearSelection() {
@@ -80,15 +90,17 @@ export class ImageUploadComponent implements OnInit {
   }
 
   uploadFile() {
+    this.fileMetaData = this.buildFileMetadata(this.isProfilePic);
     this.store.dispatch(new UploadImageRequest(this.selectedFile, this.fileMetaData));
   }
 
   buildFileMetadata(isProfilePic: boolean): FileMetadataModel {
     let fileName: string;
+    const fileExt = this.selectedFile.name.split('.').pop();
     if (isProfilePic) {
-      fileName = 'profile_' + this.userInfo.uid;
+      fileName = 'profile_' + this.userInfo.uid + '.' + fileExt;
     } else {
-      fileName = 'listing_' + this.listingInfo.uid;
+      fileName = 'listing_' + this.listingInfo.uid + '.' + fileExt;
     }
     // tslint:disable-next-line:no-unused-expression
     const fileMetadata: FileMetadataModel = {
@@ -97,6 +109,14 @@ export class ImageUploadComponent implements OnInit {
 
     // @ts-ignore
     return fileMetadata;
+  }
+
+  urlGenerated(urlGen: string) {
+    this.photoUrlGenerated.emit(urlGen);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed.next(true);
   }
 
 }

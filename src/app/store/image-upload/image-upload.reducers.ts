@@ -3,6 +3,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 
 export interface ImageUploadState {
     isRequesting: boolean;
+    url?: string;
     error?: HttpErrorResponse;
 }
 
@@ -22,6 +23,7 @@ export function imageUploadReducer(
             return {
                 ...state,
                 isRequesting: false,
+                url: action.payload,
             };
         case fromActions.UPLOAD_IMAGE_ERROR:
             return {

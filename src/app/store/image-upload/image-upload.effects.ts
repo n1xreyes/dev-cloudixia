@@ -31,11 +31,11 @@ export class ImageUploadEffects {
             this.http.post(buildFileUploadUrl(), buildFormData(request.file, request.fileMetadata),
             { }).pipe(
                 map((res: any) => {
-                    this.toastr.success('Your file was uploaded', 'Upload success');
+                    this.toastr.success('', 'Upload success');
                     return new fromActions.UploadImageResponse(res);
                 }),
                 catchError(error => {
-                    this.toastr.error(error, 'Upload failed');
+                    this.toastr.error('', 'Upload failed');
                     return of(new fromActions.UploadImageError(error));
                 })
             )

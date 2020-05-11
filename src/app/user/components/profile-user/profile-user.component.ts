@@ -10,6 +10,7 @@ import { User } from '../../../auth/models/user.model';
 export class ProfileUserComponent implements OnInit {
   @Input() user: User;
   @Output() logout = new EventEmitter<any>();
+  @Output() photoUrlUpdated = new EventEmitter<any>();
 
   constructor() { }
 
@@ -18,6 +19,14 @@ export class ProfileUserComponent implements OnInit {
 
   onLogout() {
     this.logout.emit(this.user);
+  }
+
+  setUserPhotoUrl(url: string) {
+    const updatedUser: User = {
+    ...this.user,
+    photoUrl: url
+    };
+    this.photoUrlUpdated.emit({user: { updatedUser }});
   }
 
 }

@@ -6,7 +6,7 @@
 <div class="container py-5">
   <div class="row mx-auto py-5">
     <div class="col-md-4 mt-3">
-      <app-profile-user [user]="user$ | async" (logout)="logoutUser($event)"></app-profile-user>
+      <app-profile-user [user]="user$ | async" (logout)="logoutUser($event)" (photoUrlUpdated)="updateProfile($event)"></app-profile-user>
     </div>
     <div class="col-md-8 mt-3">
         <app-main-profile [user]="user$ | async" (profileUpdate)="updateProfile($event)"></app-main-profile>
