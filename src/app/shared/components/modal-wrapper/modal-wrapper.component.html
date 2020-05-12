@@ -1,0 +1,45 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <div *ngIf="modalHeaderInjected.childNodes.length === 0">
+      <button type="button" class="close pull-right" aria-label="Close" (click)="onX()">
+        <span aria-hidden="true">×</span>
+      </button>
+      <h4 class="modal-title w-100" id="myModalLabel">{{ heading }}</h4>
+    </div>
+
+    <div #modalHeaderInjected>
+      <ng-content select="[modal-header]"></ng-content>
+    </div>
+  </div>
+  <div class="modal-body">
+    <ng-content></ng-content>
+  </div>
+  <div class="modal-footer">
+    <div *ngIf="modalFooterInjected.childNodes.length === 0">
+      <ng-content select="[modal-footer-prepend]"></ng-content>
+      <button
+        mdbBtn
+        type="button"
+        color="white"
+        class="black-text waves-light"
+        aria-label="Close"
+        (click)="onSecondary()"
+        mdbWavesEffect>
+        Close
+      </button>
+      <button
+        mdbBtn
+        mdbWavesEffect
+        type="button"
+        color="primary"
+        class="relative waves-light"
+        (click)="onPrimary()">
+        Save!
+      </button>
+      <ng-content select="[modal-footer-append]"></ng-content>
+    </div>
+    <div #modalFooterInjected>
+      <ng-content select="[modal-footer]"></ng-content>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="md-form">
+  <label [for]="name">{{label}}</label>
+  <div class="input-group-prepend">
+    <ng-content select="[prefix]"></ng-content>
+  </div>
+  <input
+    mdbInput
+    mdbValidate
+    class="form-control"
+    *ngIf="!isTextArea"
+    [type]="type"
+    [name]="name"
+    [formControl]="control"
+    [placeholder]="placeholder"
+    [readonly]="disabled"
+    [required]="required"
+    [attr.aria-label]="label">
+  <textarea
+    mdbInput
+    mdbValidate
+    class="md-textarea form-control"
+    *ngIf="isTextArea"
+    [name]="name"
+    [formControl]="control"
+    [placeholder]="placeholder"
+    [readonly]="disabled"
+    [required]="required"
+    [attr.aria-label]="label"></textarea>
+  <div class="input-group-append">
+    <ng-content select="[suffix]"></ng-content>
+  </div>
+  <app-input-error-wrapper
+      [validOnPristine]="true"
+      [control]="control"></app-input-error-wrapper>
+</div>

@@ -21,29 +21,30 @@ export class ListingDetailsComponent implements OnInit {
     private marketplaceService: MarketplaceService
   ) {
     this._route.params.subscribe(params => {
-
       this.marketplaceService.getListing(params.id).subscribe(
         payload => {
-          this.listing = payload
+          this.listing = payload;
           if (this.listing == null) {
-            console.log('Listing not found.')
+            console.log('Listing not found.');
             return;
           }
 
           this.isLoading = false;
 
-          if (this.listing.userId)
+          if (this.listing.userId) {
             this.marketplaceService.getUserProfile(this.listing.userId).subscribe(payload => {
-              this.listingUserProfile = payload
-            })
+              this.listingUserProfile = payload;
+            });
+          }
         }
-      ) 
-
+      );
     });
   }
 
   ngOnInit(): void {
   }
+
+  onDelete(): void {}
 
   openUserProfile() {
     this.router.navigateByUrl('/user/' + this.listing.userId);

@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Listing } from 'src/app/shared/models/listing.model';
+import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
 
 export enum MarketplaceActionTypes {
   MARKETPLACE_QUERY_ALL = '[Marketplace] Marketplace query all',
@@ -12,7 +13,7 @@ export enum MarketplaceActionTypes {
 export class MarketplaceSearch implements Action {
   readonly type = MarketplaceActionTypes.MARKETPLACE_SEARCH;
 
-  constructor(public payload: { query: string}) {}
+  constructor(public payload: MarketplaceListingPayload) {}
 }
 
 export class MarketplaceLoaded implements Action {

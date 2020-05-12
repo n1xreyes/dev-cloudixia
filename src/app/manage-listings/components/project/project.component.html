@@ -19,10 +19,11 @@
     
     <!--Text-->
     <mdb-card-text> 
-      {{ project.description }}
-    </mdb-card-text>
-    <mdb-card-text> 
-      $ {{ project.price }}
+      <ul>
+        <li>{{ project.description }}</li>
+        <li>{{ getCategoryNames(project) }}</li>
+        <li>$ {{ project.price }}</li>
+      </ul>
     </mdb-card-text>
 
     <div class="text-left">

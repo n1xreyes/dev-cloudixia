@@ -14,6 +14,8 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 import { combineLatest, of, Observable } from 'rxjs';
 
+const DEFAULT_PHOTO_URL = 'https://1m19tt3pztls474q6z46fnk9-wpengine.netdna-ssl.com/wp-content/themes/unbound/images/No-Image-Found-400x264.png';
+
 @Injectable()
 export class ProjectsEffects {
 
@@ -33,20 +35,20 @@ export class ProjectsEffects {
       return this.marketplaceService.getUserProfile(user.uid).pipe(
         switchMap(payload => {
           if (!payload || !payload.listings) {
-            return of([])
+            return of([]);
           }
-          
-          let listings$: Observable<Listing>[] = Object.keys(payload.listings).map( (listingId: string) => {
+
+          const listings$: Observable<Listing>[] = Object.keys(payload.listings).map( (listingId: string) => {
             return this.marketplaceService.getListing(listingId)
-          })
+          });
           return combineLatest(listings$)
         }),
         map(payload => {
           return new fromProjects.ProjectsLoaded({projects: payload})
         })
-      )
+      );
     })
-  )
+  );
 
   @Effect()
   pendingQuery$ = this.actions$.pipe(
@@ -58,9 +60,9 @@ export class ProjectsEffects {
           if (!payload) {
             return of([])
           }
-          let listings$: Observable<Listing>[] = Object.keys(payload).map( (listingId: string) => {
+          const listings$: Observable<Listing>[] = Object.keys(payload).map( (listingId: string) => {
             return this.marketplaceService.getPendingListing(listingId)
-          })
+          });
           return combineLatest(listings$)
         }),
         map(payload => {
@@ -76,13 +78,15 @@ export class ProjectsEffects {
     map((action: fromProjects.ProjectAdded) => action.payload),
     withLatestFrom(this.store.pipe(select(getUser))),
     map(([payload, user]: any) => {
-      let project: Listing = {...payload.project}
-      
-      if (!project.photoUrl) project.photoUrl = "https://1m19tt3pztls474q6z46fnk9-wpengine.netdna-ssl.com/wp-content/themes/unbound/images/No-Image-Found-400x264.png"
-      project.userId = user.uid;
-      project.state = ListingState.PENDING
+      const project: Listing = {...payload.project};
 
-      return this.projectsService.add(project)
+      if (!project.photoUrl) {
+        project.photoUrl = DEFAULT_PHOTO_URL;
+      }
+      project.userId = user.uid;
+      project.state = ListingState.PENDING;
+
+      return this.projectsService.add(project);
     })
   );
 
@@ -92,7 +96,7 @@ export class ProjectsEffects {
     map((action: fromProjects.ProjectDeleted) => action.payload),
     withLatestFrom(this.store.pipe(select(getUser))),
     map(([payload]: any) => this.projectsService.delete(payload.project))
-    );
+  );
 
   @Effect({dispatch: false})
   edit$ = this.actions$.pipe(

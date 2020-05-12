@@ -24,7 +24,9 @@ export class ListingApprovalComponent implements OnInit {
   modalConfig = {
     class: 'modal-dialog-centered'
   };
-  
+
+  getCategoryNames = Listing.getCategoryNames;
+
   constructor(private store: Store<AppState>, private modalService: MDBModalService) { }
 
   ngOnInit(): void {

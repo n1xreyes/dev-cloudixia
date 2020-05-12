@@ -1,46 +1,39 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
-
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+// import ngx-translate and the http loader
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ModalModule } from 'angular-bootstrap-md';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { environment } from '../environments/environment';
-import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { EffectsModule } from '@ngrx/effects';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { SharedModule } from './shared/shared.module';
 import { AdminModule } from './admin/admin.module';
-import { ModalModule } from 'angular-bootstrap-md';
-
-
-// import ngx-translate and the http loader
-import {TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { LanguageService } from './shared/language.service';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    // angular
     BrowserModule,
-    AuthModule,
-    SharedModule,
-    ModalModule.forRoot(),
-    AdminModule,
-    AppRoutingModule,
     HttpClientModule,
+    // firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireDatabaseModule,
-    CoreModule,
+    // ngx
     StoreModule.forRoot(reducers, {
       runtimeChecks: {
         strictStateImmutability: true,
@@ -49,19 +42,27 @@ import { LanguageService } from './shared/language.service';
       metaReducers
     }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    EffectsModule.forRoot([]),
-
     // ngx-translate and the loader module
-    HttpClientModule,
     TranslateModule.forRoot({
-        loader: {
-            provide: TranslateLoader,
-            useFactory: HttpLoaderFactory,
-            deps: [HttpClient]
-        }
-    })
+      loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+      }
+    }),
+    EffectsModule.forRoot([]),
+    // mdb
+    ModalModule.forRoot(),
+    // custom
+    SharedModule.forRoot(),
+    CoreModule,
+    AppRoutingModule,
+    AuthModule,
+    AdminModule,
   ],
-  providers: [LanguageService],
+  providers: [
+    LanguageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

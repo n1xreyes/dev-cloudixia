@@ -5,10 +5,9 @@ export interface MarketplaceState {
     loading: boolean;
     error: any;
   }
-  
+
   export const marketplaceInitialState: MarketplaceState = {
     listings: null,
     loading: false,
     error: null
   };
-  
