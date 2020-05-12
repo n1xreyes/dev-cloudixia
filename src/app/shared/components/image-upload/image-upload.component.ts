@@ -8,6 +8,7 @@ import {FileMetadataModel} from '../../models/file-metadata.model';
 import {Listing} from '../../models/listing.model';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {generateUID} from '../../../../utils/uid-generator';
 
 
 interface HTMLInputEvent extends Event {
@@ -100,7 +101,13 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
     if (isProfilePic) {
       fileName = 'profile_' + this.userInfo.uid + '.' + fileExt;
     } else {
-      fileName = 'listing_' + this.listingInfo.uid + '.' + fileExt;
+      // if this is a new listing and the uid does not exist yet,
+      // use the util to generate it
+      if (this.listingInfo && this.listingInfo.uid) {
+        fileName = 'listing_' + this.listingInfo.uid + '.' + fileExt;
+      } else {
+        fileName = 'listing_' + generateUID() + '.' + fileExt;
+      }
     }
     // tslint:disable-next-line:no-unused-expression
     const fileMetadata: FileMetadataModel = {

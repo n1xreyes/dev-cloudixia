@@ -32,4 +32,8 @@ export class ProjectModalComponent implements OnInit {
     }
   }
 
+  setListingPhotoUrl(url: string) {
+    this.project.photoUrl = url;
+  }
+
 }
