@@ -1,25 +1,26 @@
 import { Injectable } from '@angular/core';
-
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Observable, of, from } from 'rxjs';
 import { Listing } from 'src/app/shared/models/listing.model';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { environment } from 'src/environments/environment';
 import { ListingState } from 'src/app/shared/models/listing-state.enum';
+import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
+import { Category } from 'src/app/shared/models/category.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MarketplaceService {
-  LISTING_PREFIX = 'listings'
-  PENDING_PREFIX = 'pendingListings'
-  USERS_PREFIX = 'users'
+  LISTING_PREFIX = 'listings';
+  PENDING_PREFIX = 'pendingListings';
+  USERS_PREFIX = 'users';
   index: SearchIndex;
 
   constructor(private db: AngularFireDatabase) {
     // Create Algolia Reference
     this.index = algoliasearch(environment.algolia.appId, environment.algolia.apiKey)
-      .initIndex(environment.algolia.indexName)
+      .initIndex(environment.algolia.indexName);
   }
 
   update(project: Listing) {
@@ -38,15 +39,23 @@ export class MarketplaceService {
     return this.db.object(`${this.PENDING_PREFIX}/${listingId}`).valueChanges();
   }
 
+  prepareMarketplaceFilters(categories: Category[]): string {
+    return categories
+      .map((category: Category) => {
+        return `categories.name:"${category.name}"`;
+      })
+      .join(' OR ');
+  }
+
   // Algolia API
-  textSearch(query: string) {
-    return from(this.index.search(query));
+  marketplaceListingSearch(query: MarketplaceListingPayload) {
+    return from(this.index.search(query.query, {filters: this.prepareMarketplaceFilters(query.categories)}));
   }
 
   // Pending APIs
   add(listing: Listing) {
     const newKey = this.db.createPushId();
-    listing.uid = newKey
+    listing.uid = newKey;
     return this.db.list(this.PENDING_PREFIX).set(listing.uid, listing);
   }
 
@@ -61,7 +70,7 @@ export class MarketplaceService {
   deletePending(listing: Listing): Promise<void> {
     return this.db.object(`${this.PENDING_PREFIX}/${listing.uid}`).remove();
   }
-  
+
   approve(listingId: string): Promise<void> {
     return this.db.object(`${this.PENDING_PREFIX}/${listingId}`).update({state: ListingState.ACTIVE});
   }

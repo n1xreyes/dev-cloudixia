@@ -50,3 +50,14 @@ app-marketplace, app-projects-list mdb-card {
     }
   }
 }
+
+.center {
+  text-align: -webkit-center;
+}
+.app-input-error-wrapper{
+  margin-top: -8px;
+}
+
+.app-input-error-wrapper .error-message {
+  display: contents;
+}

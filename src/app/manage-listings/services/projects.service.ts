@@ -19,7 +19,6 @@ export class ProjectsService {
     if (listing.state === ListingState.PENDING) {
       return this.marketplaceService.deletePending(listing);
     }
-    
     return this.marketplaceService.delete(listing);
   }
 

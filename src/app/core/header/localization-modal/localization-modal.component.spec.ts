@@ -12,7 +12,7 @@ describe('LocalizationModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ LocalizationModalComponent ],
-      imports: [ 
+      imports: [
         StoreModule.forRoot({}),
         MDBBootstrapModule.forRoot(),
         FormsModule

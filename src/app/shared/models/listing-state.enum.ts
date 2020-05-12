@@ -1,4 +1,4 @@
 export enum ListingState {
-    ACTIVE = "ACTIVE",
-    PENDING = "PENDING"
+    ACTIVE = 'ACTIVE',
+    PENDING = 'PENDING'
   }

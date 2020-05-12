@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DashboardComponent } from './dashboard.component';
+import { NgSelectWrapperComponent } from './ng-select-wrapper.component';
 
-describe('DashboardComponent', () => {
-  let component: DashboardComponent;
-  let fixture: ComponentFixture<DashboardComponent>;
+describe('NgSelectWrapperComponent', () => {
+  let component: NgSelectWrapperComponent;
+  let fixture: ComponentFixture<NgSelectWrapperComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardComponent ]
+      declarations: [ NgSelectWrapperComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DashboardComponent);
+    fixture = TestBed.createComponent(NgSelectWrapperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

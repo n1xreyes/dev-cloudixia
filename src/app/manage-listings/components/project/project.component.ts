@@ -8,10 +8,13 @@ import { Listing } from 'src/app/shared/models/listing.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectComponent implements OnInit {
+
   @Input() project: Listing;
   @Input() editable = true;
   @Output() deleted = new EventEmitter<Listing>();
   @Output() edited = new EventEmitter<Listing>();
+
+  getCategoryNames = Listing.getCategoryNames;
 
   constructor() { }
 

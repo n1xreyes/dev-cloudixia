@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MDBModalService, MDBModalRef } from 'angular-bootstrap-md';
 import { AppState } from '../../reducers/index';
-import { Store, select } from '@ngrx/store';
+import { Store, select, Action } from '@ngrx/store';
 import * as fromProjects from '../store/projects.actions';
 import { Observable } from 'rxjs';
 import { getProjects, getAllLoaded, getPendingListings, getPendingLoaded } from '../store/projects.selectors';
@@ -23,13 +23,17 @@ export class ProjectsComponent implements OnInit {
   isPendingLoading$: Observable<boolean>;
   modalRef: MDBModalRef;
 
-  modalConfig = {
+  private modalConfig = {
     class: 'modal-dialog-centered'
   };
 
+  private get user() {
+    return this.afAuth.auth.currentUser;
+  }
+
   constructor(
-    private store: Store<AppState>, 
-    private modalService: MDBModalService, 
+    private store: Store<AppState>,
+    private modalService: MDBModalService,
     private afAuth: AngularFireAuth
   ) { }
 
@@ -57,53 +61,43 @@ export class ProjectsComponent implements OnInit {
     );
   }
 
-  get user() {
-    return this.afAuth.auth.currentUser;
-  }
+  openModal(entity: Listing = new Listing()): void {
+    const isEdit: boolean = !!entity.uid;
 
-  openAddProjectModal() {
-    this.modalRef = this.modalService.show(ProjectModalComponent, this.modalConfig);
-
-    this.modalRef.content.heading = 'Add new project';
-
-    this.modalRef.content.projectData.pipe(take(1)).subscribe( (projectData: Listing) => {
-      this.store.dispatch(new fromProjects.ProjectAdded({ project: projectData }));
-    });
-  }
-
-  openEditProjectModal(project: Listing) {
-    this.modalRef = this.modalService.show(ProjectModalComponent, this.modalConfig);
-
-    this.modalRef.content.heading = 'Edit project';
-    const projectCopy = {...project };
-    this.modalRef.content.project = projectCopy;
-
-    this.modalRef.content.projectData.pipe(take(1)).subscribe( (projectData: Listing) => {
-      this.store.dispatch(new fromProjects.ProjectEdited({ project: projectData }));
-    });
+    this.modalService
+      .show(ProjectModalComponent, {...this.modalConfig, data: {
+        heading: isEdit ? 'Edit project' : 'Add new project',
+        entity: {...entity}
+      }})
+      .content.projectData
+      .pipe(take(1))
+      .subscribe( (projectData: Listing) => {
+        const action: Action = isEdit
+          ? new fromProjects.ProjectEdited({ project: projectData })
+          : new fromProjects.ProjectAdded({ project: projectData });
+        this.store.dispatch(action);
+      });
   }
 
   openConfirmModal(project: Listing) {
-    this.modalRef = this.modalService.show(ConfirmModalComponent, this.modalConfig);
+    const modalRef = this.modalService.show(ConfirmModalComponent, this.modalConfig);
 
-    this.modalRef.content.heading = 'Delete Listing?';
-    this.modalRef.content.description = 'Are you sure you want to delete this item?';
-    this.modalRef.content.confirmBtnColor = 'red';
-    this.modalRef.content.confirmBtnText = 'Delete';
-    
-    this.modalRef.content.confirmation.pipe(take(1)).subscribe( (confirmation: boolean) => {
-      if (confirmation) {
-        this.store.dispatch(new fromProjects.ProjectDeleted({ project }));
-      }
-    });
+    modalRef.content.heading = 'Delete Listing?';
+    modalRef.content.description = 'Are you sure you want to delete this item?';
+    modalRef.content.confirmBtnColor = 'red';
+    modalRef.content.confirmBtnText = 'Delete';
+
+    modalRef.content.confirmation
+      .pipe(take(1))
+      .subscribe( (confirmation: boolean) => {
+        if (confirmation) {
+          this.store.dispatch(new fromProjects.ProjectDeleted({ project }));
+        }
+      });
   }
 
   onProjectDelete(project: Listing) {
     this.openConfirmModal(project);
-  }
-
-  onProjectEdit(project: Listing) {
-    this.openEditProjectModal(project);
   }
 
 }
