@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { User } from '../../../auth/models/user.model';
-import { FormGroup, FormControl } from '@angular/forms';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Language } from 'src/app/shared/models/language.enum';
 import { Store } from '@ngrx/store';
@@ -26,9 +26,9 @@ export class MainProfileComponent implements OnInit {
   ngOnInit() {
     this.updateProfileForm = new FormGroup({
       photoUrl: new FormControl(this.user.userProfile.photoUrl),
-      country: new FormControl(this.user.country),
-      city: new FormControl(this.user.city),
-      street: new FormControl(this.user.street),
+      country: new FormControl(this.user.country, Validators.required),
+      city: new FormControl(this.user.city, Validators.required),
+      street: new FormControl(this.user.street, Validators.required),
       poBox: new FormControl(this.user.poBox),
     });
 
@@ -37,15 +37,12 @@ export class MainProfileComponent implements OnInit {
 
   onProfileUpdate() {
     let changes = {
-      userProfile: {
-        photoUrl: this.updateProfileForm.value.photoUrl
-      },
-      country: this.updateProfileForm.value.country,
-      city: this.updateProfileForm.value.city,
-      street: this.updateProfileForm.value.street,
-      poBox: this.updateProfileForm.value.poBox,
+      country: this.updateProfileForm.value.country ? this.updateProfileForm.value.country : '',
+      city: this.updateProfileForm.value.city ? this.updateProfileForm.value.city : '',
+      street: this.updateProfileForm.value.street ? this.updateProfileForm.value.street : '',
+      poBox: this.updateProfileForm.value.poBox ? this.updateProfileForm.value.poBox : '',
     };
-    
+
 
     this.profileUpdate.emit({ user: changes });
   }

@@ -17,11 +17,8 @@
       bindLabel="name"
       label="categories"
       placeholder="Category"></app-ng-select-wrapper>
-    <app-input-wrapper
-      name="photoUrl"
-      label="Photo URL"></app-input-wrapper>
     <div class="md-form">
-      <input type="text" id="photo" class="form-control" name="photoUrl" [(ngModel)]="project.photoUrl" mdbInput>
+      <input type="hidden" id="photo" class="form-control" name="photoUrl" [formControl]="form.controls.photoUrl" mdbInput>
       <app-image-upload [isProfilePic]="false" (photoUrlGenerated)="setListingPhotoUrl($event)"></app-image-upload>
       <label for="photo">Photo URL</label>
     </div>

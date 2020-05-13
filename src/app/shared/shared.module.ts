@@ -55,7 +55,7 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
-    ImageUploadComponent
+    ImageUploadComponent,
     // mdb
     InputsModule,
     InputUtilitiesModule,

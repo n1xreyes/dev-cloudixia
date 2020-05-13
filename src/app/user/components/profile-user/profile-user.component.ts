@@ -1,5 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import {User, UserProfile} from '../../../auth/models/user.model';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../reducers';
+import {getUser} from '../../../auth/store/auth.selectors';
 
 @Component({
   selector: 'app-profile-user',
@@ -12,9 +15,16 @@ export class ProfileUserComponent implements OnInit {
   @Output() logout = new EventEmitter<any>();
   @Output() photoUrlUpdated = new EventEmitter<any>();
 
-  constructor() { }
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
+    this.store.pipe(
+    select(getUser)
+    ).subscribe(userState => {
+      if (userState) {
+        this.user = userState;
+      }
+    });
   }
 
   onLogout() {

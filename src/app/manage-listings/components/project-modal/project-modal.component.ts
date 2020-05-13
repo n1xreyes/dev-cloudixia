@@ -51,7 +51,7 @@ export class ProjectModalComponent implements OnInit {
   }
 
   setListingPhotoUrl(url: string) {
-    this.project.photoUrl = url;
+    this.form.controls['photoUrl'].setValue(url);
   }
 
 }

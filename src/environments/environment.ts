@@ -2,6 +2,7 @@
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// @ts-ignore
 export const environment = {
   production: false,
   firebase: {
@@ -19,10 +20,10 @@ export const environment = {
     appId: 'G8XK2HA834',
     apiKey: 'ed1eba3235e17f8f4cc3dff647666427',
     indexName: 'dev_LISTINGS'
-  }
+  },
 
   uploadImage: {
-    apiURL: "https://lsn7rfhkb8.execute-api.us-east-2.amazonaws.com/v1"
+    apiURL: 'https://lsn7rfhkb8.execute-api.us-east-2.amazonaws.com/v1'
   }
 };
 

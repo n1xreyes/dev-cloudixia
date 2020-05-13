@@ -99,18 +99,18 @@ export class AuthEffects {
     map( (action: auth.SaveUser) => action.payload),
     withLatestFrom(this.store.pipe(select(getUser))),
     map(([payload, user]: any) => {
-      let newUserDetails: User = Object.assign({}, user)
-      
-      newUserDetails.country = payload.user.country
-      newUserDetails.city = payload.user.city
-      newUserDetails.poBox = payload.user.poBox
-      newUserDetails.street = payload.user.street
-      newUserDetails.userProfile = {
-        photoUrl: payload.user.userProfile.photoUrl,
-        displayName: newUserDetails.userProfile.displayName
-      } 
+      let newUserDetails: User = Object.assign({}, user);
 
-      this.authService.saveUser(newUserDetails)
+      newUserDetails.country = payload.user.country ? payload.user.country : '';
+      newUserDetails.city = payload.user.city ? payload.user.city : '';
+      newUserDetails.poBox = payload.user.poBox ? payload.user.poBox : '';
+      newUserDetails.street = payload.user.street ? payload.user.street : '';
+      newUserDetails.userProfile = {
+        photoUrl: payload.user.userProfile.photoUrl ? payload.user.userProfile.photoUrl : '',
+        displayName: newUserDetails.userProfile.displayName ? newUserDetails.userProfile.displayName : ''
+      };
+
+      this.authService.saveUser(newUserDetails);
     })
   );
 
