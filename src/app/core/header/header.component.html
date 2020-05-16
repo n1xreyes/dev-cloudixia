@@ -21,14 +21,36 @@
         <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/projects" routerLinkActive="active" mdbWavesEffect translate>header.links.yourListings</a>
       </li>
 
-      <li *ngIf="isLoggedIn && !isLoading && isAdmin" class="nav-item">
-        <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/admin-panel" routerLinkActive="active" mdbWavesEffect translate>header.links.adminPanel</a>
+      <!-- Dropdown -->
+      <li mdbDropdown class="nav-item dropdown" dropdown *ngIf="isLoggedIn && !isLoading && isAdmin">
+        <a mdbDropdownToggle
+           mdbWavesEffect
+           class="nav-link dropdown-toggle"
+           id="navbarDropdownMenuLink"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false">Admin</a>
+        <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
+          <a mdbWavesEffect
+             translate
+             class="dropdown-item waves-light"
+             (click)="navbar.hide()"
+             routerLink="/admin-panel"
+             routerLinkActive="active">header.links.adminPanel</a>
+          <a mdbWavesEffect
+             translate
+             class="dropdown-item waves-light"
+             (click)="navbar.hide()"
+             routerLink="/listing-approval"
+             routerLinkActive="active">header.links.listingApproval</a>
+            <a mdbWavesEffect
+             translate
+             class="dropdown-item waves-light"
+             (click)="navbar.hide()"
+             routerLink="/categories"
+             routerLinkActive="active">header.links.categoryListing</a>
+        </div>
       </li>
-
-      <li *ngIf="isLoggedIn && !isLoading && isAdmin" class="nav-item">
-        <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/listing-approval" routerLinkActive="active" mdbWavesEffect translate>header.links.listingApproval</a>
-      </li>
-
     </ul>
     <!-- Links -->
 

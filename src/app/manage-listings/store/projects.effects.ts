@@ -13,8 +13,7 @@ import { ListingState } from 'src/app/shared/models/listing-state.enum';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 import { combineLatest, of, Observable } from 'rxjs';
-
-const DEFAULT_PHOTO_URL = 'https://1m19tt3pztls474q6z46fnk9-wpengine.netdna-ssl.com/wp-content/themes/unbound/images/No-Image-Found-400x264.png';
+import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
 
 @Injectable()
 export class ProjectsEffects {
@@ -39,12 +38,12 @@ export class ProjectsEffects {
           }
 
           const listings$: Observable<Listing>[] = Object.keys(payload.listings).map( (listingId: string) => {
-            return this.marketplaceService.getListing(listingId)
+            return this.marketplaceService.getListing(listingId);
           });
-          return combineLatest(listings$)
+          return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.ProjectsLoaded({projects: payload})
+          return new fromProjects.ProjectsLoaded({projects: payload});
         })
       );
     })
@@ -58,15 +57,15 @@ export class ProjectsEffects {
       return this.marketplaceService.getUsersPendingListingIds(user.uid).pipe(
         switchMap(payload => {
           if (!payload) {
-            return of([])
+            return of([]);
           }
-          const listings$: Observable<Listing>[] = Object.keys(payload).map( (listingId: string) => {
-            return this.marketplaceService.getPendingListing(listingId)
+          const listings$: Observable<Listing>[] = Object.keys(payload).map((listingId: string) => {
+            return this.marketplaceService.getPendingListing(listingId);
           });
-          return combineLatest(listings$)
+          return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.PendingListingsLoaded({projects: payload})
+          return new fromProjects.PendingListingsLoaded({projects: payload});
         })
       )
     })

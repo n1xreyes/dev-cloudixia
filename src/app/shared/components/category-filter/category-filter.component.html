@@ -1,0 +1,8 @@
+<div class="d-flex fadeIn animated">
+  <app-category-card
+    *ngFor="let item of currentItems; ; trackBy: trackByFunction"
+    [entity]="item"
+    [editable]="false"
+    (click)="onClick(item)"
+    ></app-category-card>
+</div>

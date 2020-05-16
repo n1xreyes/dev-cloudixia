@@ -16,6 +16,11 @@ import { FieldErrorsPipe } from './pipe/field-errors.pipe';
 import { ModalWrapperComponent } from './components/modal-wrapper/modal-wrapper.component';
 import { InputWrapperComponent } from './components/input-wrapper/input-wrapper.component';
 import { InputErrorWrapperComponent } from './components/input-error-wrapper/input-error-wrapper.component';
+import { CrudModalComponent } from './components/crud-modal/crud-modal.component';
+import { CategorySelectionComponent } from './components/category-selection/category-selection.component';
+import { CategorySubSelectionComponent } from './components/category-sub-selection/category-sub-selection.component';
+import { CategoryFilterComponent } from './components/category-filter/category-filter.component';
+import { CategoryCardComponent } from './components/category-card/category-card.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +30,11 @@ import { InputErrorWrapperComponent } from './components/input-error-wrapper/inp
     ModalWrapperComponent,
     InputWrapperComponent,
     InputErrorWrapperComponent,
+    CrudModalComponent,
+    CategorySelectionComponent,
+    CategorySubSelectionComponent,
+    CategoryFilterComponent,
+    CategoryCardComponent,
   ],
   imports: [
     // angular
@@ -60,6 +70,10 @@ import { InputErrorWrapperComponent } from './components/input-error-wrapper/inp
     FieldErrorsPipe,
     ModalWrapperComponent,
     InputWrapperComponent,
+    CrudModalComponent,
+    CategorySelectionComponent,
+    CategoryFilterComponent,
+    CategoryCardComponent,
   ],
   providers: [],
   entryComponents: [

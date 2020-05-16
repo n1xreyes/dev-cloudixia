@@ -33,6 +33,6 @@ describe('MarketplaceService', () => {
     expect(service.prepareMarketplaceFilters([
       categories[0],
       categories[1]
-    ])).toBe(`categories.name:"${categories[0].name}" OR categories.name:"${categories[1].name}"`);
+    ])).toBe(`categories.name:"${categories[0].title}" OR categories.name:"${categories[1].title}"`);
   });
 });

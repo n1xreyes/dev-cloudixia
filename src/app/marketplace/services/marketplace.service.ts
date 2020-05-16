@@ -39,17 +39,18 @@ export class MarketplaceService {
     return this.db.object(`${this.PENDING_PREFIX}/${listingId}`).valueChanges();
   }
 
+  // @Deprecated
   prepareMarketplaceFilters(categories: Category[]): string {
     return categories
       .map((category: Category) => {
-        return `categories.name:"${category.name}"`;
+        return `categories.name:"${category.title}"`;
       })
       .join(' OR ');
   }
 
   // Algolia API
   marketplaceListingSearch(query: MarketplaceListingPayload) {
-    return from(this.index.search(query.query, {filters: this.prepareMarketplaceFilters(query.categories)}));
+    return from(this.index.search(query.query, {filters: query.category && `categories:"${query.category.uid}"`}));
   }
 
   // Pending APIs

@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 export enum AdminActionTypes {
   GET_USERS_LIST = '[Admin] Get Users List',
   USERS_LIST_FETCHED = '[Admin] Users list fetched',
-  
+
   GET_PENDING_LISTINGS = '[Admin] Get Pending Services List',
   PENDING_LISTINGS_FETCHED = '[Admin] Pending Services Fetched',
   DELETE_PENDING_USER_PROJECT = '[Admin] Delete pending user project',

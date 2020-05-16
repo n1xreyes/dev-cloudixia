@@ -32,7 +32,7 @@ export class Listing {
   }
 
   static getCategoryNames(project: Listing): string {
-    return project.categories?.map((category: Category) => category.name).join(', ') || '';
+    return project.categories?.map((category: Category) => category.title).join(', ') || '';
   }
 
 }

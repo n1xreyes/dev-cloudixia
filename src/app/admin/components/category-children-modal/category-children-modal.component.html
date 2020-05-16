@@ -1,0 +1,8 @@
+<app-modal-wrapper
+  heading="{{'category.childrenHeader' | translate}} {{inputParent.title}}"
+  [modalRef]="modalRef">
+  <app-category-listing
+    [list]="list$ | async"
+    (saved)="onSaved($event)"
+    (deleted)="onDeleted($event)"></app-category-listing>
+</app-modal-wrapper>

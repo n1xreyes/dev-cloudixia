@@ -1,0 +1,19 @@
+<mdb-card>
+  <mdb-card-img
+    mdbWavesEffect
+    class="waves-light"
+    alt="{{'category.title' | translate}}"
+    *ngIf="entity.photoUrl"
+    src="{{entity.photoUrl}}"></mdb-card-img>
+  <mdb-card-body>
+    <mdb-card-title>
+      <h4>{{entity.title}}</h4>
+    </mdb-card-title>
+
+    <div *ngIf="editable" class="text-left">
+      <a mdbBtn mdbWavesEffect translate color="primary" (click)="onEdit()">common.edit</a>
+      <a mdbBtn mdbWavesEffect translate class="red lighten-1 white-text" (click)="onDelete()">common.delete</a>
+      <a mdbBtn mdbWavesEffect translate class="red lighten-1 white-text" (click)="onShowChildren()">category.showChildren</a>
+    </div>
+  </mdb-card-body>
+</mdb-card>

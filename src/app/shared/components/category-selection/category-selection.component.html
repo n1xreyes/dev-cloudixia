@@ -1,0 +1,23 @@
+<div class="wrapper">
+  <label translate>project.fields.category</label>
+  <ul class="list-group">
+    <li
+      mdbWavesEffect
+      *ngFor="let item of items; trackBy: trackByFunction" 
+      class="list-group-item"
+      [ngClass]="{
+        'active': value?.uid === item.uid,
+        'disabled': isDisabled
+      }">
+      <div (click)="setValue(item)">{{item.title}}</div>
+      <app-category-sub-selection
+        *ngIf="item.subCategories"
+        [items]="getSubcategories(item)"
+        [value]="value"
+        (setValue)="setValue($event)"></app-category-sub-selection>
+    </li>
+  </ul>
+  <app-input-error-wrapper
+    [control]="control"
+    [validOnPristine]="validOnPristine"></app-input-error-wrapper>
+</div>

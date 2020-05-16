@@ -22,11 +22,11 @@ describe('ListingApprovalComponent,', () => {
       categories: [
         {
           id: 1,
-          name: 'Cat1'
+          title: 'Cat1'
         },
         {
           id: 2,
-          name: 'Cat2'
+          title: 'Cat2'
         }
       ]
     }

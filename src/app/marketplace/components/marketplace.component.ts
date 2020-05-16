@@ -7,7 +7,9 @@ import { getAllLoaded, GetListings } from '../store/marketplace.selectors';
 import { AppState } from 'src/app/reducers';
 import { Listing } from 'src/app/shared/models/listing.model';
 import * as fromMarketplace from '../store/marketplace.actions';
-import { categories, Category } from 'src/app/shared/models/category.model';
+import * as fromCategory from '../../admin/store/category.actions';
+import { Category } from 'src/app/shared/models/category.model';
+import { getCategoryList } from 'src/app/admin/store/category.selectors';
 
 @Component({
   selector: 'app-marketplace',
@@ -16,15 +18,15 @@ import { categories, Category } from 'src/app/shared/models/category.model';
 })
 export class MarketplaceComponent implements OnInit {
 
-  categories: Category[] = categories;
+  form: FormGroup = new FormGroup({
+    query: new FormControl('')
+  });
 
+  categories$: Observable<Category[] | null>;
   listings$: Observable<Listing[] | null>;
   isLoading$: Observable<boolean>;
 
-  form: FormGroup = new FormGroup({
-    query: new FormControl(''),
-    categories: new FormControl([]),
-  });
+  selectedCategory: Category;
 
   constructor(private store: Store<AppState>) { }
 
@@ -43,10 +45,28 @@ export class MarketplaceComponent implements OnInit {
         return listings;
       })
     );
+
+    this.categories$ = this.store.pipe(
+      select(getCategoryList),
+      map((categories: Category[]) => {
+        if (!categories) {
+          this.store.dispatch(new fromCategory.GetCategoryList());
+        }
+        return categories;
+      })
+    );
+  }
+
+  selectCategory(category: Category): void {
+    this.selectedCategory = category;
+    this.smashTheSearch();
   }
 
   smashTheSearch(): void {
-    this.store.dispatch(new fromMarketplace.MarketplaceSearch(this.form.value));
+    this.store.dispatch(new fromMarketplace.MarketplaceSearch({
+      ...this.form.value,
+      category: this.selectedCategory,
+    }));
   }
 
 }

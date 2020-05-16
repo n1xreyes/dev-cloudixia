@@ -20,11 +20,11 @@ export class AdminService {
   }
 
   deletePendingUserProject(listingId: string): Observable<void> {
-    return from(this.marketplaceService.deletePending({ uid: listingId }))
+    return from(this.marketplaceService.deletePending({ uid: listingId }));
   }
 
   approveUserProject(listingId: string): Observable<void> {
-    return from(this.marketplaceService.approve(listingId))
+    return from(this.marketplaceService.approve(listingId));
   }
 
   addAdminPrivileges(uid: string) {

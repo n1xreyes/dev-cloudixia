@@ -58,7 +58,7 @@ export class ListingApprovalComponent implements OnInit {
             })
           );
         } else if (!listing.userId) {
-          console.log("ERROR - NO USERID")
+          console.log('ERROR - NO USERID');
         }
       });
   }
@@ -84,7 +84,7 @@ export class ListingApprovalComponent implements OnInit {
             })
           );
         } else if (!listing.userId) {
-          console.log("ERROR - NO USERID")
+          console.log('ERROR - NO USERID');
         }
       });
   }

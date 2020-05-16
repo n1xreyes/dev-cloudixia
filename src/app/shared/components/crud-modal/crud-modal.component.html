@@ -1,0 +1,6 @@
+<app-modal-wrapper
+  [modalRef]="modalRef"
+  heading="{{(entity?.uid ? 'common.edit' : 'common.addNew') | translate}} {{entityTitle | translate}}"
+  (primaryClick)="onSave()">
+  <ng-content></ng-content>
+</app-modal-wrapper>

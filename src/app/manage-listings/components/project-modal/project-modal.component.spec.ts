@@ -13,7 +13,7 @@ describe('ProjectModalComponent', () => {
   let entity: Listing = {
     title: 'test',
     price: '1',
-    categories: [{id: 1, name: 'Cat1'}]
+    categories: [{id: 1, title: 'Cat1'}]
   };
 
   beforeEach(async(() => {

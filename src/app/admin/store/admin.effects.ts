@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-
 import * as fromAdmin from './../store/admin.actions';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { AdminService } from '../services/admin.service';
@@ -88,6 +87,6 @@ export class AdminEffects {
           }),
       catchError((error: any) => of(new fromAdmin.AdminError({ error })))
     ))
-  )
+  );
 
 }

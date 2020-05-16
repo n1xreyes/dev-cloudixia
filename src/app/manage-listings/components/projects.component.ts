@@ -69,9 +69,9 @@ export class ProjectsComponent implements OnInit {
         heading: isEdit ? 'Edit project' : 'Add new project',
         entity: {...entity}
       }})
-      .content.projectData
+      .content.result
       .pipe(take(1))
-      .subscribe( (projectData: Listing) => {
+      .subscribe((projectData: Listing) => {
         const action: Action = isEdit
           ? new fromProjects.ProjectEdited({ project: projectData })
           : new fromProjects.ProjectAdded({ project: projectData });
