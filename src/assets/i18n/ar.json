@@ -10,5 +10,11 @@
             "adminPanel": "مشرف",
             "listingApproval": "خدمة جديدة"
         }
+    },
+    "component": { 
+        "messages" : {
+            "header": "الرسائل",
+            "subHeading": "سلم على العالم"
+        }
     }
 }
