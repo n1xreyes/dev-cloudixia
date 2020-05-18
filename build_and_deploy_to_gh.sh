@@ -1,4 +1,4 @@
-ng build --prod --baseHref=https://sedkis.github.io
+ng build --configuration=staging --baseHref=https://sedkis.github.io
 
 cd ../sedkis.github.io
 
