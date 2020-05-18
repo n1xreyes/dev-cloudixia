@@ -59,6 +59,16 @@ export class MarketplaceService {
     return this.db.list(this.PENDING_PREFIX).set(listing.uid, listing);
   }
 
+  addWithId(listing: Listing, listingId: string) {
+    const newKey = listingId;
+    listing.uid = newKey;
+    this.add(listing);
+  }
+
+  createListingPushId() {
+    return this.db.createPushId();
+  }
+
   updatePending(project: Listing) {
     return of(this.db.object(`${this.PENDING_PREFIX}/${project.uid}/`).update({ ...project }));
   }

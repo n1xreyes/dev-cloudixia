@@ -10,18 +10,20 @@
             <div *ngIf="!fileSizeError" class="caption mt-2">Max file size: 10 MB</div>
             <div *ngIf="fileSizeError" class="error mt-2">That file is too big. Try reducing it to 10 MB or less and then try again.</div>
         </div>
-        <div *ngIf="selectedFile && !isRequesting" class="d-flex flex-column align-items-center">
-            <div class="d-flex align-items-center paragraph-small pb-2">
-                <span class="semi-bold text-break mr-3">{{selectedFile.name}}</span>
-                <span class="mr-3">{{formatBytes(selectedFile.size)}}</span>
-                <button class="cancel-button focusable" (click)="clearSelection()">
-                    <span>Cancel</span>
+        <ng-template [ngIf]="isProfilePic" [ngIfElse]="projectMode">
+            <div *ngIf="selectedFile && !isRequesting" class="d-flex flex-column align-items-center">
+                <div class="d-flex align-items-center paragraph-small pb-2">
+                    <span class="semi-bold text-break mr-3">{{selectedFile.name}}</span>
+                    <span class="mr-3">{{formatBytes(selectedFile.size)}}</span>
+                    <button class="cancel-button focusable" (click)="clearSelection()">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+                <button class="btn btn-primary d-flex align-items-center" (click)="uploadFile()">
+                    <span>Upload</span>
                 </button>
             </div>
-            <button class="btn btn-primary d-flex align-items-center" (click)="uploadFile()">
-                <span>Upload</span>
-            </button>
-        </div>
+        </ng-template>
         <div *ngIf="isRequesting" class="d-flex justify-content-center align-items-center">
             <div class="spinner-grow text-primary" role="status" style="width: 4rem; height: 4rem;">
                 <span class="sr-only">Uploading...</span>
@@ -29,3 +31,19 @@
         </div>
     </div>
 </div>
+
+<ng-template #projectMode>
+    <div *ngIf="selectedFile && !isRequesting" class="d-flex flex-column align-items-center">
+        <img class="w-100" src="{{tempUrl}}"/>
+        <div class="d-flex align-items-center paragraph-small pb-2">
+            <span class="semi-bold text-break mr-3">{{selectedFile.name}}</span>
+            <span class="mr-3">{{formatBytes(selectedFile.size)}}</span>
+            <button class="cancel-button focusable back-button" (click)="clearSelection()">
+                <span>Cancel</span>
+            </button>
+        </div>
+        <button class="btn btn-primary d-flex align-items-center" (click)="uploadFile()">
+            <span>Upload</span>
+        </button>
+    </div>
+</ng-template>

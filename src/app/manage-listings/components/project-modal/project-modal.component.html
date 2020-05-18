@@ -19,8 +19,7 @@
       placeholder="Category"></app-ng-select-wrapper>
     <div class="md-form">
       <input type="hidden" id="photo" class="form-control" name="photoUrl" [formControl]="form.controls.photoUrl" mdbInput>
-      <app-image-upload [isProfilePic]="false" (photoUrlGenerated)="setListingPhotoUrl($event)"></app-image-upload>
-      <label for="photo">Photo URL</label>
+      <app-image-upload [isProfilePic]="false" [userInfo]="user" (photoUrlGenerated)="setListingPhotoUrl($event)"></app-image-upload>
     </div>
     <app-input-wrapper
       type="number"

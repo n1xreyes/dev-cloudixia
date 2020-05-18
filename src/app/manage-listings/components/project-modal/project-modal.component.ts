@@ -4,6 +4,10 @@ import { Subject } from 'rxjs';
 import { Listing } from 'src/app/shared/models/listing.model';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Category, categories } from 'src/app/shared/models/category.model';
+import {AppState} from '../../../reducers';
+import {select, Store} from '@ngrx/store';
+import {User} from '../../../auth/models/user.model';
+import {getUser} from '../../../auth/store/auth.selectors';
 
 @Component({
   selector: 'app-project-modal',
@@ -14,6 +18,7 @@ export class ProjectModalComponent implements OnInit {
 
   categories: Category[] = categories;
   projectData: Subject<Listing> = new Subject<Listing>();
+  user: User;
 
   form: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -26,13 +31,21 @@ export class ProjectModalComponent implements OnInit {
   heading: string;
   entity: Listing;
 
-  constructor(public modalRef: MDBModalRef) {}
+  constructor(public modalRef: MDBModalRef, private store: Store<AppState>) {}
 
   ngOnInit() {
     Object.entries(this.entity).forEach(([key, value]) => {
       const control: AbstractControl = this.form.controls[key];
       if (control) {
         control.setValue(value);
+      }
+    });
+
+    this.store.pipe(
+      select(getUser)
+    ).subscribe( userState => {
+      if (userState) {
+        this.user = userState;
       }
     });
   }

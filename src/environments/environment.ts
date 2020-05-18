@@ -23,7 +23,8 @@ export const environment = {
   },
 
   uploadImage: {
-    apiURL: 'https://lsn7rfhkb8.execute-api.us-east-2.amazonaws.com/v1'
+    apiURL: 'https://lsn7rfhkb8.execute-api.us-east-2.amazonaws.com/v1',
+    apiKey: 'RBMp2wcd4D44mbVVXigWM21PrZ4ukU755es0ijIl'
   }
 };
 

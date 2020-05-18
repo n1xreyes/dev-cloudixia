@@ -9,6 +9,7 @@ import {Listing} from '../../models/listing.model';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {generateUID} from '../../../../utils/uid-generator';
+import {AuthService} from '../../../auth/services/auth.service';
 
 
 interface HTMLInputEvent extends Event {
@@ -37,10 +38,20 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
   isRequesting: boolean;
   fileSizeError = false;
   destroyed: Subject<boolean> = new Subject<boolean>();
+  authToken: string;
+  tempUrl: any;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>, private authService: AuthService) {}
 
   ngOnInit() {
+    this.authService.getAuthState().subscribe((user) => {
+      if (user) {
+        user.getIdToken().then(idToken => {
+          this.authToken = idToken;
+        });
+      }
+    });
+
     this.store.pipe(
         select('imageUpload'),
         takeUntil(this.destroyed)
@@ -77,6 +88,19 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
       // @ts-ignore
       this.selectedFile = event.target.files[0];
     }
+
+    if (!this.isProfilePic) {
+      let reader = new FileReader();
+      reader.onload = (event: any) => {
+        this.tempUrl = event.target.result;
+      };
+
+      reader.onerror = (event: any) => {
+        console.log('File could not be read: ' + event.target.error.code);
+      };
+
+      reader.readAsDataURL(this.selectedFile);
+    }
   }
 
   formatBytes(bytes: number, decimalPlaces: number = 0): string {
@@ -99,19 +123,20 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
     let fileName: string;
     const fileExt = this.selectedFile.name.split('.').pop();
     if (isProfilePic) {
-      fileName = 'profile_' + this.userInfo.uid + '.' + fileExt;
+      fileName = this.userInfo.uid + '/profile/profile_' + this.userInfo.uid + '.' + fileExt;
     } else {
-      // if this is a new listing and the uid does not exist yet,
-      // use the util to generate it
       if (this.listingInfo && this.listingInfo.uid) {
-        fileName = 'listing_' + this.listingInfo.uid + '.' + fileExt;
+        // tslint:disable-next-line:max-line-length
+        fileName = this.userInfo.uid + '/listing/' + this.listingInfo.uid + '/' + this.listingInfo.uid + '_' + generateUID() + '.' + fileExt;
       } else {
-        fileName = 'listing_' + generateUID() + '.' + fileExt;
+        // new project so no listing ID generated at this point
+        fileName = this.userInfo.uid + '/listing/listing_' + this.userInfo.uid + '_' + generateUID() + '.' + fileExt;
       }
     }
     // tslint:disable-next-line:no-unused-expression
     const fileMetadata: FileMetadataModel = {
-      fileName: fileName
+      fileName: fileName,
+      token: this.authToken
     };
 
     // @ts-ignore

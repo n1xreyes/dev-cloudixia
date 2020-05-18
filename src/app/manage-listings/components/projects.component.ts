@@ -24,7 +24,7 @@ export class ProjectsComponent implements OnInit {
   modalRef: MDBModalRef;
 
   private modalConfig = {
-    class: 'modal-dialog-centered'
+    class: 'modal-dialog-scrollable'
   };
 
   private get user() {
