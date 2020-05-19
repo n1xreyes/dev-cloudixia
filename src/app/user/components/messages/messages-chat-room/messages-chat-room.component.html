@@ -1,0 +1,21 @@
+<mdb-card>
+<div *ngIf="chatMessages">
+
+  <div *ngFor="let message of chatMessages">
+    {{ message.sender}} <br>
+    {{ message.message}} <br>
+    {{ message.timestamp}} <br>
+
+    <br>
+
+  </div>
+
+  <hr>
+
+  <textarea [(ngModel)]="messageText"></textarea><button (click)="sendMessage()">Send</button>
+
+</div>
+<div *ngIf="!chatMessages">
+  Please select or start a new chat.
+</div>
+</mdb-card>

@@ -21,10 +21,11 @@ describe('RegisterComponent', () => {
     .compileComponents();
   }));
 
+  
   beforeEach(() => {
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
-    console.log(component)
+    component
     fixture.detectChanges();
   });
 

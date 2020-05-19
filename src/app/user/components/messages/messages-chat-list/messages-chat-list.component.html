@@ -1,0 +1,26 @@
+<h2>Chat List</h2>
+
+<div *ngFor="let chat of chats">
+    <mdb-card class="mb-4 col-sm-8">
+        <a (click)="chatSelected(chat)">
+        <mdb-card-body>
+            
+
+                <mdb-card-text>
+                    <label></label>
+                    {{ chat.message }}
+                </mdb-card-text>
+
+                <mdb-card-text>
+                    {{ chat.timestamp | date:'short' }}
+                </mdb-card-text>
+                    
+                <mdb-card-title>
+                    <label></label>
+                    {{ chat.receiverId }}
+                </mdb-card-title>
+            
+        </mdb-card-body>
+    </a> 
+    </mdb-card>
+</div>

@@ -10,5 +10,11 @@
             "adminPanel": "Admin",
             "listingApproval": "Approve Listings"
         }
+    },
+    "component": { 
+        "messages" : {
+            "header": "Messages",
+            "subHeading": "check em boi"
+        }
     }
 }

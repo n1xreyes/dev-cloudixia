@@ -63,7 +63,7 @@ exports.approvePending = functions.database
         if (data.state !== 'ACTIVE') {
             return;
         }
-        
+
         // Only admins have access to make it this far - regular users are NOT alowed
         // to change the state of a pending listing, as per FireBase rules
         delete data.state;
@@ -71,8 +71,8 @@ exports.approvePending = functions.database
         const objectID = context.params.listingId;
 
         // Move the listing to "listings" from "pendingListings" by copy & delete
-        const updates :any = {};
-        
+        const updates: any = {};
+
         // Actual Objects
         updates['/listings/' + objectID] = data
         updates['/pendingListings/' + objectID] = null
@@ -86,7 +86,7 @@ exports.approvePending = functions.database
             objectID,
             ...data
         }))
-});
+    });
 
 exports.addPending = functions.database
     .ref('/pendingListings/{listingId}')
@@ -99,12 +99,11 @@ exports.addPending = functions.database
 
         // Move the listing to "listings" from "pendingListings" by copy & delete
         return db.ref(dbLocation).set(true);
-});
+    });
 
 exports.deletePending = functions.database
     .ref('/pendingListings/{listingId}')
     .onDelete((snap, context) => {
-        
         // Get the Listing Data
         const data = snap.val();
 
@@ -122,6 +121,43 @@ exports.deletePending = functions.database
 
         return db.ref(dbLocation).set(null);
     })
+
+exports.createNewChat = functions.https.onCall(async (data, context) => {
+    if (!context.auth?.uid) {
+        throw new functions.https.HttpsError('permission-denied', 'Not Allowed Access To This Resource.');
+    }
+
+    const message = {
+        sender: context.auth.uid,
+        message: data.message,
+        timestamp: data.timestamp
+    }
+
+    // Grab the users
+    const sender = "" + context.auth.uid
+    const receiver = "" + data.receiverId
+
+    // Generate Firebase ID
+    const newChatId = db.ref().push().key
+
+    // Save the reference IDs & timestamp to the User's chats list
+    const userChatObject = {
+        "chatId": newChatId,
+        "lastMessage": message
+    }
+
+    // Reference IDs
+    const updates: any = {};
+    updates['/userChats/' + receiver + '/' + sender] = userChatObject;
+    updates['/userChats/' + sender + '/' + receiver] = userChatObject;
+    updates['/chatMessages/' + newChatId + "/" + db.ref().push().key] = message
+
+    await db.ref().update(updates).then().catch(error => {
+        console.log('Error: ', error)
+    })
+
+    return { message: "Chat created." }
+});
 
 function deleteFileFromAws(filename: string, callback: any) {
     const params = {
