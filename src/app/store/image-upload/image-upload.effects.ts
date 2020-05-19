@@ -13,10 +13,6 @@ export function buildFileUploadUrl() {
     return `${environment.uploadImage.apiURL}/upload`;
 }
 
-export function buildFileDeleteUrl() {
-    return `${environment.uploadImage.apiURL}/delete`;
-}
-
 export function buildFormData(file: File, fileMeta: FileMetadataModel) {
     const formData: FormData = new FormData();
     formData.append('file', file);
