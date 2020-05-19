@@ -1,10 +1,15 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as aws from 'aws-sdk';
 
 admin.initializeApp();
 
 const env = functions.config();
 const db = admin.database()
+aws.config.update({
+    credentials: new aws.Credentials('AKIAZNTXP4OZFLTS4WSP', 'GeLVlYFjSPhJ5prvMJCSapEhCrTo1gcxQ69T3kEH')
+});
+const AWS = new aws.S3()
 
 import algoliasearch from 'algoliasearch';
 
@@ -20,6 +25,17 @@ exports.deleteListing = functions.database
 
         // Remove the reference from the user
         const dbLocation = '/users/' + data.userId + '/userProfile/listings/' + context.params.listingId
+
+        // delete file from AWS
+        if (data.photoUrl) {
+            // extract file key from photoURL
+            const foundIndex = data.photoUrl.search(data.userId);
+            const fileKey = data.photoUrl.substring(foundIndex);
+            deleteFileFromAws(fileKey, function(err: any) {
+                if (err) { return err }
+            });
+        }
+
         // Remove from Algolia after reference delete
         return db.ref(dbLocation).set(null, () => index.deleteObject(context.params.listingId));
     })
@@ -94,5 +110,31 @@ exports.deletePending = functions.database
 
         const dbLocation = '/users/' + data.userId + '/pendingListings/' + context.params.listingId
 
+        // delete file from AWS
+        if (data.photoUrl) {
+            // extract file key from photoURL
+            const foundIndex = data.photoUrl.search(data.userId);
+            const fileKey = data.photoUrl.substring(foundIndex);
+            deleteFileFromAws(fileKey, function(err: any) {
+                if (err) { return err }
+            });
+        }
+
         return db.ref(dbLocation).set(null);
     })
+
+function deleteFileFromAws(filename: string, callback: any) {
+    const params = {
+        Bucket: 'cloudixia-images',
+        Key: filename
+    };
+
+    AWS.deleteObject(params, function(err, data) {
+        if (err) {
+            console.log(err);
+            callback(err);
+        } else {
+            callback(null);
+        }
+    });
+}

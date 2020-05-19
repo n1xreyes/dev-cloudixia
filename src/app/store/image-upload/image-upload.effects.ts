@@ -13,7 +13,18 @@ export function buildFileUploadUrl() {
     return `${environment.uploadImage.apiURL}/upload`;
 }
 
+export function buildFileDeleteUrl() {
+    return `${environment.uploadImage.apiURL}/delete`;
+}
+
 export function buildFormData(file: File, fileMeta: FileMetadataModel) {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    formData.append('Metadata', JSON.stringify(fileMeta));
+    return formData;
+}
+
+export function buildDeleteFormData(file: File, fileMeta: FileMetadataModel) {
     const formData: FormData = new FormData();
     formData.append('file', file);
     formData.append('Metadata', JSON.stringify(fileMeta));
@@ -37,6 +48,25 @@ export class ImageUploadEffects {
                 }),
                 catchError(error => {
                     this.toastr.error('', 'Upload failed');
+                    return of(new fromActions.UploadImageError(error));
+                })
+            )
+        )
+    );
+
+    @Effect()
+    deleteFileRequest: Observable<Action> = this.actions.pipe(
+        ofType(fromActions.DELETE_IMAGE_REQUEST),
+        map((action: fromActions.DeleteImageRequest) => action),
+        switchMap((request: fromActions.DeleteImageRequest) =>
+            this.http.post(buildFileDeleteUrl(), buildFormData(request.file, request.fileMetadata),
+                {}).pipe(
+                map((res: any) => {
+                    // this.toastr.success('', 'Upload success');
+                    return new fromActions.UploadImageResponse(res);
+                }),
+                catchError(error => {
+                    // this.toastr.error('', 'Upload failed');
                     return of(new fromActions.UploadImageError(error));
                 })
             )
