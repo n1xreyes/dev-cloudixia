@@ -25,25 +25,7 @@ export class UploadImageError implements Action {
     constructor(public error: HttpErrorResponse) { }
 }
 
-export class DeleteImageRequest implements Action {
-    readonly type = DELETE_IMAGE_REQUEST;
-    constructor(public file: File, public fileMetadata: FileMetadataModel) { }
-}
-
-export class DeleteImageResponse implements Action {
-    readonly type = DELETE_IMAGE_RESPONSE;
-    constructor(public payload: any) { }
-}
-
-export class DeleteImageError implements Action {
-    readonly type = DELETE_IMAGE_ERROR;
-    constructor(public error: HttpErrorResponse) { }
-}
-
 export type ActionTypes =
     | UploadImageRequest
     | UploadImageResponse
-    | UploadImageError
-    | DeleteImageRequest
-    | DeleteImageResponse
-    | DeleteImageError;
+    | UploadImageError;
