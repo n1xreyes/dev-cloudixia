@@ -24,7 +24,7 @@ export function buildFormData(file: File, fileMeta: FileMetadataModel) {
     return formData;
 }
 
-export function buildDeleteFormData(file: File, fileMeta: FileMetadataModel) {
+export function buildDeleteFormData(file: string, fileMeta: FileMetadataModel) {
     const formData: FormData = new FormData();
     formData.append('file', file);
     formData.append('Metadata', JSON.stringify(fileMeta));

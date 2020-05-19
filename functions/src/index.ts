@@ -108,9 +108,11 @@ exports.deletePending = functions.database
         const data = snap.val();
 
         const dbLocation = '/users/' + data.userId + '/pendingListings/' + context.params.listingId
+        const dbLocationForPhotoDelete = '/users/' + data.userId + '/userProfile/listings/' + context.params.listingId
+
 
         // delete file from AWS
-        if (data.photoUrl) {
+        if (data.photoUrl && checkIfReferenceExists(dbLocationForPhotoDelete, data.photoUrl)) {
             // extract file key from photoURL
             const foundIndex = data.photoUrl.search(data.userId);
             const fileKey = data.photoUrl.substring(foundIndex);
@@ -172,5 +174,11 @@ function deleteFileFromAws(filename: string, callback: any) {
         } else {
             callback(null);
         }
+    });
+}
+
+function checkIfReferenceExists(dbLocation: string, photoURL: string) {
+    return db.ref(dbLocation).child(photoURL).once('value', function(snapshot) {
+        return snapshot.val() !== null;
     });
 }
