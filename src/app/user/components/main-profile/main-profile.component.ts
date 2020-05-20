@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { User } from '../../../auth/models/user.model';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormGroup, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Language } from 'src/app/shared/models/language.enum';
 import { Store } from '@ngrx/store';

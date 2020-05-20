@@ -121,14 +121,7 @@ export class AuthEffects {
     map( (action: auth.SaveUserProfile) => action.payload),
     withLatestFrom(this.store.pipe(select(getUser))),
     map(([payload, user]: any) => {
-      const newUserDetails: User = Object.assign({}, user);
-
-      newUserDetails.country = payload.user.country;
-      newUserDetails.city = payload.user.city;
-      newUserDetails.poBox = payload.user.poBox;
-      newUserDetails.street = payload.user.street;
-
-      this.authService.saveUser(newUserDetails);
+      this.authService.saveUserProfile(user.uid, payload.userProfile);
     })
   );
 

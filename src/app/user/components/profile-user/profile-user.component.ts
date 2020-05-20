@@ -34,15 +34,11 @@ export class ProfileUserComponent implements OnInit {
 
   setUserPhotoUrl(url: string) {
     const updatedUserProfile: UserProfile = {
-      ...this.user.userProfile,
+      ...this.userProfile,
       photoUrl: url
     };
 
-    const updatedUser = {
-    ...this.user,
-    userProfile: updatedUserProfile
-    };
-    this.photoUrlUpdated.emit({user: updatedUser} );
+    this.photoUrlUpdated.emit({userProfile: updatedUserProfile} );
   }
 
 }
