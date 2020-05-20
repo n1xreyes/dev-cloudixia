@@ -103,21 +103,27 @@ exports.addPending = functions.database
 
 exports.deletePending = functions.database
     .ref('/pendingListings/{listingId}')
-    .onDelete((snap, context) => {
+    .onDelete(async(snap, context) => {
         // Get the Listing Data
         const data = snap.val();
 
         const dbLocation = '/users/' + data.userId + '/pendingListings/' + context.params.listingId
         const dbLocationForPhotoDelete = '/users/' + data.userId + '/userProfile/listings/' + context.params.listingId
 
+        let isFound;
+        await db.ref(dbLocationForPhotoDelete).once('value', function(snapshot) {
+            isFound = snapshot.val() == true;
+        });
 
         // delete file from AWS
-        if (data.photoUrl && checkIfReferenceExists(dbLocationForPhotoDelete, data.photoUrl)) {
+        if (data.photoUrl.includes("amazonaws") && !isFound) {
             // extract file key from photoURL
             const foundIndex = data.photoUrl.search(data.userId);
             const fileKey = data.photoUrl.substring(foundIndex);
-            deleteFileFromAws(fileKey, function(err: any) {
-                if (err) { return err }
+            deleteFileFromAws(fileKey, function (err: any) {
+                if (err) {
+                    return err
+                }
             });
         }
 
@@ -167,18 +173,12 @@ function deleteFileFromAws(filename: string, callback: any) {
         Key: filename
     };
 
-    AWS.deleteObject(params, function(err, data) {
+    AWS.deleteObject(params, function(err: any, data: any) {
         if (err) {
             console.log(err);
             callback(err);
         } else {
             callback(null);
         }
-    });
-}
-
-function checkIfReferenceExists(dbLocation: string, photoURL: string) {
-    return db.ref(dbLocation).child(photoURL).once('value', function(snapshot) {
-        return snapshot.val() !== null;
     });
 }
