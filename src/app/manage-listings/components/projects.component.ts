@@ -41,7 +41,7 @@ export class ProjectsComponent implements OnInit {
     this.isLoading$ = this.store.select(getAllLoaded);
     this.projects$ = this.store.pipe(
       select(getProjects),
-      map( (projects: Listing[]) => {
+      map((projects: Listing[]) => {
         if (this.user && !projects) {
           this.store.dispatch(new fromProjects.ProjectsQuery());
         }
@@ -52,7 +52,7 @@ export class ProjectsComponent implements OnInit {
     this.isPendingLoading$ = this.store.select(getPendingLoaded);
     this.pendingListings$ = this.store.pipe(
       select(getPendingListings),
-      map( (listings: Listing[]) => {
+      map((listings: Listing[]) => {
         if (this.user && !listings) {
           this.store.dispatch(new fromProjects.MyPendingListingsQuery());
         }

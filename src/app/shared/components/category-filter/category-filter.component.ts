@@ -8,23 +8,22 @@ import { Category } from '../../models/category.model';
 })
 export class CategoryFilterComponent implements OnInit {
 
-  _items: Category[];
+  private _items: Category[];
   @Input()
   get items(): Category[] {
     return this._items;
   }
   set items(items: Category[]) {
     this._items = items;
-    if (!this.subGroupShown) {
+    if (!this.breadcrumbs.length) {
       this.currentItems = items;
     }
   }
 
-  @Output() selected: EventEmitter<Category> = new EventEmitter<Category>();
+  @Output() selected: EventEmitter<Category | undefined> = new EventEmitter<Category | undefined>();
 
   currentItems: Category[];
-
-  private subGroupShown: boolean = false;
+  breadcrumbs: Category[] = [];
 
   constructor() { }
 
@@ -35,13 +34,26 @@ export class CategoryFilterComponent implements OnInit {
     return element.uid;
   }
 
-  onClick(entity: Category): void {
-    if (entity.subCategories) {
+  onClick(entity?: Category): void {
+    if (entity && entity.subCategories) {
+      this.breadcrumbs.push(entity);
       this.currentItems = Object.values(entity.subCategories);
-      this.subGroupShown = true;
     }
 
     this.selected.emit(entity);
+  }
+
+  goByIndex(index: number): void {
+    if (index < 0) {
+      this.currentItems = this._items;
+      this.breadcrumbs = [];
+      this.selected.emit(undefined);
+    } else {
+      const parent: Category = this.breadcrumbs[index];
+      this.currentItems = Object.values(parent.subCategories || {});
+      this.breadcrumbs.splice(index + 1);
+      this.selected.emit(parent);
+    }
   }
 
 }

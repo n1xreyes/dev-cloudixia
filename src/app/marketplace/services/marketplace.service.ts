@@ -68,8 +68,8 @@ export class MarketplaceService {
     return this.db.list(this.PENDING_PREFIX).snapshotChanges();
   }
 
-  deletePending(listing: Listing): Promise<void> {
-    return this.db.object(`${this.PENDING_PREFIX}/${listing.uid}`).remove();
+  deletePending(uid: string): Promise<void> {
+    return this.db.object(`${this.PENDING_PREFIX}/${uid}`).remove();
   }
 
   approve(listingId: string): Promise<void> {

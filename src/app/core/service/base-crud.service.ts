@@ -1,5 +1,5 @@
 import { AngularFireDatabase } from '@angular/fire/database';
-import { of } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { IDomain } from '../model/i-domain.model';
 
 export abstract class BaseCrudService<T extends IDomain> {
@@ -23,20 +23,23 @@ export abstract class BaseCrudService<T extends IDomain> {
     return this.db.list(this.dbCollectionName).snapshotChanges();
   }
 
-  add(entity: T) {
+  add(entity: T): Observable<string> {
     const newUid: string = this.getNewUid();
-    return this.db.list(this.dbCollectionName).set(newUid, {
-      ...entity,
-      uid: newUid,
-    });
+    return from(this.db.list(this.dbCollectionName)
+      .set(newUid, {
+        ...entity,
+        uid: newUid,
+      })
+      .then(() => newUid));
   }
 
-  update(entity: T) {
-    return of(this.db.object(`${this.dbCollectionName}/${entity.uid}/`).update({ ...entity }));
+  update(entity: T): Observable<void> {
+    return from(this.db.object(`${this.dbCollectionName}/${entity.uid}/`)
+      .update({ ...entity }));
   }
 
-  delete(entity: T) {
-    return this.db.object(`${this.dbCollectionName}/${entity.uid}`).remove();
+  delete(entity: T): Observable<void> {
+    return from(this.db.object(`${this.dbCollectionName}/${entity.uid}`).remove());
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, forwardRef, Input, Optional, Host, Attribute } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroupDirective, AbstractControl } from '@angular/forms';
 import { Category } from '../../models/category.model';
+import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-category-selection',
@@ -20,7 +21,7 @@ export class CategorySelectionComponent implements OnInit, ControlValueAccessor 
   @Input() returnUid: boolean;
   @Input() validOnPristine: boolean;
 
-  value: Category;
+  value: Category | undefined;
   isDisabled: boolean;
   control: AbstractControl;
 
@@ -39,21 +40,14 @@ export class CategorySelectionComponent implements OnInit, ControlValueAccessor 
   ngOnInit(): void {
   }
 
-  writeValue(value: any): void {
+  writeValue(value: Category | string[] | undefined): void {
     if (value) {
-      if (this.returnUid && value.length) {
-        let match: Category | undefined = this.items.find((item: Category) => item.uid === value[0]);
-        if (match) {
-          match = value.slice(1)
-            .reduce((result: Category, part: string) => {
-              return result?.subCategories && result.subCategories[part];
-            }, match);
-          if (match) {
-            this.value = match;
-          }
+      if (this.returnUid) {
+        if (isArray(value)) {
+          this.value = Category.getSuperParentFromList(this.items, value);
         }
       } else {
-        this.value = value;
+        this.value = value as Category;
       }
     }
   }
@@ -74,8 +68,10 @@ export class CategorySelectionComponent implements OnInit, ControlValueAccessor 
     if (!this.isDisabled) {
       this.value = value;
       if (this.returnUid) {
-        const _value: string = (value.parentPath || '') + (value.parentPath ? Category.PARENT_PATH_SEPARATOR : '') + value.uid;
-        this._onChange(_value.split(Category.PARENT_PATH_SEPARATOR));
+        this._onChange([
+          ...(value.parents || []),
+          value.uid
+        ]);
       } else {
         this._onChange(value);
       }

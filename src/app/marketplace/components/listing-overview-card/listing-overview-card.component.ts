@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Listing } from 'src/app/shared/models/listing.model';
+import { ListringWithCategory } from 'src/app/shared/models/listing.model';
 
 @Component({
   selector: 'app-listing-overview-card',
@@ -8,25 +8,13 @@ import { Listing } from 'src/app/shared/models/listing.model';
 })
 export class ListingOverviewCardComponent implements OnInit {
 
-  @Input() listing: Listing;
+  @Input() listing: ListringWithCategory;
+
+  getCategoryName = ListringWithCategory.getCategoryName;
 
   constructor() { }
 
   ngOnInit(): void {
-
-  }
-
-  log(text: Listing) {
-    console.log(text)
-  }
-
-  // will this be an async call?
-  getListingUser(){
-    return Math.floor((Math.random() * 1000) + 1) > 50 ? 'Sedky' : 'Rami'
-  }
-
-  onViewClick() {
-    console.log()
   }
 
 }

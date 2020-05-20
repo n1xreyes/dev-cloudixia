@@ -12,8 +12,9 @@ import { Listing } from 'src/app/shared/models/listing.model';
 import { ListingState } from 'src/app/shared/models/listing-state.enum';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
-import { combineLatest, of, Observable } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
+import { CategoryService } from 'src/app/admin/services/category.service';
 
 @Injectable()
 export class ProjectsEffects {
@@ -23,7 +24,8 @@ export class ProjectsEffects {
     private projectsService: ProjectsService,
     private store: Store<AppState>,
     private authService: AuthService,
-    private marketplaceService: MarketplaceService
+    private marketplaceService: MarketplaceService,
+    private categoryService: CategoryService,
     ) {}
 
   @Effect()
@@ -37,13 +39,28 @@ export class ProjectsEffects {
             return of([]);
           }
 
-          const listings$: Observable<Listing>[] = Object.keys(payload.listings).map( (listingId: string) => {
-            return this.marketplaceService.getListing(listingId);
-          });
+          const listings$ = Object.keys(payload.listings)
+            .map((listingId: string) => {
+              return this.marketplaceService.getListing(listingId)
+                .pipe(
+                  switchMap((listingPayload: Listing) => this.categoryService.get(listingPayload.categories[0])
+                    .pipe(
+                      map((categoryPayload) => ({
+                        category: categoryPayload.payload.val(),
+                        listing: listingPayload
+                      })
+                    ))
+                  )
+                );
+            });
           return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.ProjectsLoaded({projects: payload});
+          const projects = payload.map(({ listing, category }) => ({
+            ...listing,
+            category
+          }));
+          return new fromProjects.ProjectsLoaded({ projects });
         })
       );
     })
@@ -59,17 +76,32 @@ export class ProjectsEffects {
           if (!payload) {
             return of([]);
           }
-          const listings$: Observable<Listing>[] = Object.keys(payload).map((listingId: string) => {
-            return this.marketplaceService.getPendingListing(listingId);
-          });
+          const listings$ = Object.keys(payload)
+            .map((listingId: string) => {
+              return this.marketplaceService.getPendingListing(listingId)
+                .pipe(
+                  switchMap((listingPayload: Listing) => this.categoryService.get(listingPayload.categories[0])
+                    .pipe(
+                      map((categoryPayload) => ({
+                        category: categoryPayload.payload.val(),
+                        listing: listingPayload
+                      })
+                    ))
+                  )
+                );
+            });
           return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.PendingListingsLoaded({projects: payload});
+          const projects = payload.map(({ listing, category }) => ({
+            ...listing,
+            category
+          }));
+          return new fromProjects.PendingListingsLoaded({ projects });
         })
-      )
+      );
     })
-  )
+  );
 
   @Effect({dispatch: false})
   added$ = this.actions$.pipe(

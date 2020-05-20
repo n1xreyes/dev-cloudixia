@@ -1,38 +1,27 @@
 import { IDomain } from 'src/app/core/model/i-domain.model';
 
 export class Category implements IDomain {
-  static PARENT_PATH_SEPARATOR = '#';
-
   uid: string;
   title: string;
   photoUrl?: string;
-  parentPath?: string;
+  parents?: string[];
   subCategories?: {[uid: string]: Category};
-}
 
-export const categories: Category[] = [
-  {
-    uid: '1',
-    title: 'Cat1'
-  },
-  {
-    uid: '2',
-    title: 'Cat2'
-  },
-  {
-    uid: '3',
-    title: 'Cat3'
-  },
-  {
-    uid: '4',
-    title: 'Cat4'
-  },
-  {
-    uid: '5',
-    title: 'Cat5'
-  },
-  {
-    uid: '6',
-    title: 'Cat6'
+  static getSuperParentFromList(items: Category[], parentUids: string[]): Category | undefined {
+    const match: Category | undefined = items.find((item: Category) => item.uid === parentUids[0]);
+    return Category.getImmediateParentFromSuperParent(match, parentUids);
   }
-];
+
+  static getImmediateParentFromSuperParent(superParent: Category | undefined, parentUids: string[]): Category | undefined {
+    if (superParent) {
+      const result: Category | undefined = parentUids.slice(1)
+        .reduce((result: Category, categoryUid: string) => {
+          return result?.subCategories && result.subCategories[categoryUid];
+        }, superParent);
+      if (result) {
+        return result;
+      }
+    }
+  }
+
+}

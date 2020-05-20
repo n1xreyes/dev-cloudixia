@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 import { map, delay } from 'rxjs/operators';
 import { getAllLoaded, GetListings } from '../store/marketplace.selectors';
 import { AppState } from 'src/app/reducers';
-import { Listing } from 'src/app/shared/models/listing.model';
-import * as fromMarketplace from '../store/marketplace.actions';
-import * as fromCategory from '../../admin/store/category.actions';
+import { ListringWithCategory } from 'src/app/shared/models/listing.model';
 import { Category } from 'src/app/shared/models/category.model';
 import { getCategoryList } from 'src/app/admin/store/category.selectors';
+import { MarketplaceSearch } from '../store/marketplace.actions';
+import { GetCategoryList } from 'src/app/admin/store/category.actions';
 
 @Component({
   selector: 'app-marketplace',
@@ -23,10 +23,10 @@ export class MarketplaceComponent implements OnInit {
   });
 
   categories$: Observable<Category[] | null>;
-  listings$: Observable<Listing[] | null>;
+  listings$: Observable<ListringWithCategory[] | null>;
   isLoading$: Observable<boolean>;
 
-  selectedCategory: Category;
+  selectedCategory: Category | undefined;
 
   constructor(private store: Store<AppState>) { }
 
@@ -38,9 +38,9 @@ export class MarketplaceComponent implements OnInit {
 
     this.listings$ = this.store.pipe(
       select(GetListings),
-      map((listings: Listing[]) => {
+      map((listings: ListringWithCategory[]) => {
         if (!listings) {
-          this.store.dispatch(new fromMarketplace.MarketplaceSearch(this.form.value));
+          this.store.dispatch(new MarketplaceSearch(this.form.value));
         }
         return listings;
       })
@@ -50,20 +50,20 @@ export class MarketplaceComponent implements OnInit {
       select(getCategoryList),
       map((categories: Category[]) => {
         if (!categories) {
-          this.store.dispatch(new fromCategory.GetCategoryList());
+          this.store.dispatch(new GetCategoryList());
         }
         return categories;
       })
     );
   }
 
-  selectCategory(category: Category): void {
+  selectCategory(category?: Category): void {
     this.selectedCategory = category;
     this.smashTheSearch();
   }
 
   smashTheSearch(): void {
-    this.store.dispatch(new fromMarketplace.MarketplaceSearch({
+    this.store.dispatch(new MarketplaceSearch({
       ...this.form.value,
       category: this.selectedCategory,
     }));

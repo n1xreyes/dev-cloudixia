@@ -9,7 +9,9 @@ import {
   CategoryError,
   CategoryListFetched,
   CategoryEdited,
-  CategoryDeleted
+  CategoryDeleted,
+  CategoryPostChanged,
+  CategoryPostChangedType
 } from './category.actions';
 import { Category } from 'src/app/shared/models/category.model';
 import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
@@ -25,20 +27,20 @@ export class CategoryEffects {
   @Effect()
   getCategoryList$ = this.actions$.pipe(
     ofType(CategoryActionTypes.GET_CATEGORIES),
-    switchMap( () => this.categoryService.list()
+    switchMap(() => this.categoryService.list()
       .pipe(
-        map( (rawResult: any) => {
+        map((rawResult: any) => {
           const list: any[] = rawResult.map((res: any) => {
             return { ...res.payload.val() };
           });
-          return (new CategoryListFetched({ list }));
+          return new CategoryListFetched({ list });
         }),
         catchError((error: any) => of(new CategoryError({ error })))
       )
     )
   );
 
-  @Effect({dispatch: false})
+  @Effect()
   added$ = this.actions$.pipe(
     ofType(CategoryActionTypes.CATEGORY_ADDED),
     map((action: CategoryAdded) => action.payload),
@@ -49,32 +51,52 @@ export class CategoryEffects {
         entity.photoUrl = DEFAULT_PHOTO_URL;
       }
 
-      return this.categoryService.add(entity);
+      return this.categoryService.add(entity)
+        .pipe(
+          map((newUid: string) => new CategoryPostChanged({
+            uid: newUid,
+            type: CategoryPostChangedType.ADDED
+          }))
+        );
     }),
     catchError((error: any) => of(new CategoryError({ error })))
   );
 
-  @Effect({dispatch: false})
+  @Effect()
   edit$ = this.actions$.pipe(
     ofType(CategoryActionTypes.CATEGORY_EDITED),
     map((action: CategoryEdited) => action.payload),
-    map((payload) => {
+    switchMap((payload) => {
       const entity: Category = {...payload.entity};
 
       if (!entity.photoUrl) {
         entity.photoUrl = DEFAULT_PHOTO_URL;
       }
 
-      return this.categoryService.update(entity);
+      return this.categoryService.update(entity)
+        .pipe(
+          map(() => new CategoryPostChanged({
+            uid: entity.uid,
+            type: CategoryPostChangedType.EDITED
+          }))
+        );
     }),
     catchError((error: any) => of(new CategoryError({ error })))
   );
 
-  @Effect({dispatch: false})
+  @Effect()
   delete$ = this.actions$.pipe(
     ofType(CategoryActionTypes.CATEGORY_DELETED),
     map((action: CategoryDeleted) => action.payload),
-    map((payload) => this.categoryService.delete(payload.entity)),
+    switchMap((payload) => {
+      return this.categoryService.delete(payload.entity)
+        .pipe(
+          map(() => new CategoryPostChanged({
+            uid: payload.entity.uid,
+            type: CategoryPostChangedType.DELETED
+          }))
+        );
+    }),
     catchError((error: any) => of(new CategoryError({ error })))
   );
 

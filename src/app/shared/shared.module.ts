@@ -8,7 +8,8 @@ import {
   InputsModule,
   CardsModule,
   InputUtilitiesModule,
-  IconsModule
+  IconsModule,
+  BreadcrumbModule
 } from 'angular-bootstrap-md';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectWrapperComponent } from './components/ng-select-wrapper/ng-select-wrapper.component';
@@ -48,6 +49,7 @@ import { CategoryCardComponent } from './components/category-card/category-card.
     IconsModule,
     ButtonsModule,
     CardsModule,
+    BreadcrumbModule,
     // ng-select
     NgSelectModule,
   ],

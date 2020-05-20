@@ -1,5 +1,6 @@
 {
     "common": {
+        "home": "Home",
         "addNew": "Add new",
         "edit": "Edit",
         "delete": "Delete"

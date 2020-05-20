@@ -20,7 +20,7 @@ export class AdminService {
   }
 
   deletePendingUserProject(listingId: string): Observable<void> {
-    return from(this.marketplaceService.deletePending({ uid: listingId }));
+    return from(this.marketplaceService.deletePending(listingId));
   }
 
   approveUserProject(listingId: string): Observable<void> {

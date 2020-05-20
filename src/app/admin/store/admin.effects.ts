@@ -4,14 +4,19 @@ import * as fromAdmin from './../store/admin.actions';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { AdminService } from '../services/admin.service';
 import { Listing } from 'src/app/shared/models/listing.model';
-import { of } from 'rxjs';
+import { of, combineLatest } from 'rxjs';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
-
+import { CategoryService } from '../services/category.service';
 
 @Injectable()
 export class AdminEffects {
 
-  constructor(private actions$: Actions, private adminService: AdminService, private marketplaceService: MarketplaceService) {}
+  constructor(
+    private actions$: Actions,
+    private adminService: AdminService,
+    private marketplaceService: MarketplaceService,
+    private categoryService: CategoryService,
+  ) {}
 
   @Effect()
   getUsersList$ = this.actions$.pipe(
@@ -79,14 +84,34 @@ export class AdminEffects {
     switchMap(() =>
       this.marketplaceService.getPendingSearches()
         .pipe(
-          map((data: any) => {
-            const listingsData: Listing[] = data.map((res: any) => {
-              return { ...res.payload.val() };
+          map((data: any) => data.map((res: any) => ({ ...res.payload.val() }))),
+          switchMap((listingPayload: Listing[]) => {
+            const listing$ = listingPayload.map((listing) => {
+              if (listing.categories && listing.categories.length) {
+                return this.categoryService.get(listing.categories[0])
+                  .pipe(
+                    map((categoryPayload) => ({
+                      listing,
+                      category: categoryPayload.payload.val(),
+                    })
+                  ));
+              } else {
+                return of({ listing, category: null });
+              }
             });
-            return (new fromAdmin.PendingListingsFetched({ pendingListings: listingsData }));
+
+            return combineLatest(listing$);
           }),
-      catchError((error: any) => of(new fromAdmin.AdminError({ error })))
-    ))
+          map((payload) => {
+            const projects = payload.map(({ listing, category }) => ({
+              ...listing,
+              category
+            }));
+            return new fromAdmin.PendingListingsFetched({pendingListings: projects});
+          }),
+          catchError((error: any) => of(new fromAdmin.AdminError({ error })))
+        )
+    )
   );
 
 }
