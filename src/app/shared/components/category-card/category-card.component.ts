@@ -19,7 +19,7 @@ export class CategoryCardComponent implements OnInit {
   @Output() edited = new EventEmitter<Category>();
 
   constructor(
-    private modalService: MDBModalService
+    public modalService: MDBModalService
   ) { }
 
   ngOnInit(): void {
@@ -29,7 +29,7 @@ export class CategoryCardComponent implements OnInit {
     this.modalService.show(ConfirmModalComponent, {...DEFAULT_MODAL_CONFIG, data: {
         ...DELETE_CONFIRMATION,
       }})
-      .content.confirmation
+      ?.content.confirmation
       .pipe(take(1))
       .subscribe((confirmation: boolean) => {
         if (confirmation) {

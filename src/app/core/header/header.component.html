@@ -29,21 +29,21 @@
            id="navbarDropdownMenuLink"
            data-toggle="dropdown"
            aria-haspopup="true"
-           aria-expanded="false">Admin</a>
+           aria-expanded="false">header.links.adminPanel</a>
         <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
           <a mdbWavesEffect
              translate
              class="dropdown-item waves-light"
              (click)="navbar.hide()"
              routerLink="/admin-panel"
-             routerLinkActive="active">header.links.adminPanel</a>
+             routerLinkActive="active">header.links.userList</a>
           <a mdbWavesEffect
              translate
              class="dropdown-item waves-light"
              (click)="navbar.hide()"
              routerLink="/listing-approval"
              routerLinkActive="active">header.links.listingApproval</a>
-            <a mdbWavesEffect
+          <a mdbWavesEffect
              translate
              class="dropdown-item waves-light"
              (click)="navbar.hide()"

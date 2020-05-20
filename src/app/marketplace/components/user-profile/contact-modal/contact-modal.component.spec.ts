@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ContactModalComponent } from './contact-modal.component';
+import { ModalModule, MDBModalRef } from 'angular-bootstrap-md';
 
 describe('ContactModalComponent', () => {
   let component: ContactModalComponent;
@@ -8,7 +8,16 @@ describe('ContactModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContactModalComponent ]
+      declarations: [ ContactModalComponent ],
+      imports: [
+        ModalModule.forRoot(),
+      ],
+      providers: [
+        {
+          provide: MDBModalRef,
+          useValue: {},
+        },
+      ]
     })
     .compileComponents();
   }));

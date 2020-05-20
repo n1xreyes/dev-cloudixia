@@ -21,7 +21,8 @@
             "yourListings": "Your Listings",
             "adminPanel": "Admin",
             "listingApproval": "Approve Listings",
-            "categoryListing": "Categories"
+            "categoryListing": "Categories",
+            "userList": "User List"
         }
     },
     "category": {

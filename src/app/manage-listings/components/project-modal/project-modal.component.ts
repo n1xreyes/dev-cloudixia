@@ -33,7 +33,7 @@ export class ProjectModalComponent implements OnInit {
 
   constructor(
     public modalRef: MDBModalRef,
-    private store: Store<AppState>
+    public store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +41,7 @@ export class ProjectModalComponent implements OnInit {
       select(getCategoryList),
       map((categories: Category[]) => {
         if (!categories) {
+          console.log(this.store);
           this.store.dispatch(new fromCategory.GetCategoryList());
         }
         return categories;

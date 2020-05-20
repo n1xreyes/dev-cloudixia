@@ -126,8 +126,6 @@ describe('HeaderComponent', () => {
             const items = hostFixture.nativeElement.querySelectorAll('.nav-item');
 
             expect(items[2].innerText).toEqual('header.links.adminPanel');
-            expect(items[3].innerText).toEqual('header.links.listingApproval');
-            expect(items[3].innerText).toEqual('header.links.categoryListing');
         }));
 
         it('should apply the right css based on language', () => {

@@ -44,7 +44,8 @@ describe('ListingDetailsComponent', () => {
     photoUrl: 'https://www.google.com/url?sa=i&url=http%3A%2F%2Fwww.clker.com%2Fclipart-favicon.html&psig=AOvVaw2iHjEJkzW9E7lIWnRWN2cx&ust=1588454144983000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKjD1PzKk-kCFQAAAAAdAAAAABAD',
     price: '9.90',
     description: "this is my listing!!",
-    title: 'my Listing'
+    title: 'my Listing',
+    categories: []
   }
 
   let mockUserProfile: UserProfile = {

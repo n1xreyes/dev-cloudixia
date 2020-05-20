@@ -20,23 +20,23 @@ export class LanguageService {
   // Set the presentation language, returns a boolean indicating whether it is a RTL language
   // true for RTL language
   private bootstrapLang(): void {
-    
+
     // Check Local Storage first
-    let localStorageLang = localStorage.getItem("language")
+    const localStorageLang = localStorage.getItem('language');
     if (localStorageLang) {
-      this.helperBootstrapLang(localStorageLang === Language.ARABIC ? Language.ARABIC : Language.ENGLISH)
+      this.helperBootstrapLang(localStorageLang === Language.ARABIC ? Language.ARABIC : Language.ENGLISH);
       return;
     }
 
     // Then check Browser Default
-    let browserLang = this.translateService.getBrowserLang();
+    const browserLang = this.translateService.getBrowserLang();
     if (browserLang === Language.ARABIC) {
-      this.helperBootstrapLang(Language.ARABIC)
+      this.helperBootstrapLang(Language.ARABIC);
       return;
     }
 
     // Otherwise use English
-    this.helperBootstrapLang(Language.ENGLISH)
+    this.helperBootstrapLang(Language.ENGLISH);
   }
 
   // All these things must be done when a language is set.
@@ -44,7 +44,7 @@ export class LanguageService {
     // set the actual translater
     this.translateService.setDefaultLang(lang);
     // set the store
-    this.store.dispatch(new fromAuth.LanguageChange({language: lang}))
+    this.store.dispatch(new fromAuth.LanguageChange({language: lang}));
   }
 
   // To be called by Effect
@@ -52,7 +52,7 @@ export class LanguageService {
      // set the actual transalter
      this.translateService.use(lang);
      // set the local storage
-     localStorage.setItem("language", lang)
+     localStorage.setItem('language', lang);
   }
 
 }

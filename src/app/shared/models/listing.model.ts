@@ -35,7 +35,7 @@ export class Listing {
 }
 
 export class ListringWithCategory extends Listing {
-  category: Category;
+  category?: Category;
 
   static getCategoryName(project: ListringWithCategory): string | undefined {
     if (!project.categories) {
@@ -43,7 +43,7 @@ export class ListringWithCategory extends Listing {
     }
 
     if (project.categories.length === 1) {
-      return project.category.title;
+      return project?.category?.title;
     } else {
       const parents: Category[] = [];
       const immediateParent: Category | undefined = project.categories

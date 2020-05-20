@@ -49,4 +49,8 @@ export class CrudModalComponent<T extends IDomain> implements OnInit {
     }
   }
 
+  getHeadingPrefix(): string {
+    return this.entity?.uid ? 'common.edit' : 'common.addNew';
+  }
+
 }

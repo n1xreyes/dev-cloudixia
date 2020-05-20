@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MessagesChatRoomComponent } from './messages-chat-room.component';
+import { StoreModule } from '@ngrx/store';
 
 describe('MessagesChatRoomComponent', () => {
   let component: MessagesChatRoomComponent;
@@ -8,7 +9,10 @@ describe('MessagesChatRoomComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MessagesChatRoomComponent ]
+      declarations: [ MessagesChatRoomComponent ],
+      imports: [
+        StoreModule.forRoot({})
+      ]
     })
     .compileComponents();
   }));
