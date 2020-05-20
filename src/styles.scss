@@ -61,3 +61,9 @@ app-marketplace, app-projects-list mdb-card {
 .app-input-error-wrapper .error-message {
   display: contents;
 }
+
+app-marketplace, app-projects app-projects-list mdb-card {
+  mdb-card-text p {
+    height: auto;
+  }
+}

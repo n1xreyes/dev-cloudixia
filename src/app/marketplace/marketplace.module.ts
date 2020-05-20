@@ -14,6 +14,7 @@ import { ListingDetailsComponent } from './components/listing-details/listing-de
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { UserProfileUserComponent } from './components/user-profile/user-profile-user/user-profile-user.component';
 import { UserProfileListingsComponent } from './components/user-profile/user-profile-listings/user-profile-listings.component';
+import { ContactModalComponent } from './components/user-profile/contact-modal/contact-modal.component';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { UserProfileListingsComponent } from './components/user-profile/user-pro
     ListingDetailsComponent,
     UserProfileComponent,
     UserProfileUserComponent,
-    UserProfileListingsComponent
+    UserProfileListingsComponent,
+    ContactModalComponent
   ],
   exports: [MarketplaceComponent],
 })

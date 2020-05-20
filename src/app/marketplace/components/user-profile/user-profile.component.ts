@@ -13,6 +13,7 @@ import { combineLatest } from 'rxjs';
 export class UserProfileComponent implements OnInit {
   userProfile: UserProfile
   listings: Listing[]
+  userProfileId: string;
 
   constructor(
     private _route: ActivatedRoute,
@@ -21,7 +22,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this._route.params.subscribe(params => {
-
+      this.userProfileId = params.id;
       this.marketplaceService.getUserProfile(params.id).subscribe(
         payload => {
           this.userProfile = payload

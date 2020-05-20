@@ -1,0 +1,13 @@
+<app-modal-wrapper
+  [modalRef]="modalRef"
+  [heading]="heading"
+  (primaryClick)="onSend()">
+  <h2>To: {{ userProfile?.displayName }}</h2>
+  <form [formGroup]="form">
+    <app-input-wrapper
+      name="message"
+      label="Message"></app-input-wrapper>
+  </form>
+
+  Disclaimer: Please do not try to contact off the platform.  We can't protect you there.
+</app-modal-wrapper>

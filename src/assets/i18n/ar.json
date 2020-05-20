@@ -11,5 +11,11 @@
             "listingApproval": "خدمة جديدة",
             "categoryListing": "Categories"
         }
+    },
+    "component": { 
+        "messages" : {
+            "header": "الرسائل",
+            "subHeading": "سلم على العالم"
+        }
     }
 }

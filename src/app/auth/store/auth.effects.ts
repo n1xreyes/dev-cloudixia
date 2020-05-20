@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { Observable, of, defer } from 'rxjs';
+import { Observable, of, defer, EMPTY } from 'rxjs';
 import { map, switchMap, catchError, tap, take, withLatestFrom } from 'rxjs/operators';
 
 import * as auth from './../store/auth.actions';
@@ -10,9 +10,11 @@ import { User } from '../models/user.model';
 import { Language } from '../../shared/models/language.enum';
 import { LanguageService } from 'src/app/shared/language.service';
 import { select, Store } from '@ngrx/store';
-import { getUser } from './auth.selectors';
+import { getUser, getUserChats } from './auth.selectors';
 import { AppState } from 'src/app/reducers';
 
+// instead of importing the whole Firebase library, can hard code this..
+const TIMESTAMP = {'.sv': 'timestamp'};
 @Injectable()
 export class AuthEffects {
   constructor(
@@ -168,6 +170,7 @@ export class AuthEffects {
     map( (action: auth.LoginSuccess) => action.payload),
     switchMap( (payload: any) => {
         return [
+          new auth.GetChats(),
           new auth.UpdateOnlineStatus({ uid: payload.user.uid, status: true }),
           new auth.CheckAdminRole( {uid: payload.user.uid })
         ];
@@ -247,6 +250,74 @@ export class AuthEffects {
       })
     ))
   );
+
+  @Effect({dispatch: false})
+  getChats$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.GET_CHATS),
+    withLatestFrom(this.store.pipe(select(getUser))),
+    map(([_, user]: any) => {
+      if (!user) return
+      this.authService.initUserChatLists(user.uid)
+    })
+  )
+
+  @Effect({dispatch: false})
+  getChatMessages$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.GET_CHAT_MESSAGES),
+    map((payload: auth.GetChatMessages) => payload),
+    map((payload: any) => this.authService.getMessagesForChat(payload.chatId))
+  )
+
+  @Effect()
+  createChat$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.CREATE_CHAT),
+    map((payload: auth.CreateChat) => payload),
+    withLatestFrom(this.store.pipe(select(getUserChats))),
+    switchMap(([payload, userChats]) => {
+      // chat already exists
+      // todo: this will only check if the chat exists in the most recent X.
+      // if it is an old chat, it won't show up in the user's list 
+      // in the browser
+      let userChat = userChats.find(chat => chat.receiverId == payload.receiverId)
+      if (userChat){
+        // add message to existing chat
+        return [
+          new auth.NewChatMessage(
+            payload.receiverId,
+            payload.message,
+            userChat.chatId, 
+          )
+        ]
+      }
+
+      // chat does not already exist
+      this.authService.createNewChat(
+        payload.receiverId,
+        payload.message,
+        TIMESTAMP
+      )
+
+      return EMPTY
+    }),
+  );
+
+  @Effect({dispatch: false})
+  newChatMessage$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.NEW_CHAT_MESSAGE),
+    map((payload: auth.NewChatMessage) => payload),
+    withLatestFrom(this.store.pipe(select(getUser))),
+    map(([payload, user]) => 
+    this.authService.addNewChatMessage(
+        {
+          receiverId: payload.receiverId,
+          chatId: payload.chatId,
+          message: payload.message,
+          sender: user?.uid || '',
+          timestamp: TIMESTAMP
+        }
+      )
+    )
+  )
 
   @Effect()
   init$: Observable<any> = defer(() => {

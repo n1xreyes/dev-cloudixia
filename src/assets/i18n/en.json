@@ -44,5 +44,11 @@
             "photoUrl": "Photo URL",
             "price": "Price"
         }
+    },
+    "component": { 
+        "messages" : {
+            "header": "Messages",
+            "subHeading": "check em boi"
+        }
     }
 }

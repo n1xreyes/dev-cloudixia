@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { User } from '../models/user.model';
 import { Language } from '../../shared/models/language.enum';
+import { ChatData, ChatMessage } from 'src/app/shared/models/chat.model';
 
 export enum AuthActionTypes {
   EMAIL_REGISTER_REQUESTED = '[Auth] EMAIL REGISTER Requested',
@@ -28,6 +29,14 @@ export enum AuthActionTypes {
 
   GET_USER = '[Auth] GET User',
   GET_USER_DETAILS = '[Auth] GET User Details',
+
+  CREATE_CHAT = '[Auth] Creating a new chat',
+  GET_CHATS = '[Auth] Fetching User Chats',
+  RECENT_CHAT_LOADED = '[Auth] Recent Chat Loaded',
+
+  NEW_CHAT_MESSAGE = '[Auth] Sending chat message',
+  GET_CHAT_MESSAGES = '[Auth] Fetching messages for chat',
+  GET_CHAT_MESSAGES_LOADED = '[Auth] Loaded Fetching messages for chat',
 
   AUTH_ERROR = '[Auth] Error'
 }
@@ -133,6 +142,40 @@ export class GetUserDetails implements Action {
   constructor(public uid: String) {}
 }
 
+export class CreateChat implements Action {
+  readonly type = AuthActionTypes.CREATE_CHAT;
+
+  constructor(public receiverId: string, public message:  string) {}
+}
+
+export class GetChats implements Action {
+  readonly type = AuthActionTypes.GET_CHATS;
+}
+
+export class RecentChatLoaded implements Action {
+  readonly type = AuthActionTypes.RECENT_CHAT_LOADED;
+
+  constructor(public chat: ChatData) {}
+}
+
+export class NewChatMessage implements Action {
+  readonly type = AuthActionTypes.NEW_CHAT_MESSAGE;  
+  
+  constructor(public receiverId: string, public  message: string, public chatId: string) {}
+}
+
+export class GetChatMessages implements Action {
+  readonly type = AuthActionTypes.GET_CHAT_MESSAGES;  
+  
+  constructor(public chatId: string) {}
+}
+
+export class GetChatMessagesLoaded implements Action {
+  readonly type = AuthActionTypes.GET_CHAT_MESSAGES_LOADED;  
+  
+  constructor(public chatId: string, public chatMessage: ChatMessage) {}
+}
+
 export class AuthError implements Action {
   readonly type = AuthActionTypes.AUTH_ERROR;
 
@@ -158,4 +201,14 @@ export type AuthAction =
   | UpdateUserRole
   | GetUserDetails
   | GetUser
+
+  // chats
+  | CreateChat
+  | GetChats
+  | RecentChatLoaded
+  | NewChatMessage
+  | GetChatMessages
+  | GetChatMessagesLoaded
+
+  // error
   | AuthError;
