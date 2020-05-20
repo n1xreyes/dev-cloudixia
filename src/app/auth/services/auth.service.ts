@@ -8,8 +8,8 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { AppState } from 'src/app/reducers';
 import { Store } from '@ngrx/store';
 import * as fromAuth from '../store/auth.actions';
-import { ChatData } from 'src/app/shared/models/chat.model';
-import { DataSnapshot } from '@angular/fire/database/interfaces';
+import { ChatData, ChatMessage } from 'src/app/shared/models/chat.model';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +20,10 @@ export class AuthService {
   MAX_NUM_CHAT_MESSAGES = 25;
 
   constructor(
-    private afAuth: AngularFireAuth, 
-    private db: AngularFireDatabase, 
+    private afAuth: AngularFireAuth,
+    private db: AngularFireDatabase,
     private fn: AngularFireFunctions,
+    private fs: AngularFirestore,
     private store: Store<AppState>
     ) { }
 
@@ -57,15 +58,16 @@ export class AuthService {
 
   // update user in db
   saveUser(user: User) {
-    const users = this.db.object('users/' + user.uid);
+    const users = this.fs.doc('users/' + user.uid);
     return users.update(user);
   }
 
   // get user in DB
   getDBUser(uid: String): Observable<any> {
-    return this.db.object('users/' + uid).valueChanges();
+    return this.fs.doc('users/' + uid).valueChanges();
   }
 
+  // Uses RTDB for online presence tracking
   updateOnlineStatus(uid: string, status: boolean) {
     if (status) {
       this.db.database.ref().child('users/' + uid).onDisconnect().update( { isOnline: false });
@@ -73,8 +75,8 @@ export class AuthService {
     return from(this.db.object('users/' + uid).update({ isOnline: status }));
   }
 
-  checkUserRole(uid: string) {
-    return this.db.object('admins/' + uid).valueChanges();
+  checkAdminRole(uid: string) {
+    return this.fs.doc('admins/' + uid).valueChanges();
   }
 
   getAuthState() {
@@ -85,29 +87,40 @@ export class AuthService {
    * Adds a new chat message to an existing chat room.
    * This action will fire off listeners to a chat room, adding the message
    * to anyone listening in to this chat room.
-   * 
+   *
    * @param chatData All 5 variables are required.
    */
   addNewChatMessage(chatData: ChatData) {
-    var ref = this.db.database.ref()
-    
+    const batch = this.fs.firestore.batch();
+
     const chatMessage = {
       sender: chatData.sender,
-      timestamp: chatData.timestamp,
+      timestamp: new Date().getTime(),
       message: chatData.message
-    }
-    
-    var newChatMessage: any = {}
-    newChatMessage[`chatMessages/${chatData.chatId}/${ref.push().key}`] = chatMessage;
+    };
 
-    newChatMessage[`userChats/${chatData.receiverId}/${chatData.sender}/lastMessage`] = chatMessage;
-    newChatMessage[`userChats/${chatData.sender}/${chatData.receiverId}/lastMessage`] = chatMessage;
+    const chatRef = this.fs.firestore.collection('chatMessages')
+      .doc(chatData.chatId)
+      .collection('chats')
+      .doc(this.fs.createId());
 
-    return ref.update(newChatMessage, function(error) {
-      if (error) {
-        console.log("Error updating data:", error);
-      }
-    }).then( _ => {});
+    batch.set(chatRef, chatMessage);
+
+    const senderRef = this.fs.firestore.collection('userChats')
+      .doc(chatData.sender)
+      .collection('chats')
+      .doc(chatData.receiverId);
+
+    batch.update(senderRef, chatMessage);
+
+    const receiverRef = this.fs.firestore.collection('userChats')
+      .doc(chatData.receiverId)
+      .collection('chats')
+      .doc(chatData.sender);
+
+    batch.update(receiverRef, chatMessage);
+
+    batch.commit().then( _ => {});
   }
 
   /**
@@ -115,9 +128,9 @@ export class AuthService {
    * if an existing chat between two users exists already.  it will simply create a new one
    * between them, which overwrites the reference IDs for each user.
    * This will not destroy the old chat, but removes the reference for it in the users.
-   * 
+   *
    * So be careful to check for the existance of an existing chat between two users before creating a chat.
-   * 
+   *
    * @param receiverId Who are we sending a message to?
    * @param message The message to send
    * @param timestamp A timestamp
@@ -131,68 +144,74 @@ export class AuthService {
   /**
    * This gets the most recent X number of chat messages between two users.
    * It also sets up a listener for all new messages in this chat.
-   * 
+   *
    * It gets the chats one at a time and fires off an Action for each one.
-   * @param chatId 
+   * @param chatId
    */
-  getMessagesForChat(chatId: string){
-    return this.db.database
-    .ref('chatMessages/' + chatId)
-    .orderByKey()
-    .limitToLast(this.MAX_NUM_CHAT_MESSAGES)
-    .on('child_added', payload => {
-      this.store.dispatch(new fromAuth.GetChatMessagesLoaded(chatId, payload.val()))
-    })
+  getMessagesForChat(chatId: string) {
+    this.fs.firestore
+      .collection('chatMessages').doc(chatId).collection('chats')
+      .orderBy('timestamp', 'desc')
+      .limit(this.MAX_NUM_CHAT_MESSAGES)
+      .onSnapshot( snapshot => {
+        snapshot.docChanges()
+          .filter( item => item.type === 'added')
+          // We reverse because it arrives sorted, but we add messages to the "top"
+          // of the list as they come in.  This sets up initial data correctly
+          // as well as future changes
+          .reverse()
+          .forEach(snapshotDoc => {
+            const message: ChatMessage = {
+              message: snapshotDoc.doc.data().message,
+              sender: snapshotDoc.doc.data().sender,
+              timestamp: snapshotDoc.doc.data().timestamp
+            };
+            this.store.dispatch(new fromAuth.GetChatMessagesLoaded(chatId, message));
+          });
+      });
   }
 
   /**
    * This will get the most recent chats metadata, one at a time, firing
    * off an event for each one.  It will pass the chatdata to a reducer which will
    * save the data to the store in the correct order.
-   * 
+   *
    * This function also sets up a listener for NEW most recent chats, as well
-   * as changes to the existing chats.  
+   * as changes to the existing chats.
    * 1. In the first scenario, if a brand new chat is created, it goes to the
    * top of the list as it is now the most recent.
    * 2. If one of the existing chats recieves a new message, it also goes to the
    * top of the list.
-   * 
+   *
    * This listener at all times keeps the top X chats in sync.
    * @param userId gets all user chats that belong to this userId
    */
   initUserChatLists(userId: string) {
-    // gets changes to a chat already in the top 10
-    this.db.database
-    .ref('userChats/' + userId)
-    .orderByChild('lastMessage/timestamp')
-    .limitToLast(this.MAX_NUM_CHATS)
-    .on('child_changed', (payload) => {
-      this.store.dispatch(new fromAuth.RecentChatLoaded(this.recentChatLoaded(payload)))
-    })
-    
-    // Gets initial load as well as setups up
-    // listeners for new "most recent" chats
-    return this.db.database
-    .ref('userChats/' + userId)
-    .orderByChild('lastMessage/timestamp')
-    .limitToLast(this.MAX_NUM_CHATS)
-    .on('child_added', (payload) => {
-      this.store.dispatch(new fromAuth.RecentChatLoaded(this.recentChatLoaded(payload)))
-    })
-  }
 
-  private recentChatLoaded(payload: DataSnapshot): ChatData {
-    const chatResponse = payload.val();
+      return this.fs.firestore
+      .collection('userChats').doc(userId).collection('chats')
+      .orderBy('timestamp', 'desc')
+      .limit(this.MAX_NUM_CHATS)
+      .onSnapshot((snapshot => {
+        snapshot.docChanges()
+          // We ignore "removed" chats.
+          .filter( item => item.type === 'added' || item.type === 'modified')
+          // We reverse because it arrives sorted, but we add messages to the "top"
+          // of the list as they come in.  This sets up initial data correctly
+          // as well as future changes
+          .reverse()
+          .forEach(snapshotDoc => {
+            const chatData: ChatData = {
+              chatId: snapshotDoc.doc.data().chatId,
+              message: snapshotDoc.doc.data().message,
+              sender: snapshotDoc.doc.data().sender,
+              timestamp: snapshotDoc.doc.data().timestamp,
+              receiverId: snapshotDoc.doc.id
+            };
+            this.store.dispatch(new fromAuth.RecentChatLoaded(chatData));
+          });
+      }));
 
-    const newChat: ChatData = {
-      message: chatResponse.lastMessage.message,
-      timestamp: chatResponse.lastMessage.timestamp,
-      sender: chatResponse.lastMessage.sender,
-      chatId: chatResponse.chatId,
-      receiverId: payload.key || '',
-    }
-
-    return newChat;
   }
 
 }

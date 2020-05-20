@@ -1,6 +1,6 @@
 import { authInitialState, AuthState } from './auth.state';
 import { AuthAction, AuthActionTypes } from './auth.actions';
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash';
 export function authReducer(state = authInitialState, action: AuthAction): AuthState {
   switch (action.type) {
 
@@ -16,6 +16,12 @@ export function authReducer(state = authInitialState, action: AuthAction): AuthS
     case AuthActionTypes.UPDATE_USER_ROLE: {
       return Object.assign({}, state, {
         isAdmin: action.payload.isAdmin
+      });
+    }
+
+    case AuthActionTypes.GOT_USER_PROFILE: {
+      return Object.assign({}, state, {
+        userProfile: action.payload.userProfile
       });
     }
 
@@ -49,24 +55,24 @@ export function authReducer(state = authInitialState, action: AuthAction): AuthS
 
     // TODO - tests
     /**
-    * chatMessages is a map where the key is a chatId.  
+    * chatMessages is a map where the key is a chatId.
     * The value is an array with all the chatMessages.
     * They are in ascending order, where the most recent
     * chatMessage is in the last index.
-    * 
+    *
     * As chatMessages are found and added, they are simply
     * pushed to the list, keeping the most recent
     * at the end.
      */
     case AuthActionTypes.GET_CHAT_MESSAGES_LOADED: {
-      let newState = cloneDeep(state)
+      const newState = cloneDeep(state);
 
-      if(!newState.userChats.chatMessages[action.chatId])
-        newState.userChats.chatMessages[action.chatId] = [action.chatMessage]
-
-      else
+      if (!newState.userChats.chatMessages[action.chatId]) {
+        newState.userChats.chatMessages[action.chatId] = [action.chatMessage];
+      } else {
         newState.userChats.chatMessages[action.chatId].push(action.chatMessage);
-      
+      }
+
       return newState;
     }
 
@@ -74,22 +80,20 @@ export function authReducer(state = authInitialState, action: AuthAction): AuthS
     /**
      * chatData is an array containing chat meta data.  These
      * are sorted in descending order by timestamp, where the most
-     * recent timestamp is at index 0.  
+     * recent timestamp is at index 0.
      */
     case AuthActionTypes.RECENT_CHAT_LOADED: {
-      let newState = cloneDeep(state)
+      const newState = cloneDeep(state);
 
       // Does the new chat already exist in list?
-      let index = state.userChats.chatData.findIndex( chat => chat.chatId === action.chat.chatId)
+      const index = state.userChats.chatData.findIndex( chat => chat.chatId === action.chat.chatId);
 
       // If it doesn't, add it at the front of the list
-      if (index == -1) {
-        newState.userChats.chatData.unshift(action.chat)
-      } 
-      // If it does, move it to the front by remove & add
-      else {
-        newState.userChats.chatData.splice(index, 1)
-        newState.userChats.chatData.unshift(action.chat)
+      if (index === -1) {
+        newState.userChats.chatData.unshift(action.chat);
+      } else { // If it does, move it to the front by remove & add
+        newState.userChats.chatData.splice(index, 1);
+        newState.userChats.chatData.unshift(action.chat);
       }
 
       return newState;
