@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { User } from '../models/user.model';
+import { User, UserProfile } from '../models/user.model';
 import { Language } from '../../shared/models/language.enum';
 import { ChatData, ChatMessage } from 'src/app/shared/models/chat.model';
 
@@ -19,7 +19,7 @@ export enum AuthActionTypes {
   LOGOUT_REQUESTED = '[Auth] LOGOUT requested',
   LOGOUT_COMPLETED = '[Auth] LOGOUT completed',
 
-  LANGUAGE_CHANGE = "[Auth] Language switched",
+  LANGUAGE_CHANGE = '[Auth] Language switched',
 
   SAVE_USER = '[Auth] Save user',
   UPDATE_ONLINE_STATUS = '[Auth] Update online status',
@@ -28,6 +28,8 @@ export enum AuthActionTypes {
   UPDATE_USER_ROLE = '[Auth] Update user role',
 
   GET_USER = '[Auth] GET User',
+  GET_USER_PROFILE = '[Auth] GET User Profile',
+  GOT_USER_PROFILE = '[Auth] GOT User Profile',
   GET_USER_DETAILS = '[Auth] GET User Details',
 
   CREATE_CHAT = '[Auth] Creating a new chat',
@@ -136,6 +138,18 @@ export class GetUser implements Action {
   readonly type = AuthActionTypes.GET_USER;
 }
 
+export class GetUserProfile implements Action {
+  readonly type = AuthActionTypes.GET_USER_PROFILE;
+
+  constructor(public uid: String) {}
+}
+
+export class GotUserProfile implements Action {
+  readonly type = AuthActionTypes.GOT_USER_PROFILE;
+
+  constructor(public payload: {userProfile: UserProfile}) {}
+}
+
 export class GetUserDetails implements Action {
   readonly type = AuthActionTypes.GET_USER_DETAILS;
 
@@ -201,6 +215,8 @@ export type AuthAction =
   | UpdateUserRole
   | GetUserDetails
   | GetUser
+  | GetUserProfile
+  | GotUserProfile
 
   // chats
   | CreateChat

@@ -11,8 +11,8 @@ import { combineLatest } from 'rxjs';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  userProfile: UserProfile
-  listings: Listing[]
+  userProfile: UserProfile;
+  listings: Listing[];
   userProfileId: string;
 
   constructor(
@@ -24,23 +24,22 @@ export class UserProfileComponent implements OnInit {
     this._route.params.subscribe(params => {
       this.userProfileId = params.id;
       this.marketplaceService.getUserProfile(params.id).subscribe(
-        payload => {
-          this.userProfile = payload
-          if (!payload.listings) {
-            this.listings = []
+        userPayload => {
+          this.userProfile = userPayload;
+          if (!userPayload.listings || !userPayload.listings.length) {
+            this.listings = [];
             return;
           }
 
-          let listings$ = Object.keys(payload.listings).map( (listingId: string) => {
-            return this.marketplaceService.getListing(listingId)
-          })
-          combineLatest(listings$).subscribe( payload => {
-            this.listings = payload
-          })
-        
+          const listings$ = userPayload.listings.map((listingId: string) => {
+            return this.marketplaceService.getListing(listingId);
+          });
+          combineLatest(listings$).subscribe( (listingsPayload: any) => {
+            this.listings = listingsPayload;
+          });
         }
-      )
-    })
+      );
+    });
   }
 
 }

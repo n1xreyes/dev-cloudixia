@@ -8,6 +8,11 @@ export const getUser = createSelector(
   auth => auth.user
 );
 
+export const getUserProfile = createSelector(
+  getAuthState,
+  auth => auth.userProfile
+);
+
 export const getUserChats = createSelector(
   getAuthState,
   auth => auth.userChats.chatData
@@ -21,7 +26,8 @@ export const getUserChatMessages = createSelector(
 export const getLanguage = createSelector(
   getAuthState,
   auth => auth.language
-)
+);
+
 export const getIsLoggedIn = createSelector(
   getAuthState,
   auth => auth.isLoggedIn

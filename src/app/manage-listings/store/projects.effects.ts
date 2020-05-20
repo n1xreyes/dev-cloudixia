@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 import { combineLatest, of, Observable } from 'rxjs';
 
+// tslint:disable-next-line:max-line-length
 const DEFAULT_PHOTO_URL = 'https://1m19tt3pztls474q6z46fnk9-wpengine.netdna-ssl.com/wp-content/themes/unbound/images/No-Image-Found-400x264.png';
 
 @Injectable()
@@ -34,17 +35,17 @@ export class ProjectsEffects {
     mergeMap(([, user]: any) => {
       return this.marketplaceService.getUserProfile(user.uid).pipe(
         switchMap(payload => {
-          if (!payload || !payload.listings) {
+          if (!payload || !payload.listings || !payload.listings.length) {
             return of([]);
           }
 
-          const listings$: Observable<Listing>[] = Object.keys(payload.listings).map( (listingId: string) => {
-            return this.marketplaceService.getListing(listingId)
+          const listings$: Observable<Listing>[] = payload.listings.map( (listingId: string) => {
+            return this.marketplaceService.getListing(listingId);
           });
-          return combineLatest(listings$)
+          return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.ProjectsLoaded({projects: payload})
+          return new fromProjects.ProjectsLoaded({projects: payload});
         })
       );
     })
@@ -57,21 +58,22 @@ export class ProjectsEffects {
     mergeMap(([, user]: any) => {
       return this.marketplaceService.getUsersPendingListingIds(user.uid).pipe(
         switchMap(payload => {
-          if (!payload) {
-            return of([])
+          if (!payload || !payload.pendingListings || !payload.pendingListings.length) {
+            return of([]);
           }
-          const listings$: Observable<Listing>[] = Object.keys(payload).map( (listingId: string) => {
-            return this.marketplaceService.getPendingListing(listingId)
+          const listings$: Observable<Listing>[] = payload.pendingListings.map( (listingId: string) => {
+            return this.marketplaceService.getPendingListing(listingId);
           });
-          return combineLatest(listings$)
+          return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.PendingListingsLoaded({projects: payload})
+          return new fromProjects.PendingListingsLoaded({projects: payload});
         })
-      )
+      );
     })
-  )
+  );
 
+  // Todo, dispatch a load & resolve thing
   @Effect({dispatch: false})
   added$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.PROJECT_ADDED),
@@ -90,6 +92,7 @@ export class ProjectsEffects {
     })
   );
 
+  // Todo, dispatch a load & resolve thing
   @Effect({dispatch: false})
   delete$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.PROJECT_DELETED),
@@ -98,6 +101,7 @@ export class ProjectsEffects {
     map(([payload]: any) => this.projectsService.delete(payload.project))
   );
 
+  // Todo, dispatch a load & resolve thing
   @Effect({dispatch: false})
   edit$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.PROJECT_EDITED),

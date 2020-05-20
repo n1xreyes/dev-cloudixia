@@ -12,6 +12,7 @@ import {getUser} from '../../../auth/store/auth.selectors';
 })
 export class ProfileUserComponent implements OnInit {
   @Input() user: User;
+  @Input() userProfile: UserProfile;
   @Output() logout = new EventEmitter<any>();
   @Output() photoUrlUpdated = new EventEmitter<any>();
 

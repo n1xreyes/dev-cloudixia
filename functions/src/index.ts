@@ -10,6 +10,7 @@ aws.config.update({
     credentials: new aws.Credentials('AKIAZNTXP4OZFLTS4WSP', 'GeLVlYFjSPhJ5prvMJCSapEhCrTo1gcxQ69T3kEH')
 });
 const AWS = new aws.S3()
+const fs = admin.firestore()
 
 import algoliasearch from 'algoliasearch';
 
@@ -182,3 +183,111 @@ function deleteFileFromAws(filename: string, callback: any) {
         }
     });
 }
+
+exports.approvePendingFirestore = functions.firestore
+    .document('/pendingListings/{listingId}')
+    .onUpdate((change, context) => {
+
+        const data = change.after.data()
+
+        if (!data) return;  // World blows up
+
+        // We ignore regular updates are fine
+        if (data.state !== 'ACTIVE') {
+            return;
+        }
+
+        // Only admins have access to make it this far - regular users are NOT alowed
+        // to change the state of a pending listing, as per FireBase rules
+        delete data.state;
+
+        const listingId = context.params.listingId;
+        const batch = fs.batch();
+        
+        // Actual Objects
+        const listing = fs.doc('listings/' + listingId);
+        batch.set(listing, data);
+
+        const pending = fs.doc('pendingListings/' + listingId);
+        batch.delete(pending)
+
+        // Reference IDs
+        const listingRef = fs.doc('userProfiles/' + data.userId)
+        batch.update(listingRef, 
+            { listings: admin.firestore.FieldValue.arrayUnion(listingId) });
+        
+        const pendingRef = fs.doc('users/' + data.userId)
+        batch.update(pendingRef, 
+            { pendingListings: admin.firestore.FieldValue.arrayRemove(listingId) });
+
+        console.log('gonna print out this thing: ', listingId)
+        // After FireBase updates, save the Listing in Algolia
+        return batch.commit().then(() => {
+            console.log('gonna print out this thing: ', listingId)
+            return index.saveObject({
+            objectID: listingId,
+            ...data 
+        }).then( payload => { console.log ('did a thingy: ', payload)}) });
+    });
+
+
+exports.deleteListingFirestore = functions.firestore
+    .document('/listings/{listingId}')
+    .onDelete((snap, context) => {
+        // Get the Listing Data
+        const data = snap.data()
+        if (!data) return;
+
+        // Remove from Algolia
+        return index.deleteObject(context.params.listingId);
+})
+
+exports.updateListingFirestore = functions.firestore
+    .document('/listings/{listingId}')
+    .onUpdate((snap, context) => {
+        const data = snap.after.data()
+        const objectID = context.params.listingId;
+
+        // Update in Algolia
+        return index.saveObject({
+            objectID,
+            ...data
+        })
+    })
+
+exports.createNewChatFirestore = functions.https.onCall(async (data, context) => {
+    if (!context.auth?.uid) {
+        throw new functions.https.HttpsError('permission-denied', 'Not Allowed Access To This Resource.');
+    }
+
+    const message = {
+        sender: context.auth.uid,
+        message: data.message,
+        timestamp: data.timestamp
+    }
+
+    // Grab the users
+    const sender = "" + context.auth.uid
+    const receiver = "" + data.receiverId
+
+    // Generate Firebase ID
+    const newChatId = db.ref().push().key
+
+    // Save the reference IDs & timestamp to the User's chats list
+    const userChatObject = {
+        "chatId": newChatId,
+        "lastMessage": message
+    }
+
+    // Reference IDs
+    const updates: any = {};
+    updates['/userChats/' + receiver + '/' + sender] = userChatObject;
+    updates['/userChats/' + sender + '/' + receiver] = userChatObject;
+    updates['/chatMessages/' + newChatId + "/" + db.ref().push().key] = message
+
+    await db.ref().update(updates).then().catch(error => {
+        console.log('Error: ', error)
+    })
+
+    return { message: "Chat created." }
+});

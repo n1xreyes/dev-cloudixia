@@ -12,14 +12,14 @@ import { LanguageService } from 'src/app/shared/language.service';
 import { select, Store } from '@ngrx/store';
 import { getUser, getUserChats } from './auth.selectors';
 import { AppState } from 'src/app/reducers';
+import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 
-// instead of importing the whole Firebase library, can hard code this..
-const TIMESTAMP = {'.sv': 'timestamp'};
 @Injectable()
 export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
+    private marketplaceService: MarketplaceService,
     private router: Router,
     private languageService: LanguageService,
     private store: Store<AppState>
@@ -33,17 +33,19 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.registerWithEmail(payload.email, payload.password).pipe(
         map((fireCreds: firebase.auth.UserCredential) => {
-          let user: User = {
+          const user: User = {
             uid: fireCreds.user?.uid || '',
             email: fireCreds.user?.email || '',
             firstName: payload.firstName,
             lastName: payload.lastName,
             providerId: fireCreds.user?.providerId || '',
             userProfile: {
-              photoUrl: fireCreds.user?.photoURL || 'https://www.pngfind.com/pngs/m/568-5682880_rothenburg-james-fa-user-circle-icon-hd-png.png',
+              photoUrl: fireCreds.user?.photoURL ||
+              'https://www.pngfind.com/pngs/m/568-5682880_rothenburg-james-fa-user-circle-icon-hd-png.png',
               displayName: payload.firstName
-            }
-          }
+            },
+            pendingListings: []
+          };
           return user;
         }),
         switchMap((user: User) => [new auth.RegisterSuccess({ user: user })]),
@@ -59,19 +61,20 @@ export class AuthEffects {
   SocialRegisterAction$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.SOCIAL_REGISTER_REQUESTED),
     map((action: auth.SocialRegisterRequested) => action.payload),
-    switchMap(payload =>this.authService.socialLogin(payload.authProvider).pipe(
+    switchMap(payload => this.authService.socialLogin(payload.authProvider).pipe(
       map((fireCreds: firebase.auth.UserCredential) => {
-        let user: User = {
+        const user: User = {
           uid: fireCreds.user?.uid || '',
           email: fireCreds.user?.email || '',
-          firstName: fireCreds.user?.displayName?.split(" ")[0] || '',
-          lastName: fireCreds.user?.displayName?.split(" ")[1],
+          firstName: fireCreds.user?.displayName?.split(' ')[0] || '',
+          lastName: fireCreds.user?.displayName?.split(' ')[1],
           providerId: fireCreds.user?.providerId || '',
           userProfile: {
             photoUrl: fireCreds.user?.photoURL || '',
-            displayName: fireCreds.user?.displayName?.split(" ")[0] || ''
-          }
-        }
+            displayName: fireCreds.user?.displayName?.split(' ')[0] || ''
+          },
+          pendingListings: []
+        };
         return user;
       }),
       switchMap((user: User) => [new auth.RegisterSuccess({user: user})]),
@@ -79,7 +82,7 @@ export class AuthEffects {
       catchError(error => of(new auth.AuthError({ error })))
     ))
   );
-  
+
   @Effect()
   registerSuccess$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.REGISTER_SUCCESS),
@@ -91,9 +94,9 @@ export class AuthEffects {
     switchMap( (payload: User) => {
       return [
         new auth.LoginSuccess({ user: payload })
-      ]
+      ];
     })
-  )
+  );
 
   @Effect({ dispatch: false })
   saveUser$ = this.actions$.pipe(
@@ -101,16 +104,29 @@ export class AuthEffects {
     map( (action: auth.SaveUser) => action.payload),
     withLatestFrom(this.store.pipe(select(getUser))),
     map(([payload, user]: any) => {
-      let newUserDetails: User = Object.assign({}, user);
+      const newUserDetails: User = Object.assign({}, user);
 
-      newUserDetails.country = payload.user.country ? payload.user.country : '';
-      newUserDetails.city = payload.user.city ? payload.user.city : '';
-      newUserDetails.poBox = payload.user.poBox ? payload.user.poBox : '';
-      newUserDetails.street = payload.user.street ? payload.user.street : '';
-      newUserDetails.userProfile = {
-        photoUrl: payload.user.userProfile.photoUrl ? payload.user.userProfile.photoUrl : '',
-        displayName: newUserDetails.userProfile.displayName ? newUserDetails.userProfile.displayName : ''
-      };
+      newUserDetails.country = payload.user.country;
+      newUserDetails.city = payload.user.city;
+      newUserDetails.poBox = payload.user.poBox;
+      newUserDetails.street = payload.user.street;
+
+      this.authService.saveUser(newUserDetails);
+    })
+  );
+
+  @Effect({ dispatch: false })
+  saveUserProfile$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.SAVE_USER_PROFILE),
+    map( (action: auth.SaveUserProfile) => action.payload),
+    withLatestFrom(this.store.pipe(select(getUser))),
+    map(([payload, user]: any) => {
+      const newUserDetails: User = Object.assign({}, user);
+
+      newUserDetails.country = payload.user.country;
+      newUserDetails.city = payload.user.city;
+      newUserDetails.poBox = payload.user.poBox;
+      newUserDetails.street = payload.user.street;
 
       this.authService.saveUser(newUserDetails);
     })
@@ -127,10 +143,12 @@ export class AuthEffects {
   checkUserRole$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.CHECK_ADMIN_ROLE),
     map( (action: auth.CheckAdminRole) => action.payload),
-    switchMap( (payload: any) => this.authService.checkUserRole(payload.uid)
+    switchMap( (payload: any) => this.authService.checkAdminRole(payload.uid)
       .pipe(
-        map( (isAdmin: boolean) => {
-          return new auth.UpdateUserRole({ isAdmin });
+        map( (firestorePayload: any) => {
+          return new auth.UpdateUserRole({ isAdmin: firestorePayload.isAdmin });
+        // map( (isAdmin: boolean) => {
+        //   return new auth.UpdateUserRole({ isAdmin });
         }),
         catchError( (error: any) => of(new auth.AuthError({ error })))
       )
@@ -141,7 +159,7 @@ export class AuthEffects {
   updateLanguage$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.LANGUAGE_CHANGE),
     map( (action: auth.LanguageChange) => action.payload),
-    map( (payload: {language: Language}) => {  
+    map( (payload: {language: Language}) => {
       this.languageService.setLanguage(payload.language);
     })
   );
@@ -153,10 +171,11 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.loginWithEmail(payload.email, payload.password).pipe(
         map((res: firebase.auth.UserCredential) => {
-          if (res.user?.uid)
+          if (res.user?.uid) {
             return new auth.GetUserDetails( res.user?.uid);
-          else 
-            return new auth.AuthError({error: 'Fetch user details failed!'})
+          } else {
+            return new auth.AuthError({error: 'Fetch user details failed!'});
+          }
         }),
         tap(() => this.router.navigateByUrl('')),
         catchError(error => of(new auth.AuthError({ error })))
@@ -170,7 +189,6 @@ export class AuthEffects {
     map( (action: auth.LoginSuccess) => action.payload),
     switchMap( (payload: any) => {
         return [
-          new auth.GetChats(),
           new auth.UpdateOnlineStatus({ uid: payload.user.uid, status: true }),
           new auth.CheckAdminRole( {uid: payload.user.uid })
         ];
@@ -207,8 +225,8 @@ export class AuthEffects {
   @Effect()
   logoutAction$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.LOGOUT_REQUESTED),
-    map( (action: auth.LogoutRequested) => action.payload),
-    switchMap((payload: any) => this.authService.logout(payload.user.uid)
+    withLatestFrom(this.authService.getAuthState()),
+    switchMap((payload: any) => this.authService.logout(payload.uid)
       .pipe(
         map(() => (new auth.LogoutCompleted())),
         tap(() => this.router.navigateByUrl('')),
@@ -239,14 +257,35 @@ export class AuthEffects {
   );
 
   @Effect()
+  getUserProfile$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.GET_USER_PROFILE),
+    map( (action: auth.GetUserProfile) => action.uid),
+    switchMap((userId: string) => {
+      return this.marketplaceService.getUserProfile(userId)
+        .pipe(
+        map((rawUserProfile: any) => {
+          if (rawUserProfile) {
+            return new auth.GotUserProfile({ userProfile: rawUserProfile});
+          } else {
+            return new auth.AuthError({error: 'no clue what'});
+          }
+        }),
+        catchError(error => of(new auth.AuthError({ error })))
+      );
+      })
+  );
+
+  @Effect()
   getUserDetails$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.GET_USER_DETAILS),
     switchMap((payload: any) => this.authService.getDBUser(payload.uid).pipe(
       map (userDetails => userDetails),
-      switchMap((user: User)=> {
+      switchMap((user: User) => {
           return [
+            new auth.GetUserProfile(user.uid),
+            new auth.GetChats(),
             new auth.LoginSuccess({ user })
-          ]
+          ];
       })
     ))
   );
@@ -254,19 +293,19 @@ export class AuthEffects {
   @Effect({dispatch: false})
   getChats$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.GET_CHATS),
-    withLatestFrom(this.store.pipe(select(getUser))),
+    withLatestFrom(this.authService.getAuthState()),
     map(([_, user]: any) => {
-      if (!user) return
-      this.authService.initUserChatLists(user.uid)
+      if (!user) { return; }
+      this.authService.initUserChatLists(user.uid);
     })
-  )
+  );
 
   @Effect({dispatch: false})
   getChatMessages$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.GET_CHAT_MESSAGES),
     map((payload: auth.GetChatMessages) => payload),
     map((payload: any) => this.authService.getMessagesForChat(payload.chatId))
-  )
+  );
 
   @Effect()
   createChat$ = this.actions$.pipe(
@@ -276,28 +315,28 @@ export class AuthEffects {
     switchMap(([payload, userChats]) => {
       // chat already exists
       // todo: this will only check if the chat exists in the most recent X.
-      // if it is an old chat, it won't show up in the user's list 
+      // if it is an old chat, it won't show up in the user's list
       // in the browser
-      let userChat = userChats.find(chat => chat.receiverId == payload.receiverId)
-      if (userChat){
+      const userChat = userChats.find(chat => chat.receiverId === payload.receiverId);
+      if (userChat) {
         // add message to existing chat
         return [
           new auth.NewChatMessage(
             payload.receiverId,
             payload.message,
-            userChat.chatId, 
+            userChat.chatId,
           )
-        ]
+        ];
       }
 
       // chat does not already exist
       this.authService.createNewChat(
         payload.receiverId,
         payload.message,
-        TIMESTAMP
-      )
+        new Date().getTime()
+      );
 
-      return EMPTY
+      return EMPTY;
     }),
   );
 
@@ -306,18 +345,18 @@ export class AuthEffects {
     ofType(auth.AuthActionTypes.NEW_CHAT_MESSAGE),
     map((payload: auth.NewChatMessage) => payload),
     withLatestFrom(this.store.pipe(select(getUser))),
-    map(([payload, user]) => 
+    map(([payload, user]) =>
     this.authService.addNewChatMessage(
         {
           receiverId: payload.receiverId,
           chatId: payload.chatId,
           message: payload.message,
           sender: user?.uid || '',
-          timestamp: TIMESTAMP
+          timestamp: new Date().getTime()
         }
       )
     )
-  )
+  );
 
   @Effect()
   init$: Observable<any> = defer(() => {
