@@ -1,5 +1,5 @@
 <div class="md-form">
-  <label [for]="name">{{label}}</label>
+  <label [for]="name">{{label | translate}}</label>
   <div class="input-group-prepend">
     <ng-content select="[prefix]"></ng-content>
   </div>
@@ -11,10 +11,10 @@
     [type]="type"
     [name]="name"
     [formControl]="control"
-    [placeholder]="placeholder"
+    [placeholder]="placeholder | translate"
     [readonly]="disabled"
     [required]="required"
-    [attr.aria-label]="label">
+    [attr.aria-label]="label | translate">
   <textarea
     mdbInput
     mdbValidate
@@ -22,14 +22,14 @@
     *ngIf="isTextArea"
     [name]="name"
     [formControl]="control"
-    [placeholder]="placeholder"
+    [placeholder]="placeholder | translate"
     [readonly]="disabled"
     [required]="required"
-    [attr.aria-label]="label"></textarea>
+    [attr.aria-label]="label | translate"></textarea>
   <div class="input-group-append">
     <ng-content select="[suffix]"></ng-content>
   </div>
   <app-input-error-wrapper
-      [validOnPristine]="true"
+      [validOnPristine]="validOnPristine"
       [control]="control"></app-input-error-wrapper>
 </div>

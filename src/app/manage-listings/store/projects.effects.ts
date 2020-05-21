@@ -12,10 +12,10 @@ import { Listing } from 'src/app/shared/models/listing.model';
 import { ListingState } from 'src/app/shared/models/listing-state.enum';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
-import { combineLatest, of, Observable } from 'rxjs';
-
-// tslint:disable-next-line:max-line-length
-const DEFAULT_PHOTO_URL = 'https://1m19tt3pztls474q6z46fnk9-wpengine.netdna-ssl.com/wp-content/themes/unbound/images/No-Image-Found-400x264.png';
+import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
+import { CategoryService } from 'src/app/admin/services/category.service';
+import { combineLatest, of } from 'rxjs';
+import { User, UserProfile } from 'src/app/auth/models/user.model';
 
 @Injectable()
 export class ProjectsEffects {
@@ -25,7 +25,8 @@ export class ProjectsEffects {
     private projectsService: ProjectsService,
     private store: Store<AppState>,
     private authService: AuthService,
-    private marketplaceService: MarketplaceService
+    private marketplaceService: MarketplaceService,
+    private categoryService: CategoryService,
     ) {}
 
   @Effect()
@@ -34,18 +35,33 @@ export class ProjectsEffects {
     withLatestFrom(this.authService.getAuthState()),
     mergeMap(([, user]: any) => {
       return this.marketplaceService.getUserProfile(user.uid).pipe(
-        switchMap(payload => {
+        switchMap((payload: UserProfile) => {
           if (!payload || !payload.listings || !payload.listings.length) {
             return of([]);
           }
 
-          const listings$: Observable<Listing>[] = payload.listings.map( (listingId: string) => {
-            return this.marketplaceService.getListing(listingId);
-          });
+          const listings$ = payload.listings
+            .map((listingId: string) => {
+              return this.marketplaceService.getListing(listingId)
+                .pipe(
+                  switchMap((listingPayload: Listing) => this.categoryService.get(listingPayload.categories[0])
+                    .pipe(
+                      map((categoryPayload) => ({
+                        category: categoryPayload.payload.data(),
+                        listing: listingPayload
+                      })
+                    ))
+                  )
+                );
+            });
           return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.ProjectsLoaded({projects: payload});
+          const projects = payload.map(({ listing, category }) => ({
+            ...listing,
+            category
+          }));
+          return new fromProjects.ProjectsLoaded({ projects });
         })
       );
     })
@@ -56,18 +72,33 @@ export class ProjectsEffects {
     ofType(ProjectsActionTypes.MY_PENDING_LISTINGS_QUERY),
     withLatestFrom(this.authService.getAuthState()),
     mergeMap(([, user]: any) => {
-      return this.marketplaceService.getUsersPendingListingIds(user.uid).pipe(
-        switchMap(payload => {
-          if (!payload || !payload.pendingListings || !payload.pendingListings.length) {
+      return this.marketplaceService.getUserById(user.uid).pipe(
+        switchMap((payload: User) => {
+          if (!payload) {
             return of([]);
           }
-          const listings$: Observable<Listing>[] = payload.pendingListings.map( (listingId: string) => {
-            return this.marketplaceService.getPendingListing(listingId);
-          });
+          const listings$ = payload.pendingListings
+            .map((listingId: string) => {
+              return this.marketplaceService.getPendingListing(listingId)
+                .pipe(
+                  switchMap((listingPayload: Listing) => this.categoryService.get(listingPayload.categories[0])
+                    .pipe(
+                      map((categoryPayload) => ({
+                        category: categoryPayload.payload.data(),
+                        listing: listingPayload
+                      })
+                    ))
+                  )
+                );
+            });
           return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.PendingListingsLoaded({projects: payload});
+          const projects = payload.map(({ listing, category }) => ({
+            ...listing,
+            category
+          }));
+          return new fromProjects.PendingListingsLoaded({ projects });
         })
       );
     })

@@ -26,16 +26,16 @@ export function adminReducer(state = adminInitialState, action: AdminActions): A
     case AdminActionTypes.GET_PENDING_LISTINGS: {
       return Object.assign({}, state, {
         pendingListLoading: true
-      })
+      });
     }
 
     case AdminActionTypes.PENDING_LISTINGS_FETCHED: {
       return Object.assign({}, state, {
         pendingListLoading: false,
         pendingListings: action.payload.pendingListings
-      })
+      });
     }
-    
+
     default:
       return state;
   }

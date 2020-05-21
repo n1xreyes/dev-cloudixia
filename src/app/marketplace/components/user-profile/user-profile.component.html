@@ -13,8 +13,7 @@
 
         <div class="col-md-6 col-lg-8 mt-3" *ngIf="listings">
             <h2>{{ userProfile.displayName }}'s Listings</h2>
-            <app-user-profile-listings [listings]=listings>
-            </app-user-profile-listings>
+            <app-user-profile-listings [listings]="listings"></app-user-profile-listings>
         </div>
         <div *ngIf="!listings" class="d-flex justify-content-center align-items-center">
             <div class="spinner-grow text-primary" role="status">

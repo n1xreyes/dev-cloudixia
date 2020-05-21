@@ -20,6 +20,7 @@ export class UserProfileComponent implements OnInit {
     private marketplaceService: MarketplaceService
   ) { }
 
+  // TODO: move this code to effect/selector/action all that ngrx crap
   ngOnInit(): void {
     this._route.params.subscribe(params => {
       this.userProfileId = params.id;

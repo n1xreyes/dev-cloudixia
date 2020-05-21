@@ -1,0 +1,18 @@
+<ul>
+  <li
+    mdbWavesEffect
+    *ngFor="let item of items; trackBy: trackByFunction" 
+    class="list-group-item"
+    [ngClass]="{'active': value?.uid === item.uid}">
+    <div
+      class="item"
+      (click)="_setValue(item)">
+      {{item.title}}
+    </div>
+    <app-category-sub-selection
+        *ngIf="item.subCategories"
+        [items]="getSubcategories(item)"
+        [value]="value"
+        (setValue)="_setValue($event)"></app-category-sub-selection>
+  </li>
+</ul>

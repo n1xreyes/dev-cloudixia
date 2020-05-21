@@ -7,20 +7,24 @@ import {
 import * as fromAuth from '../auth/store/auth.reducer';
 import * as fromAdmin from '../admin/store/admin.reducer';
 import * as fromMarketplace from '../marketplace/store/marketplace.reducer';
+import * as fromCategory from '../admin/store/category.reducer';
 import { AuthState } from '../auth/store/auth.state';
 import { AdminState } from '../admin/store/admin.state';
 import { MarketplaceState } from '../marketplace/store/marketplace.state';
+import { CategoryState } from '../admin/store/category.state';
 
 export interface AppState {
   auth: AuthState;
   admin: AdminState;
   marketplace: MarketplaceState;
+  category: CategoryState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: fromAuth.authReducer,
   admin: fromAdmin.adminReducer,
-  marketplace: fromMarketplace.marketplaceReducer
+  marketplace: fromMarketplace.marketplaceReducer,
+  category: fromCategory.categoryReducer
 };
 
 export function clearState(reducer: ActionReducer<AppState>): ActionReducer<AppState> {

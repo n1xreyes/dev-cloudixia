@@ -11,6 +11,11 @@ import { AdminEffects } from './store/admin.effects';
 import { SharedModule } from '../shared/shared.module';
 import { UserDetailComponent } from './components/user-detail/user-detail.component';
 import { ListingApprovalComponent } from './components/listing-approval/listing-approval.component';
+import { CategoryListingComponent } from './components/category-listing/category-listing.component';
+import { CategoryModalComponent } from './components/category-modal/category-modal.component';
+import { CategoryEffects } from './store/category.effects';
+import { CategoryPageComponent } from './components/category-page/category-page.component';
+import { CategoryChildrenModalComponent } from './components/category-children-modal/category-children-modal.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +23,11 @@ import { ListingApprovalComponent } from './components/listing-approval/listing-
     UsersListComponent,
     UserComponent,
     UserDetailComponent,
-    ListingApprovalComponent
+    ListingApprovalComponent,
+    CategoryListingComponent,
+    CategoryModalComponent,
+    CategoryPageComponent,
+    CategoryChildrenModalComponent
   ],
   imports: [
     SharedModule,
@@ -27,7 +36,10 @@ import { ListingApprovalComponent } from './components/listing-approval/listing-
     DropdownModule,
     BadgeModule,
     StoreModule.forFeature('admin', fromAdmin.adminReducer),
-    EffectsModule.forFeature([AdminEffects])
+    EffectsModule.forFeature([AdminEffects, CategoryEffects])
+  ],
+  entryComponents: [
+    CategoryChildrenModalComponent,
   ]
 })
 export class AdminModule { }

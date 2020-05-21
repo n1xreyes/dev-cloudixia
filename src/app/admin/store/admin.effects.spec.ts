@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { StoreRootModule, StoreModule } from '@ngrx/store';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 describe('AdminEffects', () => {
   let actions$: Observable<any>;
@@ -19,10 +21,12 @@ describe('AdminEffects', () => {
       imports: [
         StoreModule.forRoot({}),
         StoreRootModule,
-        RouterTestingModule, 
+        RouterTestingModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule,
-        AngularFireAuthModule
+        AngularFireAuthModule,
+        AngularFireFunctionsModule,
+        AngularFirestoreModule
       ],
       providers: [
         AdminEffects,
@@ -30,7 +34,7 @@ describe('AdminEffects', () => {
       ]
     });
 
-    effects = TestBed.get(AdminEffects);
+    effects = TestBed.inject(AdminEffects);
   });
 
   it('should be created', () => {

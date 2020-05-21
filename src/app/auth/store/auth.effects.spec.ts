@@ -4,13 +4,15 @@ import { Observable } from 'rxjs';
 
 import { AuthEffects } from './auth.effects';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { StoreModule } from '@ngrx/store';
 import { RouterModule } from '@angular/router';
 import { TranslateTestingModule } from 'ngx-translate-testing';
 import { authReducer } from './auth.reducer';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 describe('AuthEffects', () => {
   let actions$: Observable<any>;
@@ -23,9 +25,11 @@ describe('AuthEffects', () => {
         StoreModule.forRoot({}),
         RouterModule.forRoot([], {}),
         AngularFireModule.initializeApp(environment.firebase),
+        AngularFireFunctionsModule,
+        AngularFirestoreModule,
         AngularFireDatabaseModule,
         AngularFireAuthModule,
-        TranslateTestingModule.withTranslations("en", {})
+        TranslateTestingModule.withTranslations('en', {})
       ],
       providers: [
         AuthEffects,
@@ -33,7 +37,7 @@ describe('AuthEffects', () => {
       ]
     });
 
-    effects = TestBed.get(AuthEffects);
+    effects = TestBed.inject(AuthEffects);
   });
 
   it('should be created', () => {

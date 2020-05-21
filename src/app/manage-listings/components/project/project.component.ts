@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { Listing } from 'src/app/shared/models/listing.model';
+import { ListringWithCategory } from 'src/app/shared/models/listing.model';
 
 @Component({
   selector: 'app-project',
@@ -9,12 +9,12 @@ import { Listing } from 'src/app/shared/models/listing.model';
 })
 export class ProjectComponent implements OnInit {
 
-  @Input() project: Listing;
+  @Input() project: ListringWithCategory;
   @Input() editable = true;
-  @Output() deleted = new EventEmitter<Listing>();
-  @Output() edited = new EventEmitter<Listing>();
+  @Output() deleted = new EventEmitter<ListringWithCategory>();
+  @Output() edited = new EventEmitter<ListringWithCategory>();
 
-  getCategoryNames = Listing.getCategoryNames;
+  getCategoryName = ListringWithCategory.getCategoryName;
 
   constructor() { }
 

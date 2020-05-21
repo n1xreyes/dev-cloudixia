@@ -6,7 +6,16 @@ import { StoreModule } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CollapseModule, CardsModule, DropdownModule, BadgeModule, ButtonsModule, IconsModule, MDBModalService, MDBBootstrapModule } from 'angular-bootstrap-md';
+import {
+  CollapseModule,
+  CardsModule,
+  DropdownModule,
+  BadgeModule,
+  ButtonsModule,
+  IconsModule,
+  MDBModalService,
+  MDBBootstrapModule
+} from 'angular-bootstrap-md';
 import { EffectsModule } from '@ngrx/effects';
 import { AdminEffects } from '../../store/admin.effects';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -19,6 +28,8 @@ import { of } from 'rxjs';
 import { UsersListComponent } from '../../components/users-list/users-list.component';
 import { UserComponent } from '../../components/user/user.component';
 import { UserDetailComponent } from '../../components/user-detail/user-detail.component';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 describe('AdminComponent', () => {
   let component: AdminComponent;
@@ -44,7 +55,9 @@ describe('AdminComponent', () => {
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule,
         AngularFireAuthModule,
-        MDBBootstrapModule.forRoot()
+        MDBBootstrapModule.forRoot(),
+        AngularFirestoreModule,
+        AngularFireFunctionsModule,
       ],
       providers: [
         MDBModalService
@@ -64,15 +77,16 @@ describe('AdminComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  let mockUsers: User[] = [
+  const mockUsers: User[] = [
     {
       uid: '12345',
       email: 'myemail@yahoo.com',
       providerId: 'email',
       userProfile: {
         displayName: 'sedky',
-        photoUrl: 'myphoto',  
-      }
+        photoUrl: 'myphoto',
+      },
+      pendingListings: [],
     },
     {
       uid: '67890',
@@ -81,35 +95,36 @@ describe('AdminComponent', () => {
       userProfile: {
         photoUrl: 'ramiphoto',
         displayName: 'rami',
-      }
+      },
+      pendingListings: [],
     }
-  ]
+  ];
 
   it('should show the loading thingy', () => {
-    expect(fixture.nativeElement.querySelectorAll('.spinner-grow')).toBeTruthy()
-  })
+    expect(fixture.nativeElement.querySelectorAll('.spinner-grow')).toBeTruthy();
+  });
 
-  describe("with users, ", () => {
+  describe('with users, ', () => {
     beforeEach(() => {
       component.users$ = of(mockUsers);
-      component.usersListLoading$ = of(false)
+      component.usersListLoading$ = of(false);
       fixture.detectChanges();
-    })
+    });
 
     it('should display two user cards', () => {
-      let cards = fixture.nativeElement.querySelectorAll("mdb-card")
-      expect(cards.length).toEqual(mockUsers.length)
-    })
+      const cards = fixture.nativeElement.querySelectorAll('mdb-card');
+      expect(cards.length).toEqual(mockUsers.length);
+    });
 
     it('should display user details', () => {
-      let card = fixture.nativeElement.querySelector("mdb-card .btn-primary")
-      card.click()
-      fixture.detectChanges()
+      const card = fixture.nativeElement.querySelector('mdb-card .btn-primary');
+      card.click();
+      fixture.detectChanges();
 
-      let userDetails = fixture.nativeElement.querySelector("app-user-detail")
-      expect(userDetails).toBeTruthy()
-    })
+      const userDetails = fixture.nativeElement.querySelector('app-user-detail');
+      expect(userDetails).toBeTruthy();
+    });
 
-  })
+  });
 
 });

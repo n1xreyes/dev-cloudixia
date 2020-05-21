@@ -2,14 +2,14 @@ import { ListingState } from './listing-state.enum';
 import { Category } from './category.model';
 
 export class Listing {
-  uid?: any;
+  uid: any;
   userId?: string;
   title?: string;
   description?: string;
   photoUrl?: string;
   // TODO: firebase store/return all properties as strings. In order to prevent problems in future, we need to convert to `Number`
   price?: string;
-  categories?: Category[];
+  categories: string[];
   state?: ListingState;
 
   constructor(raw?: ListingAlgolia) {
@@ -21,6 +21,7 @@ export class Listing {
       this.photoUrl = raw.photoUrl;
       this.price = raw.price;
       this.state = ListingState.ACTIVE;
+      this.categories = raw.categories;
     } else {
       this.title = '';
       this.description = '';
@@ -31,10 +32,34 @@ export class Listing {
     }
   }
 
-  static getCategoryNames(project: Listing): string {
-    return project.categories?.map((category: Category) => category.name).join(', ') || '';
-  }
+}
 
+export class ListringWithCategory extends Listing {
+  category?: Category;
+
+  static getCategoryName(project: ListringWithCategory): string | undefined {
+    if (!project?.categories) {
+      return '';
+    }
+
+    if (project.categories.length === 1) {
+      return project?.category?.title;
+    } else {
+      const parents: Category[] = [];
+      const immediateParent: Category | undefined = project.categories
+        .slice(1)
+        .reduce((collector: Category, categoryUid: string) => {
+          parents.push(collector);
+          return collector?.subCategories && collector.subCategories[categoryUid];
+        }, project.category);
+
+      if (immediateParent) {
+        parents.push(immediateParent);
+      }
+
+      return parents.map((category: Category) => category?.title).join(' > ');
+    }
+  }
 }
 
 export class ListingAlgolia {
@@ -45,4 +70,5 @@ export class ListingAlgolia {
   title: string;
   uid: string;
   userId: string;
+  categories: string[];
 }

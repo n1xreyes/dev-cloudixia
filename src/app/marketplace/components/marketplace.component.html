@@ -2,17 +2,15 @@
   <h3 translate>marketplace.componentHeader</h3>
   <p class="pt-3" translate>marketplace.componentSubHeading</p>
 
+  <app-category-filter
+    *ngIf="categories$ | async"
+    [items]="categories$ | async"
+    (selected)="selectCategory($event)"></app-category-filter>
+
   <form [formGroup]="form" (submit)="smashTheSearch()" class="form-inline md-form mr-auto mb-4">
     <app-input-wrapper
       name="query"
-      [placeholder]="'marketplace.mainSearchDescription' | translate"></app-input-wrapper>
-    <app-ng-select-wrapper
-      class="category-selection"
-      [items]="categories"
-      [multiple]="true"
-      bindLabel="name"
-      label="Category"
-      name="categories"></app-ng-select-wrapper>
+      placeholder="marketplace.mainSearchDescription"></app-input-wrapper>
     <button
       mdbBtn
       translate

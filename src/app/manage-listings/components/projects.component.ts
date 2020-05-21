@@ -8,7 +8,7 @@ import { getProjects, getAllLoaded, getPendingListings, getPendingLoaded } from 
 import { take, map } from 'rxjs/operators';
 import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Listing } from 'src/app/shared/models/listing.model';
+import { ListringWithCategory } from 'src/app/shared/models/listing.model';
 import { ProjectModalComponent } from './project-modal/project-modal.component';
 
 @Component({
@@ -17,9 +17,9 @@ import { ProjectModalComponent } from './project-modal/project-modal.component';
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit {
-  projects$: Observable<Listing[] | null>;
+  projects$: Observable<ListringWithCategory[] | null>;
   isLoading$: Observable<boolean>;
-  pendingListings$: Observable<Listing[] | null>;
+  pendingListings$: Observable<ListringWithCategory[] | null>;
   isPendingLoading$: Observable<boolean>;
   modalRef: MDBModalRef;
 
@@ -41,7 +41,7 @@ export class ProjectsComponent implements OnInit {
     this.isLoading$ = this.store.select(getAllLoaded);
     this.projects$ = this.store.pipe(
       select(getProjects),
-      map( (projects: Listing[]) => {
+      map((projects: ListringWithCategory[]) => {
         if (this.user && !projects) {
           this.store.dispatch(new fromProjects.ProjectsQuery());
         }
@@ -52,7 +52,7 @@ export class ProjectsComponent implements OnInit {
     this.isPendingLoading$ = this.store.select(getPendingLoaded);
     this.pendingListings$ = this.store.pipe(
       select(getPendingListings),
-      map( (listings: Listing[]) => {
+      map((listings: ListringWithCategory[]) => {
         if (this.user && !listings) {
           this.store.dispatch(new fromProjects.MyPendingListingsQuery());
         }
@@ -61,7 +61,7 @@ export class ProjectsComponent implements OnInit {
     );
   }
 
-  openModal(entity: Listing = new Listing()): void {
+  openModal(entity: ListringWithCategory = new ListringWithCategory()): void {
     const isEdit: boolean = !!entity.uid;
 
     this.modalService
@@ -69,9 +69,10 @@ export class ProjectsComponent implements OnInit {
         heading: isEdit ? 'Edit project' : 'Add new project',
         entity: {...entity}
       }})
-      .content.projectData
+      .content.result
       .pipe(take(1))
-      .subscribe( (projectData: Listing) => {
+      .subscribe((projectData: ListringWithCategory) => {
+        delete projectData.category;
         const action: Action = isEdit
           ? new fromProjects.ProjectEdited({ project: projectData })
           : new fromProjects.ProjectAdded({ project: projectData });
@@ -79,7 +80,7 @@ export class ProjectsComponent implements OnInit {
       });
   }
 
-  openConfirmModal(project: Listing) {
+  openConfirmModal(project: ListringWithCategory) {
     const modalRef = this.modalService.show(ConfirmModalComponent, this.modalConfig);
 
     modalRef.content.heading = 'Delete Listing?';
@@ -96,7 +97,7 @@ export class ProjectsComponent implements OnInit {
       });
   }
 
-  onProjectDelete(project: Listing) {
+  onProjectDelete(project: ListringWithCategory) {
     this.openConfirmModal(project);
   }
 

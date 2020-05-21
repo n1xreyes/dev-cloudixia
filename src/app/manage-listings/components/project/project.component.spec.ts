@@ -16,6 +16,10 @@ describe('ProjectComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProjectComponent);
     component = fixture.componentInstance;
+    component.project = {
+      uid: '',
+      categories: [],
+    };
     fixture.detectChanges();
   });
 
