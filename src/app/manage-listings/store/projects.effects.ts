@@ -14,7 +14,8 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
 import { CategoryService } from 'src/app/admin/services/category.service';
-import { combineLatest, of, Observable } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
+import { User, UserProfile } from 'src/app/auth/models/user.model';
 
 @Injectable()
 export class ProjectsEffects {
@@ -34,19 +35,19 @@ export class ProjectsEffects {
     withLatestFrom(this.authService.getAuthState()),
     mergeMap(([, user]: any) => {
       return this.marketplaceService.getUserProfile(user.uid).pipe(
-        switchMap(payload => {
+        switchMap((payload: UserProfile) => {
           if (!payload || !payload.listings || !payload.listings.length) {
             return of([]);
           }
 
-          const listings$ = Object.keys(payload.listings)
+          const listings$ = payload.listings
             .map((listingId: string) => {
               return this.marketplaceService.getListing(listingId)
                 .pipe(
                   switchMap((listingPayload: Listing) => this.categoryService.get(listingPayload.categories[0])
                     .pipe(
                       map((categoryPayload) => ({
-                        category: categoryPayload.payload.val(),
+                        category: categoryPayload.payload.data(),
                         listing: listingPayload
                       })
                     ))
@@ -71,19 +72,19 @@ export class ProjectsEffects {
     ofType(ProjectsActionTypes.MY_PENDING_LISTINGS_QUERY),
     withLatestFrom(this.authService.getAuthState()),
     mergeMap(([, user]: any) => {
-      return this.marketplaceService.getUsersPendingListingIds(user.uid).pipe(
-        switchMap(payload => {
+      return this.marketplaceService.getUserById(user.uid).pipe(
+        switchMap((payload: User) => {
           if (!payload) {
             return of([]);
           }
-          const listings$ = Object.keys(payload)
+          const listings$ = payload.pendingListings
             .map((listingId: string) => {
               return this.marketplaceService.getPendingListing(listingId)
                 .pipe(
                   switchMap((listingPayload: Listing) => this.categoryService.get(listingPayload.categories[0])
                     .pipe(
                       map((categoryPayload) => ({
-                        category: categoryPayload.payload.val(),
+                        category: categoryPayload.payload.data(),
                         listing: listingPayload
                       })
                     ))

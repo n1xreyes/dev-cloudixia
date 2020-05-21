@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 export enum AdminActionTypes {
   GET_USERS_LIST = '[Admin] Get Users List',
@@ -28,7 +29,7 @@ export class UsersListFetched implements Action {
 export class DeletePendingUserProject implements Action {
   readonly type = AdminActionTypes.DELETE_PENDING_USER_PROJECT;
 
-  constructor(public payload: { listingUID: string}) {}
+  constructor(public payload: { listing: Listing}) {}
 }
 
 export class ApproveUserProject implements Action {

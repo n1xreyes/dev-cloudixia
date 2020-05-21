@@ -32,7 +32,7 @@ export class MarketplaceEffects {
                     map((categoryPayload) => {
                       return {
                         listing,
-                        category: categoryPayload.payload.val()
+                        category: categoryPayload.payload.data()
                       };
                     })
                   );
@@ -44,7 +44,6 @@ export class MarketplaceEffects {
             return combineLatest(listing$);
           }),
           map((resultPayload) => {
-            console.log(resultPayload);
             const projects = resultPayload.map(({ listing, category }) => ({
               ...listing,
               category

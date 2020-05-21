@@ -4,6 +4,7 @@ import { MarketplaceService } from 'src/app/marketplace/services/marketplace.ser
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ListingState } from 'src/app/shared/models/listing-state.enum';
+import { Listing } from 'src/app/shared/models/listing.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,10 @@ import { ListingState } from 'src/app/shared/models/listing-state.enum';
 export class AdminService {
 
   constructor(
-    private marketplaceService: MarketplaceService, 
+    private marketplaceService: MarketplaceService,
     private authService: AuthService,
-    private fs: AngularFirestore) { }
+    private fs: AngularFirestore
+  ) { }
 
   getUsersList() {
     const usersRef = this.fs.collection('users');
@@ -24,8 +26,8 @@ export class AdminService {
     return this.authService.checkAdminRole(uid);
   }
 
-  deletePendingUserProject(listingId: string): Observable<void> {
-    return from(this.marketplaceService.deletePending(listingId));
+  deletePendingUserProject(listing: Listing): Observable<void> {
+    return from(this.marketplaceService.deletePending(listing));
   }
 
   approve(listingId: string): Observable<void> {

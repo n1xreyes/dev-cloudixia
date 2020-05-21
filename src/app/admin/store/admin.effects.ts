@@ -35,8 +35,8 @@ export class AdminEffects {
   @Effect({ dispatch: false })
   deleteUserProject$ = this.actions$.pipe(
     ofType(fromAdmin.AdminActionTypes.DELETE_PENDING_USER_PROJECT),
-    map( (action: fromAdmin.DeletePendingUserProject) => action.payload),
-    switchMap((payload: any) => this.adminService.deletePendingUserProject(payload.listingUID)
+    map((action: fromAdmin.DeletePendingUserProject) => action.payload),
+    switchMap((payload) => this.adminService.deletePendingUserProject(payload.listing)
       .pipe(
         catchError((error: any) => of(new fromAdmin.AdminError({ error })))
       )
@@ -82,7 +82,6 @@ export class AdminEffects {
     switchMap(() =>
       this.marketplaceService.getPendingSearches()
         .pipe(
-          map((data: any) => data.map((res: any) => ({ ...res.payload.val() }))),
           switchMap((listingPayload: Listing[]) => {
             const listing$ = listingPayload.map((listing) => {
               if (listing.categories && listing.categories.length) {
@@ -90,7 +89,7 @@ export class AdminEffects {
                   .pipe(
                     map((categoryPayload) => ({
                       listing,
-                      category: categoryPayload.payload.val(),
+                      category: categoryPayload.payload.data(),
                     })
                   ));
               } else {

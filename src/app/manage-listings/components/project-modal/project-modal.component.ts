@@ -41,7 +41,6 @@ export class ProjectModalComponent implements OnInit {
       select(getCategoryList),
       map((categories: Category[]) => {
         if (!categories) {
-          console.log(this.store);
           this.store.dispatch(new fromCategory.GetCategoryList());
         }
         return categories;

@@ -22,7 +22,7 @@ export class ListingDetailsComponent implements OnInit {
   ) {
     this._route.params.subscribe(params => {
       this.marketplaceService.getListing(params.id).subscribe(
-        payload => {
+        (payload: Listing) => {
           this.listing = payload;
           if (this.listing == null) {
             console.log('Listing not found.');

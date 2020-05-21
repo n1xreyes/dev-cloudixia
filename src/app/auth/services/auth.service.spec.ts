@@ -3,9 +3,11 @@ import { TestBed, inject } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { StoreModule } from '@ngrx/store';
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 describe('AuthService', () => {
   beforeEach(() => {
@@ -15,7 +17,10 @@ describe('AuthService', () => {
         StoreModule.forRoot({}),
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule,
-        AngularFireAuthModule
+        AngularFirestoreModule,
+        AngularFireFunctionsModule,
+        AngularFireAuthModule,
+        AngularFireFunctionsModule
       ],
     });
   });

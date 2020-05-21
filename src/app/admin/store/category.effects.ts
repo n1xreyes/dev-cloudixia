@@ -29,9 +29,9 @@ export class CategoryEffects {
     ofType(CategoryActionTypes.GET_CATEGORIES),
     switchMap(() => this.categoryService.list()
       .pipe(
-        map((rawResult: any) => {
-          const list: any[] = rawResult.map((res: any) => {
-            return { ...res.payload.val() };
+        map((rawResult) => {
+          const list: any[] = rawResult.map((res) => {
+            return { ...res.payload.doc.data() as any };
           });
           return new CategoryListFetched({ list });
         }),

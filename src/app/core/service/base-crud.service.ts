@@ -1,45 +1,39 @@
-import { AngularFireDatabase } from '@angular/fire/database';
 import { from, Observable } from 'rxjs';
 import { IDomain } from '../model/i-domain.model';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { map } from 'rxjs/operators';
 
 export abstract class BaseCrudService<T extends IDomain> {
 
-  protected abstract db: AngularFireDatabase;
+  protected abstract fs: AngularFirestore;
   protected abstract dbCollectionName: string;
 
   getNewUid(): string {
-    const newKey: string | null = this.db.createPushId();
-    if (!newKey) {
-      throw new Error('We are doomed!');
-    }
-    return newKey;
+    return this.fs.createId();
   }
 
   get(uid: string) {
-    return this.db.object(`${this.dbCollectionName}/${uid}`).snapshotChanges();
+    return this.fs.doc(`${this.dbCollectionName}/${uid}`).snapshotChanges();
   }
 
   list() {
-    return this.db.list(this.dbCollectionName).snapshotChanges();
+    return this.fs.collection(this.dbCollectionName).snapshotChanges();
   }
 
   add(entity: T): Observable<string> {
-    const newUid: string = this.getNewUid();
-    return from(this.db.list(this.dbCollectionName)
-      .set(newUid, {
-        ...entity,
-        uid: newUid,
-      })
-      .then(() => newUid));
+    entity.uid = this.fs.createId();
+    return from(this.fs.firestore.doc(`${this.dbCollectionName}/${entity.uid}`).set(entity))
+      .pipe(map(() => entity.uid));
   }
 
   update(entity: T): Observable<void> {
-    return from(this.db.object(`${this.dbCollectionName}/${entity.uid}/`)
-      .update({ ...entity }));
+    return from(
+      this.fs.doc(`${this.dbCollectionName}/${entity.uid}/`)
+        .update({ ...entity }));
   }
 
   delete(entity: T): Observable<void> {
-    return from(this.db.object(`${this.dbCollectionName}/${entity.uid}`).remove());
+    return from(this.fs.doc(`${this.dbCollectionName}/${entity.uid}`).delete());
   }
 
 }

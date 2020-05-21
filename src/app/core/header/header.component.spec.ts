@@ -9,7 +9,12 @@ import { Language } from 'src/app/shared/models/language.enum';
 @Component({
     selector: `app-host-component`,
     template: `
-        <app-header [user]="user" [isLoggedIn]="isLoggedIn" [isLoading]="isLoading" [isAdmin]="isAdmin" [language]=language></app-header>
+        <app-header
+            [userProfile]="user?.userProfile"
+            [isLoggedIn]="isLoggedIn"
+            [isLoading]="isLoading"
+            [isAdmin]="isAdmin"
+            [language]=language></app-header>
     `
 })
 class TestHostComponent {
@@ -92,7 +97,8 @@ describe('HeaderComponent', () => {
             userProfile: {
                 displayName: 'Robotron',
                 photoUrl: 'https://miro.medium.com/max/4000/1*KUy_KKExZrSpBuv9XfyBgA.png'
-            }
+            },
+            pendingListings: [],
         };
 
         // Inject a mock authenticated user

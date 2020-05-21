@@ -8,6 +8,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from 'src/environments/environment';
 import * as fromAuth from '../store/auth.reducer';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 describe('AuthGuard', () => {
   beforeEach(() => {
@@ -19,7 +21,9 @@ describe('AuthGuard', () => {
         RouterModule.forRoot([], { preloadingStrategy: PreloadAllModules }),
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule,
-        AngularFireAuthModule
+        AngularFireAuthModule,
+        AngularFireFunctionsModule,
+        AngularFirestoreModule
       ],
     });
   });

@@ -4,7 +4,6 @@ import { Listing } from 'src/app/shared/models/listing.model';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { environment } from 'src/environments/environment';
 import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
-import { Category } from 'src/app/shared/models/category.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 // TODO, get rid of the stupid fucking import bullshit dsfjdsofjsadofjas
 // warning in the browser
@@ -40,26 +39,22 @@ export class MarketplaceService {
     return batch.commit().then();
   }
 
-  getListing(listingId: string): Observable<any> {
+  getListing(listingId: string) {
     return this.fs.doc(`${this.LISTING_PREFIX}/${listingId}`).valueChanges();
   }
 
-  getPendingListing(listingId: string): Observable<any> {
-    return this.fs.collection(this.PENDING_PREFIX).doc(listingId).valueChanges();
-  }
-
-  // @Deprecated
-  prepareMarketplaceFilters(categories: Category[]): string {
-    return categories
-      .map((category: Category) => {
-        return `categories.name:"${category.title}"`;
-      })
-      .join(' OR ');
+  getPendingListing(listingId: string) {
+    return this.fs.doc(`${this.PENDING_PREFIX}/${listingId}`).valueChanges();
   }
 
   // Algolia API
   marketplaceListingSearch(query: MarketplaceListingPayload) {
-    return from(this.index.search(query.query, {filters: query.category && `categories:"${query.category.uid}"`}));
+    return from(this.index.search(
+      query.query,
+      {
+        filters: query.category && `categories:"${query.category.uid}"`
+      }
+    ));
   }
 
   // Pending APIs
@@ -101,7 +96,7 @@ export class MarketplaceService {
     return this.fs.doc(`userProfiles/${userId}`).valueChanges();
   }
 
-  getUsersPendingListingIds(userId: string): Observable<any> {
+  getUserById(userId: string): Observable<any> {
     return this.fs.doc(`${this.USERS_PREFIX}/${userId}`).valueChanges();
   }
 

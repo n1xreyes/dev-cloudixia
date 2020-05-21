@@ -53,9 +53,7 @@ export class ListingApprovalComponent implements OnInit {
       .subscribe((confirmation: boolean) => {
         if (confirmation && listing.userId) {
           this.store.dispatch(
-            new fromAdmin.DeletePendingUserProject({
-              listingUID: listing.uid
-            })
+            new fromAdmin.DeletePendingUserProject({ listing })
           );
         } else if (!listing.userId) {
           console.log('ERROR - NO USERID');

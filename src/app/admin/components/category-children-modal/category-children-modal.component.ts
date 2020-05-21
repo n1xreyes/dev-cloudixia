@@ -19,7 +19,7 @@ export class CategoryChildrenModalComponent implements OnInit {
 
   private superParent: Category;
   private immediatedParent: Category;
-  private immediateIsSuper: boolean = false;
+  private immediateIsSuper = false;
 
   inputParent: Category;
   list$: Observable<Category[]>;
@@ -34,7 +34,7 @@ export class CategoryChildrenModalComponent implements OnInit {
     this.list$ = this.categoryService.getSuperParent(this.inputParent)
       .pipe(
         tap(({payload}) => {
-          this.superParent = payload.val();
+          this.superParent = payload.data();
           this.immediatedParent = this.getImmediateParent(this.superParent, this.inputParent);
         }),
         map(() => {

@@ -38,7 +38,7 @@ export class ListringWithCategory extends Listing {
   category?: Category;
 
   static getCategoryName(project: ListringWithCategory): string | undefined {
-    if (!project.categories) {
+    if (!project?.categories) {
       return '';
     }
 
@@ -57,7 +57,7 @@ export class ListringWithCategory extends Listing {
         parents.push(immediateParent);
       }
 
-      return parents.map((category: Category) => category.title).join(' > ');
+      return parents.map((category: Category) => category?.title).join(' > ');
     }
   }
 }
