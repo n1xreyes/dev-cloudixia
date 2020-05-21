@@ -25,7 +25,6 @@ export class MainProfileComponent implements OnInit {
   // Todo: need to "select a photo" once image store is complete
   ngOnInit() {
     this.updateProfileForm = new FormGroup({
-      photoUrl: new FormControl(this.user.userProfile.photoUrl),
       country: new FormControl(this.user.country),
       city: new FormControl(this.user.city),
       street: new FormControl(this.user.street),
@@ -36,7 +35,7 @@ export class MainProfileComponent implements OnInit {
   }
 
   onProfileUpdate() {
-    let changes = {
+    const changes = {
       userProfile: {
         photoUrl: this.updateProfileForm.value.photoUrl
       },
@@ -45,7 +44,6 @@ export class MainProfileComponent implements OnInit {
       street: this.updateProfileForm.value.street,
       poBox: this.updateProfileForm.value.poBox,
     };
-    
 
     this.profileUpdate.emit({ user: changes });
   }

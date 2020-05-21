@@ -1,3 +1,5 @@
+import { Listing } from 'src/app/shared/models/listing.model';
+
 export interface User {
   uid: string;
   email: string;
@@ -13,6 +15,8 @@ export interface User {
   providerId: string;
   isNewUser?: boolean;
   userProfile: UserProfile;
+
+  pendingListings: Listing[];
 }
 
 export interface UserProfile {

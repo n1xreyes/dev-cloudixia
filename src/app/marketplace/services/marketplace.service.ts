@@ -1,42 +1,51 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { Observable, of, from } from 'rxjs';
 import { Listing } from 'src/app/shared/models/listing.model';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { environment } from 'src/environments/environment';
-import { ListingState } from 'src/app/shared/models/listing-state.enum';
 import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
 import { Category } from 'src/app/shared/models/category.model';
+import { AngularFirestore } from '@angular/fire/firestore';
+// TODO, get rid of the stupid fucking import bullshit dsfjdsofjsadofjas
+// warning in the browser
+import { firestore } from 'firebase';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MarketplaceService {
   LISTING_PREFIX = 'listings';
-  PENDING_PREFIX = 'pendingListings';
+  public PENDING_PREFIX = 'pendingListings';
   USERS_PREFIX = 'users';
   index: SearchIndex;
 
-  constructor(private db: AngularFireDatabase) {
+  constructor(private fs: AngularFirestore) {
     // Create Algolia Reference
     this.index = algoliasearch(environment.algolia.appId, environment.algolia.apiKey)
       .initIndex(environment.algolia.indexName);
   }
 
   update(project: Listing) {
-    return of(this.db.object(`${this.LISTING_PREFIX}/${project.uid}/`).update({ ...project }));
+    return of(this.fs.doc(`${this.LISTING_PREFIX}/${project.uid}/`).update({ ...project }));
   }
 
   delete(listing: Listing) {
-    return this.db.object(`${this.LISTING_PREFIX}/${listing.uid}`).remove();
+    const batch = this.fs.firestore.batch();
+
+    batch.delete(this.fs.firestore.collection(this.LISTING_PREFIX).doc(listing.uid));
+    batch.update(this.fs.firestore.doc(`userProfiles/${listing.userId}`),
+      { listings: firestore.FieldValue.arrayRemove(listing.uid) }
+    );
+
+    return batch.commit().then();
   }
 
   getListing(listingId: string): Observable<any> {
-    return this.db.object(`${this.LISTING_PREFIX}/${listingId}`).valueChanges();
+    return this.fs.doc(`${this.LISTING_PREFIX}/${listingId}`).valueChanges();
   }
 
   getPendingListing(listingId: string): Observable<any> {
-    return this.db.object(`${this.PENDING_PREFIX}/${listingId}`).valueChanges();
+    return this.fs.collection(this.PENDING_PREFIX).doc(listingId).valueChanges();
   }
 
   // @Deprecated
@@ -55,33 +64,45 @@ export class MarketplaceService {
 
   // Pending APIs
   add(listing: Listing) {
-    const newKey = this.db.createPushId();
+    const newKey = this.fs.createId();
     listing.uid = newKey;
-    return this.db.list(this.PENDING_PREFIX).set(listing.uid, listing);
+
+    const batch = this.fs.firestore.batch();
+
+    // Save the actual listing file plus a reference for the user
+    batch.set(this.fs.firestore.collection(this.PENDING_PREFIX).doc(listing.uid), listing);
+    batch.update(this.fs.firestore.doc(`users/${listing.userId}`),
+      { pendingListings: firestore.FieldValue.arrayUnion(listing.uid) }
+    );
+
+    return batch.commit().then();
   }
 
   updatePending(project: Listing) {
-    return of(this.db.object(`${this.PENDING_PREFIX}/${project.uid}/`).update({ ...project }));
+    return of(this.fs.doc(`${this.PENDING_PREFIX}/${project.uid}/`).update({ ...project }));
   }
 
   getPendingSearches() {
-    return this.db.list(this.PENDING_PREFIX).snapshotChanges();
+    return this.fs.collection(this.PENDING_PREFIX).valueChanges();
   }
 
-  deletePending(uid: string): Promise<void> {
-    return this.db.object(`${this.PENDING_PREFIX}/${uid}`).remove();
-  }
+  deletePending(listing: Listing): Promise<void> {
+    const batch = this.fs.firestore.batch();
+    batch.delete(this.fs.firestore.doc(`${this.PENDING_PREFIX}/${listing.uid}`));
+    batch.update(
+      this.fs.firestore.doc(`users/${listing.userId}`),
+      { pendingListings: firestore.FieldValue.arrayRemove(listing.uid) }
+    );
 
-  approve(listingId: string): Promise<void> {
-    return this.db.object(`${this.PENDING_PREFIX}/${listingId}`).update({state: ListingState.ACTIVE});
+    return batch.commit().then();
   }
 
   getUserProfile(userId: string): Observable<any> {
-    return this.db.object(`${this.USERS_PREFIX}/${userId}/userProfile`).valueChanges();
+    return this.fs.doc(`userProfiles/${userId}`).valueChanges();
   }
 
   getUsersPendingListingIds(userId: string): Observable<any> {
-    return this.db.object(`${this.USERS_PREFIX}/${userId}/pendingListings`).valueChanges();
+    return this.fs.doc(`${this.USERS_PREFIX}/${userId}`).valueChanges();
   }
 
 }

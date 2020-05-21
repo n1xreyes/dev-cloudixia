@@ -24,9 +24,7 @@ export class AdminEffects {
     switchMap( () => this.adminService.getUsersList()
       .pipe(
         map( (users: any) => {
-          const usersList: any[] = users.map((res: any) => {
-            return { ...res.payload.val() };
-          });
+          const usersList: any[] = users;
           return (new fromAdmin.UsersListFetched({ usersList }));
         }),
         catchError( (error: any) => of(new fromAdmin.AdminError({ error })))
@@ -49,7 +47,7 @@ export class AdminEffects {
   approveUserProject$ = this.actions$.pipe(
     ofType(fromAdmin.AdminActionTypes.APPROVE_USER_PROJECT),
     map((action: fromAdmin.ApproveUserProject) => action.payload),
-    switchMap((payload: any) => this.adminService.approveUserProject(payload.listingUID)
+    switchMap((payload: any) => this.adminService.approve(payload.listingUID)
       .pipe(
         catchError((error: any) => of(new fromAdmin.AdminError({ error })))
       )

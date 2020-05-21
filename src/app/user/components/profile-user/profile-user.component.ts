@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { User } from '../../../auth/models/user.model';
+import { User, UserProfile } from '../../../auth/models/user.model';
 
 @Component({
   selector: 'app-profile-user',
@@ -9,6 +9,7 @@ import { User } from '../../../auth/models/user.model';
 })
 export class ProfileUserComponent implements OnInit {
   @Input() user: User;
+  @Input() userProfile: UserProfile;
   @Output() logout = new EventEmitter<any>();
 
   constructor() { }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { User } from '../../auth/models/user.model';
+import { User, UserProfile } from '../../auth/models/user.model';
 import { Language } from 'src/app/shared/models/language.enum';
 import { Store } from '@ngrx/store';
 import { AuthState } from 'src/app/auth/store/auth.state';
@@ -15,7 +15,7 @@ import { take } from 'rxjs/operators';
 
 })
 export class HeaderComponent implements OnInit {
-  @Input() user: User;
+  @Input() userProfile: UserProfile;
   @Input() isLoggedIn: boolean;
   @Input() isLoading: boolean;
   @Input() isAdmin: boolean;
@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() { }
 
   onLogout() {
-    this.logout.emit(this.user);
+    this.logout.emit();
   }
 
   openLocalizationModal() {

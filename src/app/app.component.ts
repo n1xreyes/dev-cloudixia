@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from './reducers';
 import { Observable } from 'rxjs';
-import { User } from './auth/models/user.model';
-import { getUser, getIsLoggedIn, getIsLoading, getIsAdmin, getLanguage } from './auth/store/auth.selectors';
+import { User, UserProfile } from './auth/models/user.model';
+import { getIsLoggedIn, getIsLoading, getIsAdmin, getLanguage, getUserProfile } from './auth/store/auth.selectors';
 
 import * as fromAuth from './auth/store/auth.actions';
 import { Language } from './shared/models/language.enum';
@@ -16,7 +16,7 @@ import { Language } from './shared/models/language.enum';
 export class AppComponent implements OnInit {
   title = 'app';
 
-  user$: Observable<User | null>;
+  userProfile$: Observable<UserProfile | null>;
   isLoggedIn$: Observable<boolean>;
   isLoading$: Observable<boolean>;
   isAdmin$: Observable<boolean>;
@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     private store: Store<AppState>) {}
 
   ngOnInit() {
-    this.user$ = this.store.select(getUser);
+    this.userProfile$ = this.store.select(getUserProfile);
     this.isLoggedIn$ = this.store.select(getIsLoggedIn);
     this.isLoading$ = this.store.select(getIsLoading);
     this.isAdmin$ = this.store.select(getIsAdmin);

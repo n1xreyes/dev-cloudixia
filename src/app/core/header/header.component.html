@@ -75,20 +75,20 @@
         </a>
       </li>
   
-      <li *ngIf="user" class="nav-item waves-light dropdown avatar p-0 avatar-dropdown" mdbDropdown>
+      <li *ngIf="userProfile" class="nav-item waves-light dropdown avatar p-0 avatar-dropdown" mdbDropdown>
         <a mdbDropdownToggle mdbWavesEffect type="button" class="nav-link waves-light dropdown-toggle" mdbWavesEffect>
           <i class="fa-lg fas fa-user"></i>
         </a>
         <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-primary" role="menu">
-          <div *ngIf="user && user.userProfile && user.userProfile.displayName" class="text-center py-2 px-2">{{ user.userProfile.displayName }}</div>
-          <div *ngIf="!user || !user.userProfile || !user.userProfile.displayName" class="text-center py-2 px-2">Anonymous user</div>
+          <div *ngIf="userProfile && userProfile.displayName" class="text-center py-2 px-2">{{ userProfile.displayName }}</div>
+          <div *ngIf="!userProfile || !userProfile.displayName" class="text-center py-2 px-2">Anonymous user</div>
           <div class="divider dropdown-divider"></div>
           <a class="dropdown-item text-center waves-light" routerLink="/profile" mdbWavesEffect (click)="navbar.hide()">Profile</a>
           <a class="dropdown-item text-center waves-light" mdbWavesEffect (click)="onLogout(); navbar.hide()">Logout</a>
       </div>
       </li>
 
-      <li *ngIf="user" class="nav-item">
+      <li *ngIf="userProfile" class="nav-item">
         <a class="nav-link">
           <i class="fa-lg fas fa-comments" routerLink="/profile/messages"></i>
         </a>

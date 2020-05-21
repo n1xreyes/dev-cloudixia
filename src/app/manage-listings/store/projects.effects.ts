@@ -12,9 +12,9 @@ import { Listing } from 'src/app/shared/models/listing.model';
 import { ListingState } from 'src/app/shared/models/listing-state.enum';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
-import { combineLatest, of } from 'rxjs';
 import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
 import { CategoryService } from 'src/app/admin/services/category.service';
+import { combineLatest, of, Observable } from 'rxjs';
 
 @Injectable()
 export class ProjectsEffects {
@@ -35,7 +35,7 @@ export class ProjectsEffects {
     mergeMap(([, user]: any) => {
       return this.marketplaceService.getUserProfile(user.uid).pipe(
         switchMap(payload => {
-          if (!payload || !payload.listings) {
+          if (!payload || !payload.listings || !payload.listings.length) {
             return of([]);
           }
 
@@ -103,6 +103,7 @@ export class ProjectsEffects {
     })
   );
 
+  // Todo, dispatch a load & resolve thing
   @Effect({dispatch: false})
   added$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.PROJECT_ADDED),
@@ -121,6 +122,7 @@ export class ProjectsEffects {
     })
   );
 
+  // Todo, dispatch a load & resolve thing
   @Effect({dispatch: false})
   delete$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.PROJECT_DELETED),
@@ -129,6 +131,7 @@ export class ProjectsEffects {
     map(([payload]: any) => this.projectsService.delete(payload.project))
   );
 
+  // Todo, dispatch a load & resolve thing
   @Effect({dispatch: false})
   edit$ = this.actions$.pipe(
     ofType(ProjectsActionTypes.PROJECT_EDITED),

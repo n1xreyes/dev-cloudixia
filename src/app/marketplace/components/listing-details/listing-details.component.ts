@@ -12,7 +12,7 @@ import { UserProfile } from 'src/app/auth/models/user.model';
 export class ListingDetailsComponent implements OnInit {
 
   listing: Listing;
-  isLoading: boolean = true;
+  isLoading = true;
   listingUserProfile: UserProfile;
 
   constructor(
@@ -32,8 +32,8 @@ export class ListingDetailsComponent implements OnInit {
           this.isLoading = false;
 
           if (this.listing.userId) {
-            this.marketplaceService.getUserProfile(this.listing.userId).subscribe(payload => {
-              this.listingUserProfile = payload;
+            this.marketplaceService.getUserProfile(this.listing.userId).subscribe(profilePayload => {
+              this.listingUserProfile = profilePayload;
             });
           }
         }

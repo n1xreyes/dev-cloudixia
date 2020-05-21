@@ -1,40 +1,44 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { from, Observable } from 'rxjs';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { ListingState } from 'src/app/shared/models/listing-state.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
 
-  constructor(private db: AngularFireDatabase, private marketplaceService: MarketplaceService) { }
+  constructor(
+    private marketplaceService: MarketplaceService, 
+    private authService: AuthService,
+    private fs: AngularFirestore) { }
 
   getUsersList() {
-    const usersRef = this.db.list('users');
-    return usersRef.snapshotChanges();
+    const usersRef = this.fs.collection('users');
+    return usersRef.valueChanges();
   }
 
   checkAdminRole(uid: string) {
-    return this.db.object('admins/' + uid).valueChanges();
+    return this.authService.checkAdminRole(uid);
   }
 
   deletePendingUserProject(listingId: string): Observable<void> {
     return from(this.marketplaceService.deletePending(listingId));
   }
 
-  approveUserProject(listingId: string): Observable<void> {
-    return from(this.marketplaceService.approve(listingId));
+  approve(listingId: string): Observable<void> {
+    return from(this.fs.doc(`pendingListings/${listingId}`).update({state: ListingState.ACTIVE}));
   }
 
   addAdminPrivileges(uid: string) {
-    const adminsRef = this.db.object('admins/' + uid);
-    this.db.object('users/' + uid).update({ isAdmin: true });
-    return from(adminsRef.set(true));
+    const adminsRef = this.fs.doc('admins/' + uid);
+    return from(adminsRef.set({isAdmin: true}));
   }
 
   removeAdminPrivileges(uid: string) {
-    this.db.object('users/' + uid).update({ isAdmin: false });
-    return from(this.db.object('admins/' + uid).remove());
+    this.fs.doc('users/' + uid).update({ isAdmin: false });
+    return from(this.fs.doc('admins/' + uid).delete());
   }
 }
