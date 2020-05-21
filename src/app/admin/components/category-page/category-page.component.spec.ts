@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CategoryPageComponent } from './category-page.component';
+import { StoreModule } from '@ngrx/store';
 
 describe('CategoryPageComponent', () => {
   let component: CategoryPageComponent;
@@ -8,7 +9,10 @@ describe('CategoryPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CategoryPageComponent ]
+      declarations: [ CategoryPageComponent ],
+      imports: [
+        StoreModule.forRoot({}),
+      ]
     })
     .compileComponents();
   }));
