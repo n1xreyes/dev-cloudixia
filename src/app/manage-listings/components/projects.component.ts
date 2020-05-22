@@ -8,7 +8,7 @@ import { getProjects, getAllLoaded, getPendingListings, getPendingLoaded } from 
 import { take, map } from 'rxjs/operators';
 import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Listing } from 'src/app/shared/models/listing.model';
+import {Listing, ListingWithPhoto} from 'src/app/shared/models/listing.model';
 import { ProjectModalComponent } from './project-modal/project-modal.component';
 
 @Component({
@@ -61,7 +61,7 @@ export class ProjectsComponent implements OnInit {
     );
   }
 
-  openModal(entity: Listing = new Listing()): void {
+  openModal(entity: ListingWithPhoto = new ListingWithPhoto()): void {
     const isEdit: boolean = !!entity.uid;
 
     this.modalService
@@ -71,10 +71,12 @@ export class ProjectsComponent implements OnInit {
       }})
       .content.projectData
       .pipe(take(1))
-      .subscribe( (projectData: Listing) => {
+      .subscribe( (projectData: ListingWithPhoto) => {
+
+
         const action: Action = isEdit
-          ? new fromProjects.ProjectEdited({ project: projectData })
-          : new fromProjects.ProjectAdded({ project: projectData });
+          ? new fromProjects.ProjectEdited({ project: projectData, file: projectData.file })
+          : new fromProjects.ProjectAdded({ project: projectData, file: projectData.file });
         this.store.dispatch(action);
       });
   }

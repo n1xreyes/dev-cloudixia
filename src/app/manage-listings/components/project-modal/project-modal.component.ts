@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MDBModalRef } from 'angular-bootstrap-md';
 import { Subject } from 'rxjs';
-import { Listing } from 'src/app/shared/models/listing.model';
+import {ListingWithPhoto} from 'src/app/shared/models/listing.model';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Category, categories } from 'src/app/shared/models/category.model';
 import {AppState} from '../../../reducers';
@@ -17,7 +17,7 @@ import {getUser} from '../../../auth/store/auth.selectors';
 export class ProjectModalComponent implements OnInit {
 
   categories: Category[] = categories;
-  projectData: Subject<Listing> = new Subject<Listing>();
+  projectData: Subject<ListingWithPhoto> = new Subject<ListingWithPhoto>();
   user: User;
 
   form: FormGroup = new FormGroup({
@@ -29,7 +29,7 @@ export class ProjectModalComponent implements OnInit {
   });
 
   heading: string;
-  entity: Listing;
+  entity: ListingWithPhoto;
 
   constructor(public modalRef: MDBModalRef, private store: Store<AppState>) {}
 
@@ -63,8 +63,8 @@ export class ProjectModalComponent implements OnInit {
     }
   }
 
-  setListingPhotoUrl(url: string) {
-    this.form.controls['photoUrl'].setValue(url);
+  setSelectedPhoto(file: File) {
+    this.entity.file = file;
   }
 
 }

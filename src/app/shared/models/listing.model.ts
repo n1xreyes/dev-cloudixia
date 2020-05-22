@@ -46,3 +46,7 @@ export class ListingAlgolia {
   uid: string;
   userId: string;
 }
+
+export class ListingWithPhoto extends Listing {
+  file?: File;
+}

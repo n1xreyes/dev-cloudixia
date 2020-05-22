@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
-import { Listing } from 'src/app/shared/models/listing.model';
-import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { environment } from 'src/environments/environment';
-import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
-import { Category } from 'src/app/shared/models/category.model';
-import { AngularFirestore } from '@angular/fire/firestore';
+import {Injectable} from '@angular/core';
+import {from, Observable, of, Subject} from 'rxjs';
+import {Listing} from 'src/app/shared/models/listing.model';
+import algoliasearch, {SearchIndex} from 'algoliasearch';
+import {environment} from 'src/environments/environment';
+import {MarketplaceListingPayload} from '../models/marketplace-listing-payload.model';
+import {Category} from 'src/app/shared/models/category.model';
+import {AngularFirestore} from '@angular/fire/firestore';
 // TODO, get rid of the stupid fucking import bullshit dsfjdsofjsadofjas
 // warning in the browser
-import { firestore } from 'firebase';
+import {firestore} from 'firebase';
+import {BuildFileMetadataService} from '../../shared/components/image-upload/build-file-metadata.service';
+import {ImageUploadState} from '../../store/image-upload/image-upload.reducers';
+import {ImageUploadService} from '../../store/image-upload/image-upload.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +21,34 @@ export class MarketplaceService {
   public PENDING_PREFIX = 'pendingListings';
   USERS_PREFIX = 'users';
   index: SearchIndex;
+  imageUrl: string;
 
-  constructor(private fs: AngularFirestore) {
+  private imageUploadState: Subject<ImageUploadState> = new Subject<ImageUploadState>();
+
+  constructor(private fs: AngularFirestore,
+              private buildFileMetadataService: BuildFileMetadataService,
+              private imageUploadService: ImageUploadService) {
     // Create Algolia Reference
     this.index = algoliasearch(environment.algolia.appId, environment.algolia.apiKey)
       .initIndex(environment.algolia.indexName);
+
+    this.getImageUploadState();
   }
 
-  update(project: Listing) {
+  async update(project: Listing, file?: File) {
+    if (file) {
+      // build fileMetadata
+      const fileMeta = this.buildFileMetadataService.buildFileMetadata(project.userId, project.uid);
+      // get photoURL
+      await this.imageUploadService.uploadImage(file, fileMeta).toPromise().then((payload: any) => {
+        if (payload.URL) {
+          this.imageUrl = payload.URL;
+        }
+      });
+      if (this.imageUrl) {
+        project.photoUrl = this.imageUrl;
+      }
+    }
     return of(this.fs.doc(`${this.LISTING_PREFIX}/${project.uid}/`).update({ ...project }));
   }
 
@@ -63,8 +86,7 @@ export class MarketplaceService {
 
   // Pending APIs
   add(listing: Listing) {
-    const newKey = this.fs.createId();
-    listing.uid = newKey;
+    listing.uid = this.fs.createId();
 
     const batch = this.fs.firestore.batch();
 
@@ -77,7 +99,20 @@ export class MarketplaceService {
     return batch.commit().then();
   }
 
-  updatePending(project: Listing) {
+  async updatePending(project: Listing, file?: File) {
+    if (file) {
+      // build fileMetadata
+      const fileMeta = this.buildFileMetadataService.buildFileMetadata(project.userId, project.uid);
+      // get photoURL
+      await this.imageUploadService.uploadImage(file, fileMeta).toPromise().then((payload: any) => {
+        if (payload.URL) {
+          this.imageUrl = payload.URL;
+        }
+      });
+      if (this.imageUrl) {
+        project.photoUrl = this.imageUrl;
+      }
+    }
     return of(this.fs.doc(`${this.PENDING_PREFIX}/${project.uid}/`).update({ ...project }));
   }
 
@@ -101,6 +136,14 @@ export class MarketplaceService {
 
   getUsersPendingListingIds(userId: string): Observable<any> {
     return this.fs.doc(`${this.USERS_PREFIX}/${userId}`).valueChanges();
+  }
+
+  getImageUploadState() {
+    this.imageUploadState.subscribe((state: ImageUploadState) => {
+      if (state && state.url) {
+        this.imageUrl = state.url;
+      }
+    });
   }
 
 }

@@ -8,8 +8,8 @@ import {FileMetadataModel} from '../../models/file-metadata.model';
 import {Listing} from '../../models/listing.model';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {generateUID} from '../../../../utils/uid-generator';
 import {AuthService} from '../../../auth/services/auth.service';
+import {BuildFileMetadataService} from './build-file-metadata.service';
 
 
 interface HTMLInputEvent extends Event {
@@ -33,6 +33,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
   @Input() listingInfo: Listing;
   @Input() isProfilePic: boolean;
   @Output() photoUrlGenerated: EventEmitter<any> = new EventEmitter();
+  @Output() photoSelected: EventEmitter<any> = new EventEmitter();
   selectedFile: File;
   fileMetaData: FileMetadataModel;
   isRequesting: boolean;
@@ -41,7 +42,9 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
   authToken: string;
   tempUrl: any;
 
-  constructor(private store: Store<AppState>, private authService: AuthService) {}
+  constructor(private store: Store<AppState>,
+              private buildFileMetaDataService: BuildFileMetadataService,
+              private authService: AuthService) {}
 
   ngOnInit() {
     this.authService.getAuthState().subscribe((user) => {
@@ -100,6 +103,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
       };
 
       reader.readAsDataURL(this.selectedFile);
+      this.photoSelected.emit(this.selectedFile);
     }
   }
 
@@ -115,32 +119,46 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
   }
 
   uploadFile() {
-    this.fileMetaData = this.buildFileMetadata(this.isProfilePic);
+    this.buildFileMetadata();
     this.store.dispatch(new UploadImageRequest(this.selectedFile, this.fileMetaData));
   }
 
-  buildFileMetadata(isProfilePic: boolean): FileMetadataModel {
-    let fileName: string;
-    const fileExt = this.selectedFile.name.split('.').pop();
-    if (isProfilePic) {
-      fileName = this.userInfo.uid + '/profile/profile_' + this.userInfo.uid + '.' + fileExt;
-    } else {
-      if (this.listingInfo && this.listingInfo.uid) {
-        // tslint:disable-next-line:max-line-length
-        fileName = this.userInfo.uid + '/listing/' + this.listingInfo.uid + '/' + this.listingInfo.uid + '_' + generateUID() + '.' + fileExt;
-      } else {
-        // new project so no listing ID generated at this point
-        fileName = this.userInfo.uid + '/listing/listing_' + this.userInfo.uid + '_' + generateUID() + '.' + fileExt;
-      }
-    }
-    // tslint:disable-next-line:no-unused-expression
-    const fileMetadata: FileMetadataModel = {
-      fileName: fileName,
-      token: this.authToken
-    };
+  buildFileMetadata() {
+    // let fileName: string;
+    // const fileExt = this.selectedFile.name.split('.').pop();
+    // if (isProfilePic) {
+    //   fileName = this.userInfo.uid + '/profile/profile_' + this.userInfo.uid + '.' + fileExt;
+    // } else {
+    //   if (this.listingInfo && this.listingInfo.uid) {
+    //     // tslint:disable-next-line:max-line-length
+    //     fileName = this.userInfo.uid + '/listing/' + this.listingInfo.uid + '/' + this.listingInfo.uid + '_' + generateUID() + '.' + fileExt;
+    //   } else {
+    //     // new project so no listing ID generated at this point
+    //     fileName = this.userInfo.uid + '/listing/listing_' + this.userInfo.uid + '_' + generateUID() + '.' + fileExt;
+    //   }
+    // }
+    // // tslint:disable-next-line:no-unused-expression
+    // const fileMetadata: FileMetadataModel = {
+    //   fileName: fileName,
+    //   token: this.authToken
+    // };
+    //
+    // // @ts-ignore
+    // return fileMetadata;
 
-    // @ts-ignore
-    return fileMetadata;
+    // this.fileMetaData = this.isProfilePic ?
+    //     this.buildFileMetaDataService.buildFileMetadata(this.userInfo.uid, this.selectedFile) :
+    //     this.buildFileMetaDataService.buildFileMetadata(this.userInfo.uid, this.selectedFile, this.listingInfo.uid);
+    let meta;
+    if (this.isProfilePic) {
+      meta = this.buildFileMetaDataService.buildFileMetadata(this.userInfo.uid);
+    } else {
+      meta = this.buildFileMetaDataService.buildFileMetadata(this.userInfo.uid, this.listingInfo.uid);
+    }
+    this.fileMetaData = {
+      fileName: meta.fileName,
+      token: meta.token
+    }
   }
 
   urlGenerated(urlGen: string) {

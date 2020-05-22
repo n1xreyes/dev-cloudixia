@@ -22,12 +22,12 @@ export class ProjectsService {
     return this.marketplaceService.delete(listing);
   }
 
-  updateListing(listing: Listing) {
+  updateListing(listing: Listing, file?: File) {
     if (listing.state === ListingState.PENDING) {
-      return this.marketplaceService.updatePending(listing);
+      return this.marketplaceService.updatePending(listing, file);
     }
 
-    return this.marketplaceService.update(listing);
+    return this.marketplaceService.update(listing, file);
   }
 
 }
