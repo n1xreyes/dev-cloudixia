@@ -15,12 +15,12 @@ export const getUserProfile = createSelector(
 
 export const getUserChats = createSelector(
   getAuthState,
-  auth => auth.userChats.chatData
+  auth => auth.chatData
 );
 
 export const getUserChatMessages = createSelector(
   getAuthState,
-  auth => auth.userChats.chatMessages
+  auth => auth.chatMessages
 );
 
 export const getLanguage = createSelector(

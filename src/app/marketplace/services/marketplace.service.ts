@@ -5,9 +5,7 @@ import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { environment } from 'src/environments/environment';
 import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
 import { AngularFirestore } from '@angular/fire/firestore';
-// TODO, get rid of the stupid fucking import bullshit dsfjdsofjsadofjas
-// warning in the browser
-import { firestore } from 'firebase';
+import * as firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +31,7 @@ export class MarketplaceService {
 
     batch.delete(this.fs.firestore.collection(this.LISTING_PREFIX).doc(listing.uid));
     batch.update(this.fs.firestore.doc(`userProfiles/${listing.userId}`),
-      { listings: firestore.FieldValue.arrayRemove(listing.uid) }
+      { listings: firebase.firestore.FieldValue.arrayRemove(listing.uid) }
     );
 
     return batch.commit().then();
@@ -67,7 +65,7 @@ export class MarketplaceService {
     // Save the actual listing file plus a reference for the user
     batch.set(this.fs.firestore.collection(this.PENDING_PREFIX).doc(listing.uid), listing);
     batch.update(this.fs.firestore.doc(`users/${listing.userId}`),
-      { pendingListings: firestore.FieldValue.arrayUnion(listing.uid) }
+      { pendingListings: firebase.firestore.FieldValue.arrayUnion(listing.uid) }
     );
 
     return batch.commit().then();
@@ -86,7 +84,7 @@ export class MarketplaceService {
     batch.delete(this.fs.firestore.doc(`${this.PENDING_PREFIX}/${listing.uid}`));
     batch.update(
       this.fs.firestore.doc(`users/${listing.userId}`),
-      { pendingListings: firestore.FieldValue.arrayRemove(listing.uid) }
+      { pendingListings: firebase.firestore.FieldValue.arrayRemove(listing.uid) }
     );
 
     return batch.commit().then();

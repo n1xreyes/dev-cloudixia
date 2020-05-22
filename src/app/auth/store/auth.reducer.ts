@@ -67,10 +67,10 @@ export function authReducer(state = authInitialState, action: AuthAction): AuthS
     case AuthActionTypes.GET_CHAT_MESSAGES_LOADED: {
       const newState = cloneDeep(state);
 
-      if (!newState.userChats.chatMessages[action.chatId]) {
-        newState.userChats.chatMessages[action.chatId] = [action.chatMessage];
+      if (!newState.chatMessages[action.chatId]) {
+        newState.chatMessages[action.chatId] = [action.chatMessage];
       } else {
-        newState.userChats.chatMessages[action.chatId].push(action.chatMessage);
+        newState.chatMessages[action.chatId].push(action.chatMessage);
       }
 
       return newState;
@@ -86,14 +86,14 @@ export function authReducer(state = authInitialState, action: AuthAction): AuthS
       const newState = cloneDeep(state);
 
       // Does the new chat already exist in list?
-      const index = state.userChats.chatData.findIndex( chat => chat.chatId === action.chat.chatId);
+      const index = state.chatData.findIndex( chat => chat.chatId === action.chat.chatId);
 
       // If it doesn't, add it at the front of the list
       if (index === -1) {
-        newState.userChats.chatData.unshift(action.chat);
+        newState.chatData.unshift(action.chat);
       } else { // If it does, move it to the front by remove & add
-        newState.userChats.chatData.splice(index, 1);
-        newState.userChats.chatData.unshift(action.chat);
+        newState.chatData.splice(index, 1);
+        newState.chatData.unshift(action.chat);
       }
 
       return newState;

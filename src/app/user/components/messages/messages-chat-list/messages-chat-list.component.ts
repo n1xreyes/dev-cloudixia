@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+  import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ChatData } from 'src/app/shared/models/chat.model';
 
 @Component({
@@ -13,8 +13,7 @@ export class MessagesChatListComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   chatSelected(user: any) {
     this.onChatSelect.emit(user);

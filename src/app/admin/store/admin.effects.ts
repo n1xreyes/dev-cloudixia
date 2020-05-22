@@ -83,6 +83,9 @@ export class AdminEffects {
       this.marketplaceService.getPendingSearches()
         .pipe(
           switchMap((listingPayload: Listing[]) => {
+            if (!listingPayload || !listingPayload.length) {
+              return of([]);
+            }
             const listing$ = listingPayload.map((listing) => {
               if (listing.categories && listing.categories.length) {
                 return this.categoryService.get(listing.categories[0])

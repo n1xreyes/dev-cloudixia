@@ -44,13 +44,15 @@ export class ProjectsEffects {
             .map((listingId: string) => {
               return this.marketplaceService.getListing(listingId)
                 .pipe(
-                  switchMap((listingPayload: Listing) => this.categoryService.get(listingPayload.categories[0])
+                  switchMap((listingPayload: Listing) => {
+                    return    this.categoryService.get(listingPayload.categories[0])
                     .pipe(
                       map((categoryPayload) => ({
                         category: categoryPayload.payload.data(),
                         listing: listingPayload
                       })
-                    ))
+                    ));
+                  }
                   )
                 );
             });
@@ -74,20 +76,22 @@ export class ProjectsEffects {
     mergeMap(([, user]: any) => {
       return this.marketplaceService.getUserById(user.uid).pipe(
         switchMap((payload: User) => {
-          if (!payload) {
+          if (!payload || !payload.pendingListings || !payload.pendingListings.length) {
             return of([]);
           }
           const listings$ = payload.pendingListings
             .map((listingId: string) => {
               return this.marketplaceService.getPendingListing(listingId)
                 .pipe(
-                  switchMap((listingPayload: Listing) => this.categoryService.get(listingPayload.categories[0])
+                  switchMap((listingPayload: Listing) => {
+                    return this.categoryService.get(listingPayload.categories[0])
                     .pipe(
                       map((categoryPayload) => ({
                         category: categoryPayload.payload.data(),
                         listing: listingPayload
                       })
-                    ))
+                    ));
+                  }
                   )
                 );
             });

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Observable, of, defer, EMPTY } from 'rxjs';
 import { map, switchMap, catchError, tap, take, withLatestFrom } from 'rxjs/operators';
 
+import * as firebase from 'firebase/app';
 import * as auth from './../store/auth.actions';
 import { User } from '../models/user.model';
 import { Language } from '../../shared/models/language.enum';
@@ -315,8 +316,7 @@ export class AuthEffects {
       // chat does not already exist
       this.authService.createNewChat(
         payload.receiverId,
-        payload.message,
-        new Date().getTime()
+        payload.message
       );
 
       return EMPTY;
@@ -335,7 +335,7 @@ export class AuthEffects {
           chatId: payload.chatId,
           message: payload.message,
           sender: user?.uid || '',
-          timestamp: new Date().getTime()
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
       )
     )
