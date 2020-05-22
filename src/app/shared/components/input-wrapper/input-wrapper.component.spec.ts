@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InputWrapperComponent } from './input-wrapper.component';
 import { Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('InputWrapperComponent', () => {
   let component: InputWrapperComponent;
@@ -10,7 +11,10 @@ describe('InputWrapperComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InputWrapperComponent ]
+      declarations: [ InputWrapperComponent ],
+      imports: [
+        TranslateModule.forRoot()
+      ],
     })
     .compileComponents();
   }));

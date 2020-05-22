@@ -64,7 +64,9 @@ describe('ProjectsComponent', () => {
   }));
 
   const mockListings: Listing[] = [{
-    title: 'my listing'
+    uid: 'Test',
+    title: 'my listing',
+    categories: [],
   }];
 
   beforeEach(() => {

@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-
 import * as fromAdmin from './../store/admin.actions';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { AdminService } from '../services/admin.service';
 import { Listing } from 'src/app/shared/models/listing.model';
-import { of } from 'rxjs';
+import { of, combineLatest } from 'rxjs';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
-
+import { CategoryService } from '../services/category.service';
 
 @Injectable()
 export class AdminEffects {
 
-  constructor(private actions$: Actions, private adminService: AdminService, private marketplaceService: MarketplaceService) {}
+  constructor(
+    private actions$: Actions,
+    private adminService: AdminService,
+    private marketplaceService: MarketplaceService,
+    private categoryService: CategoryService,
+  ) {}
 
   @Effect()
   getUsersList$ = this.actions$.pipe(
@@ -31,8 +35,8 @@ export class AdminEffects {
   @Effect({ dispatch: false })
   deleteUserProject$ = this.actions$.pipe(
     ofType(fromAdmin.AdminActionTypes.DELETE_PENDING_USER_PROJECT),
-    map( (action: fromAdmin.DeletePendingUserProject) => action.payload),
-    switchMap((payload: any) => this.adminService.deletePendingUserProject(payload.listingUID)
+    map((action: fromAdmin.DeletePendingUserProject) => action.payload),
+    switchMap((payload) => this.adminService.deletePendingUserProject(payload.listing)
       .pipe(
         catchError((error: any) => of(new fromAdmin.AdminError({ error })))
       )
@@ -78,12 +82,36 @@ export class AdminEffects {
     switchMap(() =>
       this.marketplaceService.getPendingSearches()
         .pipe(
-          map((data: any) => {
-            const listingsData: Listing[] = data;
-            return (new fromAdmin.PendingListingsFetched({ pendingListings: listingsData }));
+          switchMap((listingPayload: Listing[]) => {
+            if (!listingPayload || !listingPayload.length) {
+              return of([]);
+            }
+            const listing$ = listingPayload.map((listing) => {
+              if (listing.categories && listing.categories.length) {
+                return this.categoryService.get(listing.categories[0])
+                  .pipe(
+                    map((categoryPayload) => ({
+                      listing,
+                      category: categoryPayload.payload.data(),
+                    })
+                  ));
+              } else {
+                return of({ listing, category: null });
+              }
+            });
+
+            return combineLatest(listing$);
           }),
-      catchError((error: any) => of(new fromAdmin.AdminError({ error })))
-    ))
+          map((payload) => {
+            const projects = payload.map(({ listing, category }) => ({
+              ...listing,
+              category
+            }));
+            return new fromAdmin.PendingListingsFetched({pendingListings: projects});
+          }),
+          catchError((error: any) => of(new fromAdmin.AdminError({ error })))
+        )
+    )
   );
 
 }

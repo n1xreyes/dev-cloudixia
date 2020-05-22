@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Listing } from 'src/app/shared/models/listing.model';
+import { ListringWithCategory, Listing } from 'src/app/shared/models/listing.model';
 import { Store } from '@ngrx/store';
 import { getPendingListingLoading, getPendingListings } from '../../store/admin.selectors';
 import { AppState } from 'src/app/reducers';
@@ -16,7 +16,7 @@ import * as fromAdmin from '../../store/admin.actions';
   styleUrls: ['./listing-approval.component.css']
 })
 export class ListingApprovalComponent implements OnInit {
-  listings$: Observable<Listing[]>;
+  listings$: Observable<ListringWithCategory[]>;
   isLoading$: Observable<boolean>;
 
   private modalRef: MDBModalRef;
@@ -25,7 +25,7 @@ export class ListingApprovalComponent implements OnInit {
     class: 'modal-dialog-centered'
   };
 
-  getCategoryNames = Listing.getCategoryNames;
+  getCategoryName = ListringWithCategory.getCategoryName;
 
   constructor(private store: Store<AppState>, private modalService: MDBModalService) { }
 
@@ -37,7 +37,7 @@ export class ListingApprovalComponent implements OnInit {
     this.store.dispatch(new adminActions.GetPendingListings());
   }
 
-  onDelete(listing: Listing) {
+  onDelete(listing: ListringWithCategory) {
     this.modalRef = this.modalService.show(
       ConfirmModalComponent,
       this.modalConfig
@@ -53,12 +53,10 @@ export class ListingApprovalComponent implements OnInit {
       .subscribe((confirmation: boolean) => {
         if (confirmation && listing.userId) {
           this.store.dispatch(
-            new fromAdmin.DeletePendingUserProject({
-              listingUID: listing.uid
-            })
+            new fromAdmin.DeletePendingUserProject({ listing })
           );
         } else if (!listing.userId) {
-          console.log("ERROR - NO USERID")
+          console.log('ERROR - NO USERID');
         }
       });
   }
@@ -84,7 +82,7 @@ export class ListingApprovalComponent implements OnInit {
             })
           );
         } else if (!listing.userId) {
-          console.log("ERROR - NO USERID")
+          console.log('ERROR - NO USERID');
         }
       });
   }

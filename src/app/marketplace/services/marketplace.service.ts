@@ -1,14 +1,11 @@
-import {Injectable} from '@angular/core';
-import {from, Observable, of, Subject} from 'rxjs';
-import {Listing} from 'src/app/shared/models/listing.model';
-import algoliasearch, {SearchIndex} from 'algoliasearch';
-import {environment} from 'src/environments/environment';
-import {MarketplaceListingPayload} from '../models/marketplace-listing-payload.model';
-import {Category} from 'src/app/shared/models/category.model';
-import {AngularFirestore} from '@angular/fire/firestore';
-// TODO, get rid of the stupid fucking import bullshit dsfjdsofjsadofjas
-// warning in the browser
-import {firestore} from 'firebase';
+import { Injectable } from '@angular/core';
+import { Observable, of, from } from 'rxjs';
+import { Listing } from 'src/app/shared/models/listing.model';
+import algoliasearch, { SearchIndex } from 'algoliasearch';
+import { environment } from 'src/environments/environment';
+import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
+import { AngularFirestore } from '@angular/fire/firestore';
+import * as firebase from 'firebase/app';
 import {BuildFileMetadataService} from '../../shared/components/image-upload/build-file-metadata.service';
 import {ImageUploadState} from '../../store/image-upload/image-upload.reducers';
 import {ImageUploadService} from '../../store/image-upload/image-upload.service';
@@ -57,43 +54,41 @@ export class MarketplaceService {
 
     batch.delete(this.fs.firestore.collection(this.LISTING_PREFIX).doc(listing.uid));
     batch.update(this.fs.firestore.doc(`userProfiles/${listing.userId}`),
-      { listings: firestore.FieldValue.arrayRemove(listing.uid) }
+      { listings: firebase.firestore.FieldValue.arrayRemove(listing.uid) }
     );
 
     return batch.commit().then();
   }
 
-  getListing(listingId: string): Observable<any> {
+  getListing(listingId: string) {
     return this.fs.doc(`${this.LISTING_PREFIX}/${listingId}`).valueChanges();
   }
 
-  getPendingListing(listingId: string): Observable<any> {
-    return this.fs.collection(this.PENDING_PREFIX).doc(listingId).valueChanges();
-  }
-
-  prepareMarketplaceFilters(categories: Category[]): string {
-    return categories
-      .map((category: Category) => {
-        return `categories.name:"${category.name}"`;
-      })
-      .join(' OR ');
+  getPendingListing(listingId: string) {
+    return this.fs.doc(`${this.PENDING_PREFIX}/${listingId}`).valueChanges();
   }
 
   // Algolia API
   marketplaceListingSearch(query: MarketplaceListingPayload) {
-    return from(this.index.search(query.query, {filters: this.prepareMarketplaceFilters(query.categories)}));
+    return from(this.index.search(
+      query.query,
+      {
+        filters: query.category && `categories:"${query.category.uid}"`
+      }
+    ));
   }
 
   // Pending APIs
   add(listing: Listing) {
-    listing.uid = this.fs.createId();
+    const newKey = this.fs.createId();
+    listing.uid = newKey;
 
     const batch = this.fs.firestore.batch();
 
     // Save the actual listing file plus a reference for the user
     batch.set(this.fs.firestore.collection(this.PENDING_PREFIX).doc(listing.uid), listing);
     batch.update(this.fs.firestore.doc(`users/${listing.userId}`),
-      { pendingListings: firestore.FieldValue.arrayUnion(listing.uid) }
+      { pendingListings: firebase.firestore.FieldValue.arrayUnion(listing.uid) }
     );
 
     return batch.commit().then();
@@ -123,9 +118,10 @@ export class MarketplaceService {
   deletePending(listing: Listing): Promise<void> {
     const batch = this.fs.firestore.batch();
     batch.delete(this.fs.firestore.doc(`${this.PENDING_PREFIX}/${listing.uid}`));
-    batch.update(this.fs.firestore.doc(`users/${listing.userId}`),
-    { pendingListings: firestore.FieldValue.arrayRemove(listing.uid) }
-  );
+    batch.update(
+      this.fs.firestore.doc(`users/${listing.userId}`),
+      { pendingListings: firebase.firestore.FieldValue.arrayRemove(listing.uid) }
+    );
 
     return batch.commit().then();
   }
@@ -134,7 +130,7 @@ export class MarketplaceService {
     return this.fs.doc(`userProfiles/${userId}`).valueChanges();
   }
 
-  getUsersPendingListingIds(userId: string): Observable<any> {
+  getUserById(userId: string): Observable<any> {
     return this.fs.doc(`${this.USERS_PREFIX}/${userId}`).valueChanges();
   }
 

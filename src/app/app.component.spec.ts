@@ -39,12 +39,12 @@ describe('AppComponent', () => {
   }));
 
   it(`should apply the correct css depending on the language`, async(() => {
-    component.language$ = of(Language.ENGLISH)
-    fixture.detectChanges()
-    expect(fixture.nativeElement.querySelector(".rtl")).toBeNull()
-    component.language$ = of(Language.ARABIC)
-    fixture.detectChanges()
-    expect(fixture.nativeElement.querySelector(".rtl")).toBeTruthy();
+    component.language$ = of(Language.ENGLISH);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.rtl')).toBeNull();
+    component.language$ = of(Language.ARABIC);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.rtl')).toBeTruthy();
   }));
 
 });

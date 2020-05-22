@@ -4,7 +4,7 @@
   <div *ngFor="let message of chatMessages">
     {{ message.sender}} <br>
     {{ message.message}} <br>
-    {{ message.timestamp}} <br>
+    {{ message.timestamp.toDate().getTime() | date:'short' }} <br>
 
     <br>
 

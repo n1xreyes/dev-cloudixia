@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MDBModalRef } from 'angular-bootstrap-md';
-import { Subject } from 'rxjs';
-import {ListingWithPhoto} from 'src/app/shared/models/listing.model';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Category, categories } from 'src/app/shared/models/category.model';
-import {AppState} from '../../../reducers';
-import {select, Store} from '@ngrx/store';
-import {User} from '../../../auth/models/user.model';
-import {getUser} from '../../../auth/store/auth.selectors';
+import { Subject, Observable } from 'rxjs';
+import { ListingWithPhoto } from 'src/app/shared/models/listing.model';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Category } from 'src/app/shared/models/category.model';
+import { getCategoryList } from 'src/app/admin/store/category.selectors';
+import { select, Store } from '@ngrx/store';
+import { map } from 'rxjs/operators';
+import { AppState } from 'src/app/reducers';
+import * as fromCategory from '../../../admin/store/category.actions';
 
 @Component({
   selector: 'app-project-modal',
@@ -16,9 +17,11 @@ import {getUser} from '../../../auth/store/auth.selectors';
 })
 export class ProjectModalComponent implements OnInit {
 
-  categories: Category[] = categories;
-  projectData: Subject<ListingWithPhoto> = new Subject<ListingWithPhoto>();
-  user: User;
+  // Input
+  entity: ListingWithPhoto;
+
+  categories$: Observable<Category[] | null>;
+  result: Subject<ListingWithPhoto> = new Subject<ListingWithPhoto>();
 
   form: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -28,39 +31,21 @@ export class ProjectModalComponent implements OnInit {
     price: new FormControl(0, [Validators.required, Validators.min(0.01)])
   });
 
-  heading: string;
-  entity: ListingWithPhoto;
+  constructor(
+    public modalRef: MDBModalRef,
+    public store: Store<AppState>
+  ) {}
 
-  constructor(public modalRef: MDBModalRef, private store: Store<AppState>) {}
-
-  ngOnInit() {
-    Object.entries(this.entity).forEach(([key, value]) => {
-      const control: AbstractControl = this.form.controls[key];
-      if (control) {
-        control.setValue(value);
-      }
-    });
-
-    this.store.pipe(
-      select(getUser)
-    ).subscribe( userState => {
-      if (userState) {
-        this.user = userState;
-      }
-    });
-  }
-
-  onSave() {
-    if (this.form.valid) {
-      this.projectData.next({
-        ...this.entity,
-        ...this.form.value
-      });
-      this.modalRef.hide();
-    } else {
-      Object.keys(this.form.controls)
-        .forEach(controlName => this.form.controls[controlName].markAsTouched());
-    }
+  ngOnInit(): void {
+    this.categories$ = this.store.pipe(
+      select(getCategoryList),
+      map((categories: Category[]) => {
+        if (!categories) {
+          this.store.dispatch(new fromCategory.GetCategoryList());
+        }
+        return categories;
+      })
+    );
   }
 
   setSelectedPhoto(file: File) {

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NgSelectWrapperComponent } from './ng-select-wrapper.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('NgSelectWrapperComponent', () => {
   let component: NgSelectWrapperComponent;
@@ -8,7 +9,10 @@ describe('NgSelectWrapperComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NgSelectWrapperComponent ]
+      declarations: [ NgSelectWrapperComponent ],
+      imports: [
+        TranslateModule.forRoot()
+      ],
     })
     .compileComponents();
   }));

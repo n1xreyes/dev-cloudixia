@@ -1,14 +1,14 @@
 <div class="md-form">
   <ng-select
     ngDefaultControl 
-    [placeholder]="label"
+    [placeholder]="label | translate"
     [formControl]="control"
-    name="qwe"
     [clearable]="clearable"
     [items]="items"
     [multiple]="multiple"
     [bindLabel]="bindLabel"
     [bindValue]="bindValue"
+    [groupBy]="groupBy"
     appendTo="body"
     [required]="required"
     [readonly]="disabled"

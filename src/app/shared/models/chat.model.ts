@@ -1,10 +1,10 @@
 export interface ChatMessage {
-    sender: string
-    message: string
-    timestamp: any
+    sender: string;
+    message: string;
+    timestamp: object;
 }
 
 export interface ChatData extends ChatMessage  {
-    receiverId: string
-    chatId: string
+    receiverId: string;
+    chatId: string;
 }

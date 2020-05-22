@@ -17,7 +17,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 export class AuthService {
 
   MAX_NUM_CHATS = 10;
-  MAX_NUM_CHAT_MESSAGES = 25;
+  MAX_NUM_CHAT_MESSAGES = 15;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -99,7 +99,7 @@ export class AuthService {
 
     const chatMessage = {
       sender: chatData.sender,
-      timestamp: new Date().getTime(),
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       message: chatData.message
     };
 
@@ -128,7 +128,7 @@ export class AuthService {
   }
 
   /**
-   * Creates a brand new chat between two users.  There is no logic to check 
+   * Creates a brand new chat between two users.  There is no logic to check
    * if an existing chat between two users exists already.  it will simply create a new one
    * between them, which overwrites the reference IDs for each user.
    * This will not destroy the old chat, but removes the reference for it in the users.
@@ -139,10 +139,12 @@ export class AuthService {
    * @param message The message to send
    * @param timestamp A timestamp
    */
-  createNewChat(receiverId: string, message: string, timestamp: any) {
+  createNewChat(receiverId: string, message: string) {
     this.fn.functions.httpsCallable('createNewChat')
-      ({ receiverId: receiverId, message: message, timestamp: timestamp })
-      .then(function (_: any) {});
+      ({
+        receiverId: receiverId,
+        message: message,
+      }).then(function (_: any) {});
   }
 
   /**
@@ -168,7 +170,7 @@ export class AuthService {
             const message: ChatMessage = {
               message: snapshotDoc.doc.data().message,
               sender: snapshotDoc.doc.data().sender,
-              timestamp: snapshotDoc.doc.data().timestamp
+              timestamp: snapshotDoc.doc.data({ serverTimestamps: 'estimate' }).timestamp
             };
             this.store.dispatch(new fromAuth.GetChatMessagesLoaded(chatId, message));
           });
@@ -209,7 +211,7 @@ export class AuthService {
               chatId: snapshotDoc.doc.data().chatId,
               message: snapshotDoc.doc.data().message,
               sender: snapshotDoc.doc.data().sender,
-              timestamp: snapshotDoc.doc.data().timestamp,
+              timestamp: snapshotDoc.doc.data({ serverTimestamps: 'estimate' }).timestamp,
               receiverId: snapshotDoc.doc.id
             };
             this.store.dispatch(new fromAuth.RecentChatLoaded(chatData));

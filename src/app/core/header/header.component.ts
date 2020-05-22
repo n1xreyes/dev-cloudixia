@@ -26,7 +26,10 @@ export class HeaderComponent implements OnInit {
   // Localization Modal
   localizationModalRef: MDBModalRef;
 
-  constructor(private store: Store<AuthState>, private modalService: MDBModalService, ) { }
+  constructor(
+    private store: Store<AuthState>,
+    private modalService: MDBModalService,
+  ) { }
 
   ngOnInit() { }
 
@@ -41,9 +44,11 @@ export class HeaderComponent implements OnInit {
     this.localizationModalRef.content.formLanguage = this.language;
 
     // Listen for changes to the Language - Fired on "save" event
-    this.localizationModalRef.content.language.pipe(take(1)).subscribe( (language: Language) => {
-      this.store.dispatch(new fromAuth.LanguageChange({language: language}))
-    });
+    this.localizationModalRef.content.language
+      .pipe(take(1))
+      .subscribe((language: Language) => {
+        this.store.dispatch(new fromAuth.LanguageChange({language: language}));
+      });
   }
 
 }

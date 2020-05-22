@@ -1,22 +1,25 @@
-import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { ProjectsActionTypes } from './projects.actions';
+import { Store, select } from '@ngrx/store';
+import { map, withLatestFrom, mergeMap, switchMap } from 'rxjs/operators';
+import { ProjectsService } from '../services/projects.service';
+
 import * as fromProjects from './projects.actions';
-import {ProjectsActionTypes} from './projects.actions';
-import {select, Store} from '@ngrx/store';
-import {map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
-import {ProjectsService} from '../services/projects.service';
-import {AppState} from '../../reducers/index';
-import {getUser} from '../../auth/store/auth.selectors';
-import {Listing} from 'src/app/shared/models/listing.model';
-import {ListingState} from 'src/app/shared/models/listing-state.enum';
-import {AuthService} from 'src/app/auth/services/auth.service';
-import {MarketplaceService} from 'src/app/marketplace/services/marketplace.service';
-import {combineLatest, Observable, of} from 'rxjs';
+import { AppState } from '../../reducers/index';
+import { getUser } from '../../auth/store/auth.selectors';
+import { Listing } from 'src/app/shared/models/listing.model';
+import { ListingState } from 'src/app/shared/models/listing-state.enum';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
+import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
+import { CategoryService } from 'src/app/admin/services/category.service';
+import { combineLatest, Observable, of } from 'rxjs';
+import { User, UserProfile } from 'src/app/auth/models/user.model';
+
 import {ImageUploadService} from '../../store/image-upload/image-upload.service';
 import {BuildFileMetadataService} from '../../shared/components/image-upload/build-file-metadata.service';
 
-// tslint:disable-next-line:max-line-length
-const DEFAULT_PHOTO_URL = 'https://1m19tt3pztls474q6z46fnk9-wpengine.netdna-ssl.com/wp-content/themes/unbound/images/No-Image-Found-400x264.png';
 const PHOTO_URL_PREFIX = 'https://cloudixia-images.s3.us-east-2.amazonaws.com/';
 
 @Injectable()
@@ -28,8 +31,9 @@ export class ProjectsEffects {
     private store: Store<AppState>,
     private authService: AuthService,
     private marketplaceService: MarketplaceService,
+    private categoryService: CategoryService,
     private imageUploadService: ImageUploadService,
-    private buildFileMetadataService: BuildFileMetadataService
+    private buildFileMetadataService: BuildFileMetadataService,
     ) {}
 
   @Effect()
@@ -38,18 +42,35 @@ export class ProjectsEffects {
     withLatestFrom(this.authService.getAuthState()),
     mergeMap(([, user]: any) => {
       return this.marketplaceService.getUserProfile(user.uid).pipe(
-        switchMap(payload => {
+        switchMap((payload: UserProfile) => {
           if (!payload || !payload.listings || !payload.listings.length) {
             return of([]);
           }
 
-          const listings$: Observable<Listing>[] = payload.listings.map( (listingId: string) => {
-            return this.marketplaceService.getListing(listingId);
-          });
+          const listings$ = payload.listings
+            .map((listingId: string) => {
+              return this.marketplaceService.getListing(listingId)
+                .pipe(
+                  switchMap((listingPayload: Listing) => {
+                    return    this.categoryService.get(listingPayload.categories[0])
+                    .pipe(
+                      map((categoryPayload) => ({
+                        category: categoryPayload.payload.data(),
+                        listing: listingPayload
+                      })
+                    ));
+                  }
+                  )
+                );
+            });
           return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.ProjectsLoaded({projects: payload});
+          const projects = payload.map(({ listing, category }) => ({
+            ...listing,
+            category
+          }));
+          return new fromProjects.ProjectsLoaded({ projects });
         })
       );
     })
@@ -60,18 +81,35 @@ export class ProjectsEffects {
     ofType(ProjectsActionTypes.MY_PENDING_LISTINGS_QUERY),
     withLatestFrom(this.authService.getAuthState()),
     mergeMap(([, user]: any) => {
-      return this.marketplaceService.getUsersPendingListingIds(user.uid).pipe(
-        switchMap(payload => {
+      return this.marketplaceService.getUserById(user.uid).pipe(
+        switchMap((payload: User) => {
           if (!payload || !payload.pendingListings || !payload.pendingListings.length) {
             return of([]);
           }
-          const listings$: Observable<Listing>[] = payload.pendingListings.map( (listingId: string) => {
-            return this.marketplaceService.getPendingListing(listingId);
-          });
+          const listings$ = payload.pendingListings
+            .map((listingId: string) => {
+              return this.marketplaceService.getPendingListing(listingId)
+                .pipe(
+                  switchMap((listingPayload: Listing) => {
+                    return this.categoryService.get(listingPayload.categories[0])
+                    .pipe(
+                      map((categoryPayload) => ({
+                        category: categoryPayload.payload.data(),
+                        listing: listingPayload
+                      })
+                    ));
+                  }
+                  )
+                );
+            });
           return combineLatest(listings$);
         }),
         map(payload => {
-          return new fromProjects.PendingListingsLoaded({projects: payload});
+          const projects = payload.map(({ listing, category }) => ({
+            ...listing,
+            category
+          }));
+          return new fromProjects.PendingListingsLoaded({ projects });
         })
       );
     })

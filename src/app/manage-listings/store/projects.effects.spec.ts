@@ -5,10 +5,12 @@ import { Observable } from 'rxjs';
 import { ProjectsEffects } from './projects.effects';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { StoreModule } from '@ngrx/store';
 import { projectsReducer } from './projects.reducer';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 describe('ProjectsEffects', () => {
   let actions$: Observable<any>;
@@ -24,12 +26,14 @@ describe('ProjectsEffects', () => {
         StoreModule.forFeature('projects', projectsReducer),
         StoreModule.forRoot({}),
         AngularFireModule.initializeApp(environment.firebase),
+        AngularFirestoreModule,
         AngularFireDatabaseModule,
+        AngularFireFunctionsModule,
         AngularFireAuthModule
       ]
     });
 
-    effects = TestBed.get(ProjectsEffects);
+    effects = TestBed.inject(ProjectsEffects);
   });
 
   it('should be created', () => {

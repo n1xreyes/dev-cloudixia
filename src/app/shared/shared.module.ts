@@ -8,7 +8,8 @@ import {
   InputsModule,
   CardsModule,
   InputUtilitiesModule,
-  IconsModule
+  IconsModule,
+  BreadcrumbModule
 } from 'angular-bootstrap-md';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectWrapperComponent } from './components/ng-select-wrapper/ng-select-wrapper.component';
@@ -16,6 +17,11 @@ import { FieldErrorsPipe } from './pipe/field-errors.pipe';
 import { ModalWrapperComponent } from './components/modal-wrapper/modal-wrapper.component';
 import { InputWrapperComponent } from './components/input-wrapper/input-wrapper.component';
 import { InputErrorWrapperComponent } from './components/input-error-wrapper/input-error-wrapper.component';
+import { CrudModalComponent } from './components/crud-modal/crud-modal.component';
+import { CategorySelectionComponent } from './components/category-selection/category-selection.component';
+import { CategorySubSelectionComponent } from './components/category-sub-selection/category-sub-selection.component';
+import { CategoryFilterComponent } from './components/category-filter/category-filter.component';
+import { CategoryCardComponent } from './components/category-card/category-card.component';
 import { ImageUploadComponent } from './components/image-upload/image-upload.component';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -30,6 +36,11 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     ModalWrapperComponent,
     InputWrapperComponent,
     InputErrorWrapperComponent,
+    CrudModalComponent,
+    CategorySelectionComponent,
+    CategorySubSelectionComponent,
+    CategoryFilterComponent,
+    CategoryCardComponent,
     ImageUploadComponent,
   ],
   imports: [
@@ -44,6 +55,7 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     IconsModule,
     ButtonsModule,
     CardsModule,
+    BreadcrumbModule,
     // ng-select
     NgSelectModule,
     StoreModule.forFeature('imageUpload', fromImageUpload.imageUploadReducer),
@@ -69,6 +81,10 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     FieldErrorsPipe,
     ModalWrapperComponent,
     InputWrapperComponent,
+    CrudModalComponent,
+    CategorySelectionComponent,
+    CategoryFilterComponent,
+    CategoryCardComponent,
   ],
   providers: [],
   entryComponents: [

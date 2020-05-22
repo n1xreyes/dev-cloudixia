@@ -7,6 +7,8 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { StoreModule, StoreRootModule } from '@ngrx/store';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 
 describe('AdminGuard', () => {
@@ -15,10 +17,12 @@ describe('AdminGuard', () => {
       imports: [
         StoreModule.forRoot({}),
         StoreRootModule,
-        RouterTestingModule, 
+        RouterTestingModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireDatabaseModule,
-        AngularFireAuthModule
+        AngularFireAuthModule,
+        AngularFirestoreModule,
+        AngularFireFunctionsModule
       ],
       providers: [AdminGuard]
     });

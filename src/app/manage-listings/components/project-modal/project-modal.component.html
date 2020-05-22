@@ -1,22 +1,22 @@
-<app-modal-wrapper
+<app-crud-modal
+  entityTitle="project.title"
+  [form]="form"
+  [entity]="entity"
   [modalRef]="modalRef"
-  [heading]="heading"
-  (primaryClick)="onSave()">
+  (saved)="result.next($event)">
   <form [formGroup]="form">
     <app-input-wrapper
       name="title"
-      label="Title"></app-input-wrapper>
+      label="project.fields.title"></app-input-wrapper>
     <app-input-wrapper
       type="textarea"
       name="description"
-      label="Description"></app-input-wrapper>
-    <app-ng-select-wrapper
-      name="categories"
-      [items]="categories"
-      [multiple]="true"
-      bindLabel="name"
-      label="categories"
-      placeholder="Category"></app-ng-select-wrapper>
+      label="project.fields.description"></app-input-wrapper>
+    <app-category-selection
+      *ngIf="categories$ | async"
+      [items]="categories$ | async"
+      formControlName="categories"
+      [returnUid]="true"></app-category-selection>
     <div class="md-form">
       <input type="hidden" id="photo" class="form-control" name="photoUrl" [formControl]="form.controls.photoUrl" mdbInput>
       <app-image-upload [isProfilePic]="false" [userInfo]="user" (photoSelected)="setSelectedPhoto($event)"></app-image-upload>
@@ -24,6 +24,6 @@
     <app-input-wrapper
       type="number"
       name="price"
-      label="Price"></app-input-wrapper>
+      label="project.fields.price"></app-input-wrapper>
   </form>
-</app-modal-wrapper>
+</app-crud-modal>

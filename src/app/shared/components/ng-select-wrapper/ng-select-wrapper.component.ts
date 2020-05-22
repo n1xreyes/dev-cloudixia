@@ -26,6 +26,7 @@ export class NgSelectWrapperComponent extends InputWrapperBase {
   @Input() bindValue: string;
   @Input() multiple: boolean;
   @Input() addTag?: boolean | AddTagFn;
+  @Input() groupBy?: string;
 
   // Error modal
   @Input() validOnPristine: boolean = true;

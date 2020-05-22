@@ -17,8 +17,8 @@ export class ContactModalComponent implements OnInit {
     message: new FormControl('', Validators.required)
   });
 
-  userProfile: UserProfile
-  heading: string
+  userProfile: UserProfile;
+  heading: string;
 
   constructor(public modalRef: MDBModalRef) {}
 

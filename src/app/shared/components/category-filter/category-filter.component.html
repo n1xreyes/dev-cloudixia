@@ -1,0 +1,19 @@
+<mdb-breadcrumb>
+  <mdb-breadcrumb-item (click)="goByIndex(-1)">{{'common.home' | translate}}</mdb-breadcrumb-item>
+  <mdb-breadcrumb-item
+    *ngFor="let breadcrumbItem of breadcrumbs; index as i; trackBy: trackByFunction"
+    (click)="goByIndex(i)"
+    [ngClass]="{
+      'active': i === breadcrumbs.length - 1
+    }">
+    {{breadcrumbItem.title}}
+  </mdb-breadcrumb-item>
+</mdb-breadcrumb>
+<div class="d-flex fadeIn animated">
+  <app-category-card
+    *ngFor="let item of currentItems; trackBy: trackByFunction"
+    [entity]="item"
+    [editable]="false"
+    (click)="onClick(item)"
+    ></app-category-card>
+</div>
