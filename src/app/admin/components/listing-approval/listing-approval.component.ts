@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ListringWithCategory, Listing } from 'src/app/shared/models/listing.model';
+import { ListingWithCategory, Listing } from 'src/app/shared/models/listing.model';
 import { Store } from '@ngrx/store';
 import { getPendingListingLoading, getPendingListings } from '../../store/admin.selectors';
 import { AppState } from 'src/app/reducers';
@@ -16,7 +16,7 @@ import * as fromAdmin from '../../store/admin.actions';
   styleUrls: ['./listing-approval.component.css']
 })
 export class ListingApprovalComponent implements OnInit {
-  listings$: Observable<ListringWithCategory[]>;
+  listings$: Observable<ListingWithCategory[]>;
   isLoading$: Observable<boolean>;
 
   private modalRef: MDBModalRef;
@@ -25,7 +25,7 @@ export class ListingApprovalComponent implements OnInit {
     class: 'modal-dialog-centered'
   };
 
-  getCategoryName = ListringWithCategory.getCategoryName;
+  getCategoryName = ListingWithCategory.getCategoryName;
 
   constructor(private store: Store<AppState>, private modalService: MDBModalService) { }
 
@@ -37,7 +37,7 @@ export class ListingApprovalComponent implements OnInit {
     this.store.dispatch(new adminActions.GetPendingListings());
   }
 
-  onDelete(listing: ListringWithCategory) {
+  onDelete(listing: ListingWithCategory) {
     this.modalRef = this.modalService.show(
       ConfirmModalComponent,
       this.modalConfig

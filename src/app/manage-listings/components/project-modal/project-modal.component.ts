@@ -9,6 +9,8 @@ import { select, Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 import * as fromCategory from '../../../admin/store/category.actions';
+import {getUser} from '../../../auth/store/auth.selectors';
+import {User} from '../../../auth/models/user.model';
 
 @Component({
   selector: 'app-project-modal',
@@ -22,6 +24,7 @@ export class ProjectModalComponent implements OnInit {
 
   categories$: Observable<Category[] | null>;
   result: Subject<ListingWithPhoto> = new Subject<ListingWithPhoto>();
+  user: User;
 
   form: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -46,6 +49,14 @@ export class ProjectModalComponent implements OnInit {
         return categories;
       })
     );
+
+    this.store.pipe(
+        select(getUser)
+    ).subscribe( userState => {
+      if (userState) {
+        this.user = userState;
+      }
+    });
   }
 
   setSelectedPhoto(file: File) {

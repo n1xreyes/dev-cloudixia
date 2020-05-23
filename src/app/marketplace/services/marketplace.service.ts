@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
+import {Observable, of, from, Subject} from 'rxjs';
 import { Listing } from 'src/app/shared/models/listing.model';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { environment } from 'src/environments/environment';

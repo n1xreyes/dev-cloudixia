@@ -34,10 +34,10 @@ export class Listing {
 
 }
 
-export class ListringWithCategory extends Listing {
+export class ListingWithCategory extends Listing {
   category?: Category;
 
-  static getCategoryName(project: ListringWithCategory): string | undefined {
+  static getCategoryName(project: ListingWithCategory): string | undefined {
     if (!project?.categories) {
       return '';
     }
@@ -73,6 +73,6 @@ export class ListingAlgolia {
   categories: string[];
 }
 
-export class ListingWithPhoto extends Listing {
+export class ListingWithPhoto extends ListingWithCategory {
   file?: File;
 }

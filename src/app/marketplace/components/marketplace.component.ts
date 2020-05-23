@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { map, delay } from 'rxjs/operators';
 import { getAllLoaded, GetListings } from '../store/marketplace.selectors';
 import { AppState } from 'src/app/reducers';
-import { ListringWithCategory } from 'src/app/shared/models/listing.model';
+import { ListingWithCategory } from 'src/app/shared/models/listing.model';
 import { Category } from 'src/app/shared/models/category.model';
 import { getCategoryList } from 'src/app/admin/store/category.selectors';
 import { MarketplaceSearch } from '../store/marketplace.actions';
@@ -23,7 +23,7 @@ export class MarketplaceComponent implements OnInit {
   });
 
   categories$: Observable<Category[] | null>;
-  listings$: Observable<ListringWithCategory[] | null>;
+  listings$: Observable<ListingWithCategory[] | null>;
   isLoading$: Observable<boolean>;
 
   selectedCategory: Category | undefined;
@@ -38,7 +38,7 @@ export class MarketplaceComponent implements OnInit {
 
     this.listings$ = this.store.pipe(
       select(GetListings),
-      map((listings: ListringWithCategory[]) => {
+      map((listings: ListingWithCategory[]) => {
         if (!listings) {
           this.store.dispatch(new MarketplaceSearch(this.form.value));
         }

@@ -5,7 +5,6 @@ import * as aws from 'aws-sdk';
 admin.initializeApp();
 
 const env = functions.config();
-const db = admin.database()
 aws.config.update({
     credentials: new aws.Credentials('AKIAZNTXP4OZFLTS4WSP', 'GeLVlYFjSPhJ5prvMJCSapEhCrTo1gcxQ69T3kEH')
 });

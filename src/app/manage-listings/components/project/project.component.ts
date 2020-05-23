@@ -1,5 +1,3 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { ListringWithCategory } from 'src/app/shared/models/listing.model';
 import {
   Component,
   OnInit,
@@ -10,6 +8,7 @@ import {
   OnChanges,
   SimpleChanges, OnDestroy
 } from '@angular/core';
+import { ListingWithCategory } from 'src/app/shared/models/listing.model';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -20,12 +19,12 @@ import {Subject} from 'rxjs';
 })
 export class ProjectComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() project: ListringWithCategory;
+  @Input() project: ListingWithCategory;
   @Input() editable = true;
-  @Output() deleted = new EventEmitter<ListringWithCategory>();
-  @Output() edited = new EventEmitter<ListringWithCategory>();
+  @Output() deleted = new EventEmitter<ListingWithCategory>();
+  @Output() edited = new EventEmitter<ListingWithCategory>();
 
-  getCategoryName = ListringWithCategory.getCategoryName;
+  getCategoryName = ListingWithCategory.getCategoryName;
   destroyed: Subject<boolean> = new Subject<boolean>();
 
   constructor() { }

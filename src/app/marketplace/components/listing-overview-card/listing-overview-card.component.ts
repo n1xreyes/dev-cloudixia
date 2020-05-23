@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ListringWithCategory } from 'src/app/shared/models/listing.model';
+import { ListingWithCategory } from 'src/app/shared/models/listing.model';
 
 @Component({
   selector: 'app-listing-overview-card',
@@ -8,9 +8,9 @@ import { ListringWithCategory } from 'src/app/shared/models/listing.model';
 })
 export class ListingOverviewCardComponent implements OnInit {
 
-  @Input() listing: ListringWithCategory;
+  @Input() listing: ListingWithCategory;
 
-  getCategoryName = ListringWithCategory.getCategoryName;
+  getCategoryName = ListingWithCategory.getCategoryName;
 
   constructor() { }
 

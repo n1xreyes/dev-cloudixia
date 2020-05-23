@@ -14,7 +14,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
 import { CategoryService } from 'src/app/admin/services/category.service';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { User, UserProfile } from 'src/app/auth/models/user.model';
 
 import {ImageUploadService} from '../../store/image-upload/image-upload.service';
