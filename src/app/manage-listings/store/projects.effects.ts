@@ -17,7 +17,7 @@ import { CategoryService } from 'src/app/admin/services/category.service';
 import { combineLatest, of } from 'rxjs';
 import { User, UserProfile } from 'src/app/auth/models/user.model';
 
-import {ImageUploadService} from '../../store/image-upload/image-upload.service';
+// import {ImageUploadService} from '../../store/image-upload/image-upload.service';
 import {BuildFileMetadataService} from '../../shared/components/image-upload/build-file-metadata.service';
 
 const PHOTO_URL_PREFIX = 'https://cloudixia-images.s3.us-east-2.amazonaws.com/';
@@ -32,7 +32,7 @@ export class ProjectsEffects {
     private authService: AuthService,
     private marketplaceService: MarketplaceService,
     private categoryService: CategoryService,
-    private imageUploadService: ImageUploadService,
+    // private imageUploadService: ImageUploadService,
     private buildFileMetadataService: BuildFileMetadataService,
     ) {}
 
@@ -122,7 +122,7 @@ export class ProjectsEffects {
     map((action: fromProjects.ProjectAdded) => action.payload),
     withLatestFrom(this.store.pipe(select(getUser))),
     switchMap(([payload, user]: any) => {
-      const project: Listing = {...payload.project};
+      const project = {...payload.project};
       const projectPhoto: File = payload.file;
 
       project.userId = user.uid;
@@ -130,25 +130,14 @@ export class ProjectsEffects {
 
       if (!projectPhoto) {
         project.photoUrl = DEFAULT_PHOTO_URL;
-        return of(project);
+        // return of(project);
+        return this.projectsService.add(project);
       } else {
-          return this.imageUploadService.uploadImage(projectPhoto,
-            this.buildFileMetadataService.buildFileMetadata(project.userId, project.uid)).pipe(
-                map((payload: any) => {
-                    project.photoUrl = payload.URL;
-                    return project;
-                })
-            );
+          if(project.file) {
+            delete project.file;
+          }
+          return this.projectsService.add(project, projectPhoto);
       }
-    }),
-    map( (listing: any) => {
-        console.log(listing);
-        if (listing.file) {
-            delete listing.file;
-        }
-        this.projectsService.add(listing).then( payload => {
-        console.log('payload: ', payload)
-        })
     })
   );
 

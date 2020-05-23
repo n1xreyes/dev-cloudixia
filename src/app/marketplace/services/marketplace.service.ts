@@ -79,9 +79,23 @@ export class MarketplaceService {
   }
 
   // Pending APIs
-  add(listing: Listing) {
+  async add(listing: Listing, file?: File) {
     const newKey = this.fs.createId();
     listing.uid = newKey;
+
+    if (file) {
+      // build fileMetadata
+      const fileMeta = this.buildFileMetadataService.buildFileMetadata(listing.userId, listing.uid);
+      // get photoURL
+      await this.imageUploadService.uploadImage(file, fileMeta).toPromise().then((payload: any) => {
+        if (payload.URL) {
+          this.imageUrl = payload.URL;
+        }
+      });
+      if (this.imageUrl) {
+        listing.photoUrl = this.imageUrl;
+      }
+    }
 
     const batch = this.fs.firestore.batch();
 

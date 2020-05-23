@@ -11,8 +11,8 @@ export class ProjectsService {
     private marketplaceService: MarketplaceService
     ) { }
 
-  add(project: Listing) {
-    return this.marketplaceService.add(project);
+  add(project: Listing, file?: File) {
+    return this.marketplaceService.add(project, file);
   }
 
   delete(listing: Listing) {
