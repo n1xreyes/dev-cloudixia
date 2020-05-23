@@ -12,9 +12,10 @@
         </div>
         <ng-template [ngIf]="isProfilePic" [ngIfElse]="projectMode">
             <div *ngIf="selectedFile && !isRequesting" class="d-flex flex-column align-items-center">
-                <div class="d-flex align-items-center paragraph-small pb-2">
-                    <span class="semi-bold text-break mr-3">{{selectedFile.name}}</span>
+                <div class="d-flex align-items-center pb-2">
                     <span class="mr-3">{{formatBytes(selectedFile.size)}}</span>
+                </div>
+                <div>
                     <button class="btn btn-secondary focusable" (click)="clearSelection()">
                         <span>Cancel</span>
                     </button>
@@ -36,7 +37,6 @@
     <div *ngIf="selectedFile && !isRequesting" class="d-flex flex-column align-items-center">
         <img class="w-75 p-3" src="{{tempUrl}}"/>
         <div class="d-flex align-items-center paragraph-small pb-2">
-            <span class="semi-bold text-break mr-3">{{selectedFile.name}}</span>
             <span class="d-flex align-items-center">{{formatBytes(selectedFile.size)}}</span>
         </div>
     </div>
