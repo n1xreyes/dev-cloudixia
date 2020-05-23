@@ -144,7 +144,10 @@ export class AuthService {
       ({
         receiverId: receiverId,
         message: message,
-      }).then(function (_: any) {});
+      }).then(function (_: any) {
+        console.log('CRETED NEW: ', _);
+        // TODO: create TOAST when Angelo's changes are in.
+      });
   }
 
   /**

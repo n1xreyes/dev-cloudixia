@@ -30,10 +30,6 @@ export class AdminService {
     return from(this.marketplaceService.deletePending(listing));
   }
 
-  approve(listingId: string): Observable<void> {
-    return from(this.fs.doc(`pendingListings/${listingId}`).update({state: ListingState.ACTIVE}));
-  }
-
   addAdminPrivileges(uid: string) {
     const adminsRef = this.fs.doc('admins/' + uid);
     return from(adminsRef.set({isAdmin: true}));

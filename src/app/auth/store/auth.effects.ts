@@ -7,13 +7,14 @@ import { map, switchMap, catchError, tap, take, withLatestFrom } from 'rxjs/oper
 
 import * as firebase from 'firebase/app';
 import * as auth from './../store/auth.actions';
-import { User } from '../models/user.model';
+import { User, UserProfile } from '../models/user.model';
 import { Language } from '../../shared/models/language.enum';
 import { LanguageService } from 'src/app/shared/language.service';
 import { select, Store } from '@ngrx/store';
 import { getUser, getUserChats } from './auth.selectors';
 import { AppState } from 'src/app/reducers';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable()
 export class AuthEffects {
@@ -21,6 +22,7 @@ export class AuthEffects {
     private actions$: Actions,
     private authService: AuthService,
     private marketplaceService: MarketplaceService,
+    private fn: AngularFireFunctions,
     private router: Router,
     private languageService: LanguageService,
     private store: Store<AppState>
@@ -34,22 +36,24 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.registerWithEmail(payload.email, payload.password).pipe(
         map((fireCreds: firebase.auth.UserCredential) => {
-          const user: User = {
-            uid: fireCreds.user?.uid || '',
-            email: fireCreds.user?.email || '',
-            firstName: payload.firstName,
-            lastName: payload.lastName,
-            providerId: fireCreds.user?.providerId || '',
+          const userObject = {
+            user: {
+              uid: fireCreds.user?.uid || '',
+              email: fireCreds.user?.email || '',
+              firstName: payload.firstName,
+              lastName: payload.lastName,
+              providerId: fireCreds.user?.providerId || '',
+              pendingListings: []
+            },
             userProfile: {
               photoUrl: fireCreds.user?.photoURL ||
               'https://www.pngfind.com/pngs/m/568-5682880_rothenburg-james-fa-user-circle-icon-hd-png.png',
               displayName: payload.firstName
-            },
-            pendingListings: []
+            }
           };
-          return user;
+          return userObject;
         }),
-        switchMap((user: User) => [new auth.RegisterSuccess({ user: user })]),
+        switchMap((userObject: any) => [new auth.RegisterSuccess(userObject)]),
         tap(() => this.router.navigateByUrl('')),
         catchError(error => of(new auth.AuthError({ error })))
       ),
@@ -64,21 +68,24 @@ export class AuthEffects {
     map((action: auth.SocialRegisterRequested) => action.payload),
     switchMap(payload => this.authService.socialLogin(payload.authProvider).pipe(
       map((fireCreds: firebase.auth.UserCredential) => {
-        const user: User = {
-          uid: fireCreds.user?.uid || '',
-          email: fireCreds.user?.email || '',
-          firstName: fireCreds.user?.displayName?.split(' ')[0] || '',
-          lastName: fireCreds.user?.displayName?.split(' ')[1],
-          providerId: fireCreds.user?.providerId || '',
+        const userObject = {
+          user: {
+            uid: fireCreds.user?.uid || '',
+            email: fireCreds.user?.email || '',
+            firstName: fireCreds.user?.displayName?.split(' ')[0] || '',
+            lastName: fireCreds.user?.displayName?.split(' ')[1],
+            providerId: fireCreds.user?.providerId || '',
+            pendingListings: []
+          },
           userProfile: {
             photoUrl: fireCreds.user?.photoURL || '',
-            displayName: fireCreds.user?.displayName?.split(' ')[0] || ''
-          },
-          pendingListings: []
+            displayName: fireCreds.user?.displayName?.split(' ')[0] || '',
+            listings: []
+          }
         };
-        return user;
+        return userObject;
       }),
-      switchMap((user: User) => [new auth.RegisterSuccess({user: user})]),
+      switchMap((userDetails: any) => [new auth.RegisterSuccess(userDetails)]),
       tap(() => this.router.navigateByUrl('')),
       catchError(error => of(new auth.AuthError({ error })))
     ))
@@ -88,13 +95,15 @@ export class AuthEffects {
   registerSuccess$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.REGISTER_SUCCESS),
     map((action: auth.RegisterSuccess) => action.payload),
-    map((payload: { user: User }) => {
-      this.authService.saveUser(payload.user);
-      return payload.user;
-    }),
-    switchMap( (payload: User) => {
+    switchMap((payload: { user: User, userProfile: UserProfile }) => {
+      this.fn.functions.httpsCallable('createNewUser')
+      ({
+        user: payload.user,
+        userProfile: payload.userProfile,
+      });
       return [
-        new auth.LoginSuccess({ user: payload })
+        new auth.LoginSuccess({ user: payload.user }),
+        new auth.GotUserProfile({ userProfile: payload.userProfile})
       ];
     })
   );

@@ -59,7 +59,7 @@ export class SocialRegisterRequested implements Action {
 export class RegisterSuccess implements Action {
   readonly type = AuthActionTypes.REGISTER_SUCCESS;
 
-  constructor(public payload: {user: User}) {}
+  constructor(public payload: {user: User, userProfile: UserProfile}) {}
 }
 
 export class RegisterCompleted implements Action {
