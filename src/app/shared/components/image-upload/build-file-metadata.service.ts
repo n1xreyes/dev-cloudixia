@@ -43,6 +43,6 @@ export class BuildFileMetadataService {
     }
 
     getProfilePhotoFileName(userId: string) {
-        return userId + '/profile/' + userId + '.jpg';
+        return userId + '/profile/' + userId + generateUID() + '.jpg';
     }
 }
