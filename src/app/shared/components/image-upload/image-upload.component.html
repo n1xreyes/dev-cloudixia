@@ -38,13 +38,7 @@
         <div class="d-flex align-items-center paragraph-small pb-2">
             <span class="semi-bold text-break mr-3">{{selectedFile.name}}</span>
             <span class="d-flex align-items-center">{{formatBytes(selectedFile.size)}}</span>
-<!--            <button class="btn btn-secondary focusable" (click)="clearSelection()">-->
-<!--                <span>Cancel</span>-->
-<!--            </button>-->
         </div>
-<!--        <button class="btn btn-primary d-flex align-items-center" (click)="uploadFile()">-->
-<!--            <span>Upload</span>-->
-<!--        </button>-->
     </div>
     <div *ngIf="!isRequesting">
         <div class="d-flex flex-column align-items-center">
