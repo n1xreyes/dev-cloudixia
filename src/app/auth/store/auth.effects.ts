@@ -126,6 +126,16 @@ export class AuthEffects {
   );
 
   @Effect({ dispatch: false })
+  saveUserProfile$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.SAVE_USER_PROFILE),
+    map( (action: auth.SaveUserProfile) => action.payload),
+    withLatestFrom(this.store.pipe(select(getUser))),
+    map(([payload, user]: any) => {
+      this.authService.saveUserProfile(user.uid, payload.userProfile);
+    })
+  );
+
+  @Effect({ dispatch: false })
   updateOnlineStatus$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.UPDATE_ONLINE_STATUS),
     map( (action: auth.UpdateOnlineStatus) => action.payload),

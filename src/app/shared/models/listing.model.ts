@@ -34,7 +34,7 @@ export class Listing {
 
 }
 
-export class ListringWithCategory extends Listing {
+export class ListingWithCategory extends Listing {
   category?: Category;
 }
 
@@ -47,4 +47,8 @@ export class ListingAlgolia {
   uid: string;
   userId: string;
   categories: string[];
+}
+
+export class ListingWithPhoto extends ListingWithCategory {
+  file?: File;
 }

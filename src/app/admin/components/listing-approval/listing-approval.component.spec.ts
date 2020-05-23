@@ -5,13 +5,13 @@ import { ListingApprovalComponent } from './listing-approval.component';
 import { StoreModule } from '@ngrx/store';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { of } from 'rxjs';
-import { Listing, ListringWithCategory } from 'src/app/shared/models/listing.model';
+import { Listing, ListingWithCategory } from 'src/app/shared/models/listing.model';
 
 describe('ListingApprovalComponent,', () => {
   let component: ListingApprovalComponent;
   let fixture: ComponentFixture<ListingApprovalComponent>;
 
-  const mockListings: ListringWithCategory[] = [
+  const mockListings: ListingWithCategory[] = [
     {
       uid: '12345',
       userId: 'John Lennon',

@@ -23,7 +23,7 @@ export class ProfileComponent implements OnInit {
   }
 
   updateProfile(userData: any) {
-    this.store.dispatch(new fromAuth.SaveUser(userData));
+    this.store.dispatch(new fromAuth.SaveUserProfile(userData));
   }
 
   logoutUser(user: User) {

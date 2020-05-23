@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ListringWithCategory } from 'src/app/shared/models/listing.model';
+import { ListingWithCategory } from 'src/app/shared/models/listing.model';
 
 @Component({
   selector: 'app-marketplace-listing',
@@ -8,7 +8,7 @@ import { ListringWithCategory } from 'src/app/shared/models/listing.model';
 })
 export class MarketplaceListingComponent implements OnInit {
 
-  @Input() listings: ListringWithCategory[];
+  @Input() listings: ListingWithCategory[];
   @Input() isLoading: boolean;
 
   constructor() { }

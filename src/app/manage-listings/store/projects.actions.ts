@@ -52,13 +52,13 @@ export class ProjectChanged implements Action {
 export class ProjectAdded implements Action {
   readonly type = ProjectsActionTypes.PROJECT_ADDED;
 
-  constructor(public payload: { project: Listing}) {}
+  constructor(public payload: { project: Listing, file?: File}) {}
 }
 
 export class ProjectEdited implements Action {
   readonly type = ProjectsActionTypes.PROJECT_EDITED;
 
-  constructor(public payload: { project: Listing }) {}
+  constructor(public payload: { project: Listing, file?: File}) {}
 }
 
 export class ProjectDeleted implements Action {

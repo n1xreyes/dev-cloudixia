@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { Listing } from 'src/app/shared/models/listing.model';
+import { ListingWithPhoto } from 'src/app/shared/models/listing.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Category } from 'src/app/shared/models/category.model';
 import { getCategoryList } from 'src/app/admin/store/category.selectors';
@@ -8,6 +8,8 @@ import { select, Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 import * as fromCategory from '../../../admin/store/category.actions';
+import {getUser} from '../../../auth/store/auth.selectors';
+import {User} from '../../../auth/models/user.model';
 
 @Component({
   selector: 'app-project-modal',
@@ -17,10 +19,11 @@ import * as fromCategory from '../../../admin/store/category.actions';
 export class ProjectModalComponent implements OnInit {
 
   // Input
-  entity: Listing;
+  entity: ListingWithPhoto;
 
   categories$: Observable<Category[] | null>;
-  result: Subject<Listing> = new Subject<Listing>();
+  result: Subject<ListingWithPhoto> = new Subject<ListingWithPhoto>();
+  user: User;
 
   form: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -44,6 +47,18 @@ export class ProjectModalComponent implements OnInit {
         return categories;
       })
     );
+
+    this.store.pipe(
+        select(getUser)
+    ).subscribe( userState => {
+      if (userState) {
+        this.user = userState;
+      }
+    });
+  }
+
+  setSelectedPhoto(file: File) {
+    this.entity.file = file;
   }
 
 }

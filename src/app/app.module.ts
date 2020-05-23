@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
@@ -22,6 +22,8 @@ import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
 import { AdminModule } from './admin/admin.module';
 import { LanguageService } from './shared/language.service';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ToastrModule} from 'ngx-toastr';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +38,8 @@ import { LanguageService } from './shared/language.service';
     AngularFireDatabaseModule,
     AngularFireFunctionsModule,
     // ngx
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     StoreModule.forRoot(reducers, {
       runtimeChecks: {
         strictStateImmutability: true,

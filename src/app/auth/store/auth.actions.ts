@@ -22,6 +22,7 @@ export enum AuthActionTypes {
   LANGUAGE_CHANGE = '[Auth] Language switched',
 
   SAVE_USER = '[Auth] Save user',
+  SAVE_USER_PROFILE = '[Auth] Save user profile',
   UPDATE_ONLINE_STATUS = '[Auth] Update online status',
 
   CHECK_ADMIN_ROLE = '[Auth] Check admin role',
@@ -114,6 +115,12 @@ export class SaveUser implements Action {
   readonly type = AuthActionTypes.SAVE_USER;
 
   constructor(public payload: { user: User }) {}
+}
+
+export class SaveUserProfile implements Action {
+  readonly type = AuthActionTypes.SAVE_USER_PROFILE;
+
+  constructor(public payload: { userProfile: UserProfile }) {}
 }
 
 export class UpdateOnlineStatus implements Action {
@@ -210,6 +217,7 @@ export type AuthAction =
   | LogoutCompleted
   | LanguageChange
   | SaveUser
+  | SaveUserProfile
   | UpdateOnlineStatus
   | CheckAdminRole
   | UpdateUserRole

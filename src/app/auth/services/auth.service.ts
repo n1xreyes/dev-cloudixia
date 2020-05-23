@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { from, Observable } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { User } from '../models/user.model';
+import { User, UserProfile } from '../models/user.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AppState } from 'src/app/reducers';
 import { Store } from '@ngrx/store';
@@ -60,6 +60,10 @@ export class AuthService {
   saveUser(user: User) {
     const users = this.fs.doc('users/' + user.uid);
     return users.update(user);
+  }
+
+  saveUserProfile(userId: string, userProfile: UserProfile): Observable<any> {
+    return from(this.fs.doc(`userProfiles/${userId}`).update(userProfile));
   }
 
   // get user in DB

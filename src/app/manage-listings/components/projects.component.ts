@@ -8,7 +8,7 @@ import { getProjects, getAllLoaded, getPendingListings, getPendingLoaded } from 
 import { take, map } from 'rxjs/operators';
 import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { ListringWithCategory } from 'src/app/shared/models/listing.model';
+import { ListingWithCategory, ListingWithPhoto } from 'src/app/shared/models/listing.model';
 import { ProjectModalComponent } from './project-modal/project-modal.component';
 import { DEFAULT_MODAL_CONFIG, DELETE_CONFIRMATION } from 'src/app/core/service/util.service';
 
@@ -18,11 +18,15 @@ import { DEFAULT_MODAL_CONFIG, DELETE_CONFIRMATION } from 'src/app/core/service/
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit {
-  projects$: Observable<ListringWithCategory[] | null>;
+  projects$: Observable<ListingWithCategory[] | null>;
   isLoading$: Observable<boolean>;
-  pendingListings$: Observable<ListringWithCategory[] | null>;
+  pendingListings$: Observable<ListingWithCategory[] | null>;
   isPendingLoading$: Observable<boolean>;
   modalRef: MDBModalRef;
+
+  private modalConfig = {
+    class: 'modal-dialog-scrollable'
+  };
 
   private get user() {
     return this.afAuth.auth.currentUser;
@@ -38,7 +42,7 @@ export class ProjectsComponent implements OnInit {
     this.isLoading$ = this.store.select(getAllLoaded);
     this.projects$ = this.store.pipe(
       select(getProjects),
-      map((projects: ListringWithCategory[]) => {
+      map((projects: ListingWithCategory[]) => {
         if (this.user && !projects) {
           this.store.dispatch(new fromProjects.ProjectsQuery());
         }
@@ -49,7 +53,7 @@ export class ProjectsComponent implements OnInit {
     this.isPendingLoading$ = this.store.select(getPendingLoaded);
     this.pendingListings$ = this.store.pipe(
       select(getPendingListings),
-      map((listings: ListringWithCategory[]) => {
+      map((listings: ListingWithCategory[]) => {
         if (this.user && !listings) {
           this.store.dispatch(new fromProjects.MyPendingListingsQuery());
         }
@@ -58,25 +62,25 @@ export class ProjectsComponent implements OnInit {
     );
   }
 
-  openModal(entity: ListringWithCategory = new ListringWithCategory()): void {
+  openModal(entity: ListingWithPhoto = new ListingWithPhoto()): void {
     const isEdit: boolean = !!entity.uid;
 
     this.modalService
-      .show(ProjectModalComponent, {...DEFAULT_MODAL_CONFIG, data: {
+      .show(ProjectModalComponent, {...this.modalConfig, data: {
         entity: {...entity}
       }})
       .content.result
       .pipe(take(1))
-      .subscribe((projectData: ListringWithCategory) => {
+      .subscribe((projectData: ListingWithPhoto) => {
         delete projectData.category;
         const action: Action = isEdit
-          ? new fromProjects.ProjectEdited({ project: projectData })
-          : new fromProjects.ProjectAdded({ project: projectData });
+          ? new fromProjects.ProjectEdited({ project: projectData, file: projectData.file })
+          : new fromProjects.ProjectAdded({ project: projectData, file: projectData.file });
         this.store.dispatch(action);
       });
   }
 
-  openConfirmModal(project: ListringWithCategory) {
+  openConfirmModal(project: ListingWithCategory) {
     this.modalService
       .show(ConfirmModalComponent, {...DEFAULT_MODAL_CONFIG, data: { ...DELETE_CONFIRMATION }})
       ?.content.confirmation
@@ -88,7 +92,7 @@ export class ProjectsComponent implements OnInit {
       });
   }
 
-  onProjectDelete(project: ListringWithCategory) {
+  onProjectDelete(project: ListingWithCategory) {
     this.openConfirmModal(project);
   }
 

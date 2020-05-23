@@ -1,9 +1,14 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as aws from 'aws-sdk';
 
 admin.initializeApp();
 
 const env = functions.config();
+aws.config.update({
+    credentials: new aws.Credentials('AKIAZNTXP4OZFLTS4WSP', 'GeLVlYFjSPhJ5prvMJCSapEhCrTo1gcxQ69T3kEH')
+});
+const AWS = new aws.S3()
 const fs = admin.firestore()
 
 import algoliasearch from 'algoliasearch';
@@ -43,7 +48,7 @@ exports.approvePending = functions.https.onCall(async (data, context) => {
         return batch.commit().then(() => {
             return index.saveObject({
             objectID: listingId,
-            ...listingPayload 
+            ...listingPayload
         }).then( payload => { console.log ('did a thingy: ', payload)}) });
     });
 
@@ -54,6 +59,16 @@ exports.deleteListing= functions.firestore
         // Get the Listing Data
         const data = snap.data()
         if (!data) return;
+
+        // delete file from AWS
+        if (data.photoUrl) {
+            // extract file key from photoURL
+            const foundIndex = data.photoUrl.search(data.userId);
+            const fileKey = data.photoUrl.substring(foundIndex);
+            deleteFileFromAws(fileKey, function(err: any) {
+                if (err) { return err }
+            });
+        }
 
         // Remove from Algolia
         return index.deleteObject(context.params.listingId);
@@ -117,6 +132,23 @@ exports.createNewChat = functions.https.onCall(async (data, context) => {
     return { message: "message sent."}
 });
 
+function deleteFileFromAws(filename: string, callback: any) {
+    const params = {
+        Bucket: 'cloudixia-images',
+        Key: filename
+    };
+
+    AWS.deleteObject(params, function(err: any, data: any) {
+        if (err) {
+            console.log(err);
+            callback(err);
+        } else {
+            callback(null);
+        }
+    });
+}
+
+
 exports.createNewUser = functions.https.onCall(async (data, context) => {
     const batch = fs.batch();
 
@@ -126,7 +158,7 @@ exports.createNewUser = functions.https.onCall(async (data, context) => {
     const userProfileRef = fs.doc('/userProfiles/' + data.user.uid);
     batch.set(userProfileRef, data.userProfile);
 
-    return batch.commit().then( 
+    return batch.commit().then(
         payload => console.log('Created chat: ', payload),
         error => console.log('error: ', error)
     );

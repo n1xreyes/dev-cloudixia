@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { User } from '../../../auth/models/user.model';
-import { FormGroup, FormControl } from '@angular/forms';
+import {FormGroup, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Language } from 'src/app/shared/models/language.enum';
 import { Store } from '@ngrx/store';
@@ -36,14 +36,12 @@ export class MainProfileComponent implements OnInit {
 
   onProfileUpdate() {
     const changes = {
-      userProfile: {
-        photoUrl: this.updateProfileForm.value.photoUrl
-      },
-      country: this.updateProfileForm.value.country,
-      city: this.updateProfileForm.value.city,
-      street: this.updateProfileForm.value.street,
-      poBox: this.updateProfileForm.value.poBox,
+      country: this.updateProfileForm.value.country ? this.updateProfileForm.value.country : '',
+      city: this.updateProfileForm.value.city ? this.updateProfileForm.value.city : '',
+      street: this.updateProfileForm.value.street ? this.updateProfileForm.value.street : '',
+      poBox: this.updateProfileForm.value.poBox ? this.updateProfileForm.value.poBox : '',
     };
+
 
     this.profileUpdate.emit({ user: changes });
   }

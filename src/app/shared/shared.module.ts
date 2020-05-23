@@ -27,6 +27,11 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { LoaderComponent } from './components/loader/loader.component';
 import { CategoryTitlePipe } from './pipe/category-title.pipe';
 import { ProjectCategoryTitlePipe } from './pipe/project-category-title.pipe';
+import { ImageUploadComponent } from './components/image-upload/image-upload.component';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import * as fromImageUpload from '../store/image-upload/image-upload.reducers';
+import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
 
 @NgModule({
   declarations: [
@@ -44,6 +49,7 @@ import { ProjectCategoryTitlePipe } from './pipe/project-category-title.pipe';
     LoaderComponent,
     CategoryTitlePipe,
     ProjectCategoryTitlePipe,
+    ImageUploadComponent,
   ],
   imports: [
     // angular
@@ -62,6 +68,8 @@ import { ProjectCategoryTitlePipe } from './pipe/project-category-title.pipe';
     WavesModule,
     // ng-select
     NgSelectModule,
+    StoreModule.forFeature('imageUpload', fromImageUpload.imageUploadReducer),
+    EffectsModule.forFeature([ImageUploadEffects])
   ],
   exports: [
     // angular
@@ -69,6 +77,7 @@ import { ProjectCategoryTitlePipe } from './pipe/project-category-title.pipe';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    ImageUploadComponent,
     // mdb
     InputsModule,
     InputUtilitiesModule,
@@ -93,7 +102,8 @@ import { ProjectCategoryTitlePipe } from './pipe/project-category-title.pipe';
   ],
   providers: [],
   entryComponents: [
-    ConfirmModalComponent
+    ConfirmModalComponent,
+    ImageUploadComponent
   ]
 })
 export class SharedModule {

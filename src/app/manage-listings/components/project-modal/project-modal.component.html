@@ -16,9 +16,10 @@
       [items]="categories$ | async"
       formControlName="categories"
       [returnUid]="true"></app-category-selection>
-    <app-input-wrapper
-      name="photoUrl"
-      label="project.fields.photoUrl"></app-input-wrapper>
+    <div class="md-form">
+      <input type="hidden" id="photo" class="form-control" name="photoUrl" [formControl]="form.controls.photoUrl" mdbInput>
+      <app-image-upload [isProfilePic]="false" [userInfo]="user" (photoSelected)="setSelectedPhoto($event)"></app-image-upload>
+    </div>
     <app-input-wrapper
       type="number"
       name="price"
