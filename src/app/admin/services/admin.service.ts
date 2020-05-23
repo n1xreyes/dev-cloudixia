@@ -3,7 +3,6 @@ import { from, Observable } from 'rxjs';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { ListingState } from 'src/app/shared/models/listing-state.enum';
 import { Listing } from 'src/app/shared/models/listing.model';
 
 @Injectable({
