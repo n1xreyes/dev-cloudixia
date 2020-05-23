@@ -8,8 +8,9 @@ export const DELETE_CONFIRMATION = {
   confirmBtnText: 'common.delete'
 };
 
-
 // TODO: we should be able to provide default configuration via injection
 export const DEFAULT_MODAL_CONFIG = {
-  class: 'modal-dialog-centered'
+  class: 'modal-dialog-centered',
+  ignoreBackdropClick: true,
+  keyboard: false,
 };

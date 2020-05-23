@@ -10,6 +10,7 @@ import { ConfirmModalComponent } from '../../shared/components/confirm-modal/con
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ListingWithCategory, ListingWithPhoto } from 'src/app/shared/models/listing.model';
 import { ProjectModalComponent } from './project-modal/project-modal.component';
+import { DEFAULT_MODAL_CONFIG, DELETE_CONFIRMATION } from 'src/app/core/service/util.service';
 
 @Component({
   selector: 'app-projects',
@@ -66,7 +67,6 @@ export class ProjectsComponent implements OnInit {
 
     this.modalService
       .show(ProjectModalComponent, {...this.modalConfig, data: {
-        heading: isEdit ? 'Edit project' : 'Add new project',
         entity: {...entity}
       }})
       .content.result
@@ -81,14 +81,9 @@ export class ProjectsComponent implements OnInit {
   }
 
   openConfirmModal(project: ListingWithCategory) {
-    const modalRef = this.modalService.show(ConfirmModalComponent, this.modalConfig);
-
-    modalRef.content.heading = 'Delete Listing?';
-    modalRef.content.description = 'Are you sure you want to delete this item?';
-    modalRef.content.confirmBtnColor = 'red';
-    modalRef.content.confirmBtnText = 'Delete';
-
-    modalRef.content.confirmation
+    this.modalService
+      .show(ConfirmModalComponent, {...DEFAULT_MODAL_CONFIG, data: { ...DELETE_CONFIRMATION }})
+      ?.content.confirmation
       .pipe(take(1))
       .subscribe( (confirmation: boolean) => {
         if (confirmation) {

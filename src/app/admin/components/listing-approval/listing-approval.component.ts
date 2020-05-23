@@ -9,6 +9,7 @@ import { take } from 'rxjs/operators';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { ConfirmModalComponent } from 'src/app/shared/components/confirm-modal/confirm-modal.component';
 import * as fromAdmin from '../../store/admin.actions';
+import { DEFAULT_MODAL_CONFIG, DELETE_CONFIRMATION } from 'src/app/core/service/util.service';
 
 @Component({
   selector: 'app-listing-approval',
@@ -25,8 +26,6 @@ export class ListingApprovalComponent implements OnInit {
     class: 'modal-dialog-centered'
   };
 
-  getCategoryName = ListingWithCategory.getCategoryName;
-
   constructor(private store: Store<AppState>, private modalService: MDBModalService) { }
 
   ngOnInit(): void {
@@ -38,33 +37,25 @@ export class ListingApprovalComponent implements OnInit {
   }
 
   onDelete(listing: ListingWithCategory) {
-    this.modalRef = this.modalService.show(
-      ConfirmModalComponent,
-      this.modalConfig
-    );
-
-    this.modalRef.content.heading = 'Delete Listing?';
-    this.modalRef.content.description = 'Are you sure you want to delete this item?';
-    this.modalRef.content.confirmBtnColor = 'red';
-    this.modalRef.content.confirmBtnText = 'Delete';
-
-    this.modalRef.content.confirmation
-      .pipe(take(1))
-      .subscribe((confirmation: boolean) => {
-        if (confirmation && listing.userId) {
-          this.store.dispatch(
-            new fromAdmin.DeletePendingUserProject({ listing })
-          );
-        } else if (!listing.userId) {
-          console.log('ERROR - NO USERID');
-        }
-      });
+    this.modalService
+      .show(ConfirmModalComponent, {...DEFAULT_MODAL_CONFIG, data: { ...DELETE_CONFIRMATION }})
+      ?.content.confirmation
+        .pipe(take(1))
+        .subscribe((confirmation: boolean) => {
+          if (confirmation && listing.userId) {
+            this.store.dispatch(
+              new fromAdmin.DeletePendingUserProject({ listing })
+            );
+          } else if (!listing.userId) {
+            console.log('ERROR - NO USERID');
+          }
+        });
   }
 
   onApprove(listing: Listing) {
     this.modalRef = this.modalService.show(
       ConfirmModalComponent,
-      this.modalConfig
+      DEFAULT_MODAL_CONFIG
     );
 
     this.modalRef.content.heading = 'Approve Listing?';

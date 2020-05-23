@@ -35,17 +35,19 @@ app-welcome {
   background-color: white;
 }
 
-app-marketplace, app-projects-list mdb-card {
-  mdb-card-img img.img-fluid {
-    height: 245px;
-    object-fit: cover;
-  }
-
-  @media (min-width: 768px) {
-    mdb-card-body {
-      height: 200px;
-      mdb-card-text p {
-        height: 42px;
+.project-listing-cards {
+  mdb-card {
+    mdb-card-img img.img-fluid {
+      height: 245px;
+      object-fit: cover;
+    }
+  
+    @media (min-width: 768px) {
+      mdb-card-body {
+        height: 200px;
+        mdb-card-text p {
+          height: 42px;
+        }
       }
     }
   }

@@ -16,8 +16,10 @@
       <!--Text-->
       <mdb-card-text>
         <p>
-        {{ listing.description }}
-        {{ getCategoryName(listing) }}
+          {{ listing | projectCategoryTitle }}
+          <br/>
+          {{ listing.description }}
+        </p>
       </mdb-card-text>
 
       <hr>

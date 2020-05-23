@@ -1,4 +1,5 @@
 import { IDomain } from 'src/app/core/model/i-domain.model';
+import { isObject } from 'lodash';
 
 export class Category implements IDomain {
   uid: string;
@@ -22,6 +23,10 @@ export class Category implements IDomain {
         return result;
       }
     }
+  }
+
+  static isCategory(value: any): value is Category {
+    return isObject(value) && !!(value as Category).title;
   }
 
 }

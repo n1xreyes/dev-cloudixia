@@ -1,0 +1,11 @@
+<div
+  *ngIf="isLoading"
+  class="d-flex justify-content-center align-items-center"
+  style="margin-top: 200px">
+  <div class="spinner-grow text-primary" role="status" style="width: 4rem; height: 4rem;">
+    <span translate class="sr-only">component.loader.loading</span>
+  </div>
+</div>
+<div translate class="text-center" *ngIf="showNoRecordsMessage && !isLoading">
+  component.loader.noRecords
+</div>

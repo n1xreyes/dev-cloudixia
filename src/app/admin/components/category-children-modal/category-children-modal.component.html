@@ -1,6 +1,5 @@
 <app-modal-wrapper
-  heading="{{'category.childrenHeader' | translate}} {{inputParent.title}}"
-  [modalRef]="modalRef">
+  heading="{{'category.childrenHeader' | translate}} {{inputParent.title}}">
   <app-category-listing
     [list]="list$ | async"
     (saved)="onSaved($event)"

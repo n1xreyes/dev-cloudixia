@@ -166,7 +166,7 @@ export class GetUserDetails implements Action {
 export class CreateChat implements Action {
   readonly type = AuthActionTypes.CREATE_CHAT;
 
-  constructor(public receiverId: string, public message:  string) {}
+  constructor(public receiverId: string, public message: string) {}
 }
 
 export class GetChats implements Action {

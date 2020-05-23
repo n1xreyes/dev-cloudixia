@@ -9,7 +9,8 @@ import {
   CardsModule,
   InputUtilitiesModule,
   IconsModule,
-  BreadcrumbModule
+  BreadcrumbModule,
+  WavesModule
 } from 'angular-bootstrap-md';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectWrapperComponent } from './components/ng-select-wrapper/ng-select-wrapper.component';
@@ -22,6 +23,10 @@ import { CategorySelectionComponent } from './components/category-selection/cate
 import { CategorySubSelectionComponent } from './components/category-sub-selection/category-sub-selection.component';
 import { CategoryFilterComponent } from './components/category-filter/category-filter.component';
 import { CategoryCardComponent } from './components/category-card/category-card.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { LoaderComponent } from './components/loader/loader.component';
+import { CategoryTitlePipe } from './pipe/category-title.pipe';
+import { ProjectCategoryTitlePipe } from './pipe/project-category-title.pipe';
 import { ImageUploadComponent } from './components/image-upload/image-upload.component';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -41,6 +46,9 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     CategorySubSelectionComponent,
     CategoryFilterComponent,
     CategoryCardComponent,
+    LoaderComponent,
+    CategoryTitlePipe,
+    ProjectCategoryTitlePipe,
     ImageUploadComponent,
   ],
   imports: [
@@ -49,6 +57,7 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    ScrollingModule,
     // mdb
     InputsModule,
     InputUtilitiesModule,
@@ -56,6 +65,7 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     ButtonsModule,
     CardsModule,
     BreadcrumbModule,
+    WavesModule,
     // ng-select
     NgSelectModule,
     StoreModule.forFeature('imageUpload', fromImageUpload.imageUploadReducer),
@@ -74,6 +84,7 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     IconsModule,
     ButtonsModule,
     CardsModule,
+    WavesModule,
     // ng-select
     NgSelectModule,
     // custom
@@ -85,6 +96,9 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     CategorySelectionComponent,
     CategoryFilterComponent,
     CategoryCardComponent,
+    LoaderComponent,
+    CategoryTitlePipe,
+    ProjectCategoryTitlePipe
   ],
   providers: [],
   entryComponents: [

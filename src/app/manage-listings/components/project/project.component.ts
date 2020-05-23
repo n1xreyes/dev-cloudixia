@@ -24,7 +24,6 @@ export class ProjectComponent implements OnInit, OnChanges, OnDestroy {
   @Output() deleted = new EventEmitter<ListingWithCategory>();
   @Output() edited = new EventEmitter<ListingWithCategory>();
 
-  getCategoryName = ListingWithCategory.getCategoryName;
   destroyed: Subject<boolean> = new Subject<boolean>();
 
   constructor() { }

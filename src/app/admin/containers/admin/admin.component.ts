@@ -28,10 +28,6 @@ export class AdminComponent implements OnInit {
   selectedUser: any;
   uid: any;
 
-  modalConfig = {
-    class: 'modal-dialog-centered'
-  };
-
   ngOnInit() {
     this.users$ = this.store.pipe(
       select(getUsersList),

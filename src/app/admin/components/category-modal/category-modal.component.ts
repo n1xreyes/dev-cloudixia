@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MDBModalRef } from 'angular-bootstrap-md';
 import { Category } from 'src/app/shared/models/category.model';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Language } from 'src/app/shared/models/language.enum';
 
 @Component({
   selector: 'app-category-modal',
@@ -21,9 +21,17 @@ export class CategoryModalComponent implements OnInit {
     photoUrl: new FormControl(''),
   });
 
-  constructor(public modalRef: MDBModalRef) {}
+  constructor() {
+    this.getLanguages().forEach((lang: string) => {
+      this.form.addControl(`title_${lang}`, new FormControl(''));
+    });
+  }
 
   ngOnInit(): void {
+  }
+
+  getLanguages(): string[] {
+    return Object.values(Language);
   }
 
 }

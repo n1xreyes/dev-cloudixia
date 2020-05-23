@@ -1,0 +1,33 @@
+:host ::ng-deep {
+  .waves-effect {
+    overflow: initial;
+  }
+
+  // due to nature of virtual scroll heigth of elements needs to be hardcoded
+  .virtual-viewport {
+    height: 260px;
+    width: 100%;
+
+    .cdk-virtual-scroll-content-wrapper {
+      display: flex;
+      flex-direction: row;
+    }
+  
+    .card {
+      margin-left: 15px;
+      margin-right: 15px;
+      min-width: 250px;
+      width: 250px;
+      writing-mode: horizontal-tb;
+
+      mdb-card-img img.img-fluid {
+        height: 165px;
+        object-fit: cover;
+      }
+
+      .card-body {
+        height: 76px;
+      }
+    }
+  }
+}

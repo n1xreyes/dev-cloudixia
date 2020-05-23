@@ -25,23 +25,27 @@ export class MarketplaceEffects {
         .pipe(
           map((data: any) => data.hits.map((listing: ListingAlgolia) => new Listing(listing))),
           switchMap((listingPayload: Listing[]) => {
-            const listing$ = listingPayload.map((listing: Listing) => {
-              if (listing.categories && listing.categories.length) {
-                return this.categoryService.get(listing.categories[0])
-                  .pipe(
-                    map((categoryPayload) => {
-                      return {
-                        listing,
-                        category: categoryPayload.payload.data()
-                      };
-                    })
-                  );
-              } else {
-                return of({ listing, category: null });
-              }
-            });
+            if (listingPayload && listingPayload.length) {
+              const listing$ = listingPayload.map((listing: Listing) => {
+                if (listing.categories && listing.categories.length) {
+                  return this.categoryService.get(listing.categories[0])
+                    .pipe(
+                      map((categoryPayload) => {
+                        return {
+                          listing,
+                          category: categoryPayload.payload.data()
+                        };
+                      })
+                    );
+                } else {
+                  return of({ listing, category: null });
+                }
+              });
 
-            return combineLatest(listing$);
+              return combineLatest(listing$);
+            } else {
+              return of([]);
+            }
           }),
           map((resultPayload) => {
             const projects = resultPayload.map(({ listing, category }) => ({
@@ -50,7 +54,10 @@ export class MarketplaceEffects {
             }));
             return new fromMarketplace.MarketplaceLoaded({ listings: projects });
           }),
-          catchError(error => of(new fromMarketplace.MarketplaceError({ error })))
+          catchError(error => {
+              return of(new fromMarketplace.MarketplaceError({ error }));
+            }
+          )
         )
     ),
   );

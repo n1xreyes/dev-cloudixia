@@ -9,11 +9,23 @@
     {{breadcrumbItem.title}}
   </mdb-breadcrumb-item>
 </mdb-breadcrumb>
-<div class="d-flex fadeIn animated">
-  <app-category-card
-    *ngFor="let item of currentItems; trackBy: trackByFunction"
-    [entity]="item"
-    [editable]="false"
-    (click)="onClick(item)"
-    ></app-category-card>
+<div>
+  <cdk-virtual-scroll-viewport
+    class="virtual-viewport"
+    itemSize="250"
+    dir="{{ (language$ | async) === 'ar' ? 'rtl' : 'ltr' }}" 
+    orientation="horizontal">
+    <div 
+      mdbWavesEffect 
+      class="waves-light"
+      *cdkVirtualFor="let item of currentItems">
+      <app-category-card
+        class="virtual-item"
+        [entity]="item"
+        [editable]="false"
+        [selected]="item === _selected"
+        (click)="onClick(item)"
+        ></app-category-card>
+    </div>
+  </cdk-virtual-scroll-viewport>
 </div>

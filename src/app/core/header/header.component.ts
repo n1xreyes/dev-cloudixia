@@ -7,6 +7,7 @@ import * as fromAuth from 'src/app/auth/store/auth.actions';
 import { MDBModalRef, MDBModalService } from 'angular-bootstrap-md';
 import { LocalizationModalComponent } from './localization-modal/localization-modal.component';
 import { take } from 'rxjs/operators';
+import { DEFAULT_MODAL_CONFIG } from '../service/util.service';
 
 @Component({
   selector: 'app-header',
@@ -38,7 +39,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openLocalizationModal() {
-    this.localizationModalRef = this.modalService.show(LocalizationModalComponent, {class: 'modal-dialog-centered'});
+    this.localizationModalRef = this.modalService.show(LocalizationModalComponent, DEFAULT_MODAL_CONFIG);
 
     // Inject current language
     this.localizationModalRef.content.formLanguage = this.language;
