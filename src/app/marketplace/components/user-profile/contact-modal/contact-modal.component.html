@@ -1,7 +1,7 @@
-<app-modal-wrapper
-  [modalRef]="modalRef"
-  [heading]="heading"
-  (primaryClick)="onSend()">
+<app-crud-modal
+  customTitle="Send Message"
+  [form]="form"
+  (saved)="onSend()">
   <h2>To: {{ userProfile?.displayName }}</h2>
   <form [formGroup]="form">
     <app-input-wrapper
@@ -10,4 +10,4 @@
   </form>
 
   Disclaimer: Please do not try to contact off the platform.  We can't protect you there.
-</app-modal-wrapper>
+</app-crud-modal>

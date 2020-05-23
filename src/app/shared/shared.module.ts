@@ -9,7 +9,8 @@ import {
   CardsModule,
   InputUtilitiesModule,
   IconsModule,
-  BreadcrumbModule
+  BreadcrumbModule,
+  WavesModule
 } from 'angular-bootstrap-md';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectWrapperComponent } from './components/ng-select-wrapper/ng-select-wrapper.component';
@@ -22,6 +23,10 @@ import { CategorySelectionComponent } from './components/category-selection/cate
 import { CategorySubSelectionComponent } from './components/category-sub-selection/category-sub-selection.component';
 import { CategoryFilterComponent } from './components/category-filter/category-filter.component';
 import { CategoryCardComponent } from './components/category-card/category-card.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { LoaderComponent } from './components/loader/loader.component';
+import { CategoryTitlePipe } from './pipe/category-title.pipe';
+import { ProjectCategoryTitlePipe } from './pipe/project-category-title.pipe';
 
 @NgModule({
   declarations: [
@@ -36,6 +41,9 @@ import { CategoryCardComponent } from './components/category-card/category-card.
     CategorySubSelectionComponent,
     CategoryFilterComponent,
     CategoryCardComponent,
+    LoaderComponent,
+    CategoryTitlePipe,
+    ProjectCategoryTitlePipe,
   ],
   imports: [
     // angular
@@ -43,6 +51,7 @@ import { CategoryCardComponent } from './components/category-card/category-card.
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    ScrollingModule,
     // mdb
     InputsModule,
     InputUtilitiesModule,
@@ -50,6 +59,7 @@ import { CategoryCardComponent } from './components/category-card/category-card.
     ButtonsModule,
     CardsModule,
     BreadcrumbModule,
+    WavesModule,
     // ng-select
     NgSelectModule,
   ],
@@ -65,6 +75,7 @@ import { CategoryCardComponent } from './components/category-card/category-card.
     IconsModule,
     ButtonsModule,
     CardsModule,
+    WavesModule,
     // ng-select
     NgSelectModule,
     // custom
@@ -76,6 +87,9 @@ import { CategoryCardComponent } from './components/category-card/category-card.
     CategorySelectionComponent,
     CategoryFilterComponent,
     CategoryCardComponent,
+    LoaderComponent,
+    CategoryTitlePipe,
+    ProjectCategoryTitlePipe
   ],
   providers: [],
   entryComponents: [

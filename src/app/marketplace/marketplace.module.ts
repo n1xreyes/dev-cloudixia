@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { MarketplaceComponent } from './components/marketplace.component';
-import { WavesModule, ModalModule } from 'angular-bootstrap-md';
+import { ModalModule } from 'angular-bootstrap-md';
 import * as fromMarketplace from './store/marketplace.reducer';
 import { MarketplaceEffects } from './store/marketplace.effects';
 import { SharedModule } from '../shared/shared.module';
@@ -25,7 +25,6 @@ import { ContactModalComponent } from './components/user-profile/contact-modal/c
     EffectsModule.forFeature([MarketplaceEffects]),
     // mdb
     ModalModule,
-    WavesModule,
     // custom
     SharedModule,
     MarketplaceRoutingModule

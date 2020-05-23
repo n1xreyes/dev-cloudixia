@@ -10,8 +10,6 @@ export class ListingOverviewCardComponent implements OnInit {
 
   @Input() listing: ListringWithCategory;
 
-  getCategoryName = ListringWithCategory.getCategoryName;
-
   constructor() { }
 
   ngOnInit(): void {

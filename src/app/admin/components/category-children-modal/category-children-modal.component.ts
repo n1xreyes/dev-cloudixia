@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from 'src/app/shared/models/category.model';
-import { MDBModalRef } from 'angular-bootstrap-md';
 import { AppState } from 'src/app/reducers';
 import { Store } from '@ngrx/store';
 import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
@@ -25,7 +24,6 @@ export class CategoryChildrenModalComponent implements OnInit {
   list$: Observable<Category[]>;
 
   constructor(
-    public modalRef: MDBModalRef,
     private store: Store<AppState>,
     private categoryService: CategoryService,
   ) { }

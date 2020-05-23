@@ -9,13 +9,12 @@ import { MDBModalRef } from 'angular-bootstrap-md';
 export class ModalWrapperComponent implements OnInit {
 
   @Input() heading: string;
-  @Input() modalRef: MDBModalRef;
 
   @Output() primaryClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() secondaryClick: EventEmitter<any> = new EventEmitter<any>();
   @Output() xClick: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() {}
+  constructor(public modalRef: MDBModalRef) {}
 
   ngOnInit(): void {
   }

@@ -14,8 +14,6 @@ export class ProjectComponent implements OnInit {
   @Output() deleted = new EventEmitter<ListringWithCategory>();
   @Output() edited = new EventEmitter<ListringWithCategory>();
 
-  getCategoryName = ListringWithCategory.getCategoryName;
-
   constructor() { }
 
   ngOnInit() {

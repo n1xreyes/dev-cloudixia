@@ -33,7 +33,8 @@
         "showChildren": "Show children",
         "fields": {
             "title": "Title",
-            "photoUrl": "Photo URL"
+            "photoUrl": "Photo URL",
+            "titleLang": "Title for: {{lang}}"
         }
     },
     "project": {
@@ -50,6 +51,18 @@
         "messages" : {
             "header": "Messages",
             "subHeading": "check em boi"
+        },
+        "loader": {
+            "loading": "Loading...",
+            "noRecords": "No records found"
         }
+    },
+    "fieldError": {
+        "required": "Field is required",
+        "minlength": "Min length is {{requiredLength}}",
+        "maxlength": "Max length is {{requiredLength}}",
+        "email": "Not valid email format",
+        "min": "Min value is {{min}}",
+        "max": "Max value is {{max}}"
     }
 }

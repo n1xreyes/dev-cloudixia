@@ -16,23 +16,25 @@ export class CrudModalComponent<T extends IDomain> implements OnInit {
 
   @Input() entity: T;
 
-  @Input() modalRef: MDBModalRef;
-
   @Input() entityTitle: string;
+
+  @Input() customTitle: string;
 
   @Output() saved: EventEmitter<T> = new EventEmitter<T>();
 
   @Output() error: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() { }
+  constructor(public modalRef: MDBModalRef) { }
 
   ngOnInit(): void {
-    Object.entries(this.entity).forEach(([key, value]) => {
-      const control: AbstractControl = this.form.controls[key];
-      if (control) {
-        control.setValue(value);
-      }
-    });
+    if (this.entity) {
+      Object.entries(this.entity).forEach(([key, value]) => {
+        const control: AbstractControl = this.form.controls[key];
+        if (control) {
+          control.setValue(value);
+        }
+      });
+    }
   }
 
   onSave() {

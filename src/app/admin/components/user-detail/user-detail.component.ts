@@ -20,9 +20,7 @@ export class UserDetailComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-    
-  }
+  ngOnInit() {}
 
   closeDetails() {
     this.detailsClosed.emit();

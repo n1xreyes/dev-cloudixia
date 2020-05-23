@@ -4,9 +4,10 @@ import { ContactModalComponent } from '../contact-modal/contact-modal.component'
 import { take } from 'rxjs/operators';
 import * as fromAuth from '../../../../auth/store/auth.actions'
 import { MDBModalService } from 'angular-bootstrap-md';
-
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/reducers';
+import { DEFAULT_MODAL_CONFIG } from 'src/app/core/service/util.service';
+
 @Component({
   selector: 'app-user-profile-user',
   templateUrl: './user-profile-user.component.html',
@@ -24,14 +25,9 @@ export class UserProfileUserComponent implements OnInit {
   ngOnInit(): void { }
 
   openModal(): void {
-    const modalConfig = {
-      class: 'modal-dialog-centered'
-    };
-
-    const modalRef = this.modalService.show(ContactModalComponent, modalConfig);
-
-    modalRef.content.userProfile = this.userProfile;
-    modalRef.content.heading = 'Send Message';
+    const modalRef = this.modalService.show(ContactModalComponent, {...DEFAULT_MODAL_CONFIG, data: {
+      userProfile: this.userProfile
+    }});
 
     modalRef.content.message
       .pipe(take(1))

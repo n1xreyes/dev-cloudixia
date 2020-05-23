@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MDBModalRef } from 'angular-bootstrap-md';
 import { Subject, Observable } from 'rxjs';
 import { Listing } from 'src/app/shared/models/listing.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -32,7 +31,6 @@ export class ProjectModalComponent implements OnInit {
   });
 
   constructor(
-    public modalRef: MDBModalRef,
     public store: Store<AppState>
   ) {}
 

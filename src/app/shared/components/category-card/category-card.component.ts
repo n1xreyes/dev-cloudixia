@@ -9,12 +9,13 @@ import { CategoryChildrenModalComponent } from '../../../admin/components/catego
 @Component({
   selector: 'app-category-card',
   templateUrl: './category-card.component.html',
-  styleUrls: ['./category-card.component.css']
+  styleUrls: ['./category-card.component.scss']
 })
 export class CategoryCardComponent implements OnInit {
 
   @Input() entity: Category;
   @Input() editable: boolean;
+  @Input() selected: boolean;
   @Output() deleted = new EventEmitter<Category>();
   @Output() edited = new EventEmitter<Category>();
 
@@ -26,9 +27,7 @@ export class CategoryCardComponent implements OnInit {
   }
 
   onDelete(): void {
-    this.modalService.show(ConfirmModalComponent, {...DEFAULT_MODAL_CONFIG, data: {
-        ...DELETE_CONFIRMATION,
-      }})
+    this.modalService.show(ConfirmModalComponent, {...DEFAULT_MODAL_CONFIG, data: { ...DELETE_CONFIRMATION }})
       ?.content.confirmation
       .pipe(take(1))
       .subscribe((confirmation: boolean) => {

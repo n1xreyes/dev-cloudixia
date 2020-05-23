@@ -1,6 +1,5 @@
 <app-modal-wrapper
-  [modalRef]="modalRef"
-  heading="{{getHeadingPrefix() | translate}} {{entityTitle | translate}}"
+  heading="{{customTitle || ((getHeadingPrefix() | translate) + (entityTitle | translate))}}"
   (primaryClick)="onSave()">
   <ng-content></ng-content>
 </app-modal-wrapper>

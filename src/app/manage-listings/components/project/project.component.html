@@ -21,7 +21,7 @@
     <mdb-card-text> 
       <ul>
         <li>{{ project.description }}</li>
-        <li>{{ getCategoryName(project) }}</li>
+        <li>{{ project | projectCategoryTitle }}</li>
         <li>$ {{ project.price }}</li>
       </ul>
     </mdb-card-text>

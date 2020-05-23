@@ -9,6 +9,8 @@ import { ListringWithCategory } from 'src/app/shared/models/listing.model';
 export class MarketplaceListingComponent implements OnInit {
 
   @Input() listings: ListringWithCategory[];
+  @Input() isLoading: boolean;
+
   constructor() { }
 
   ngOnInit(): void {

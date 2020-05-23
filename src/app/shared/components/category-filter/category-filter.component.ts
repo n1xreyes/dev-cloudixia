@@ -1,12 +1,19 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Category } from '../../models/category.model';
+import { Observable } from 'rxjs';
+import { Language } from '../../models/language.enum';
+import { getLanguage } from 'src/app/auth/store/auth.selectors';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/reducers';
 
 @Component({
   selector: 'app-category-filter',
   templateUrl: './category-filter.component.html',
-  styleUrls: ['./category-filter.component.css']
+  styleUrls: ['./category-filter.component.scss']
 })
 export class CategoryFilterComponent implements OnInit {
+
+  language$: Observable<Language>;
 
   private _items: Category[];
   @Input()
@@ -24,22 +31,25 @@ export class CategoryFilterComponent implements OnInit {
 
   currentItems: Category[];
   breadcrumbs: Category[] = [];
+  _selected: Category;
 
-  constructor() { }
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
+    this.language$ = this.store.select(getLanguage);
   }
 
   trackByFunction(_index: number, element: Category): string {
     return element.uid;
   }
 
-  onClick(entity?: Category): void {
+  onClick(entity: Category): void {
     if (entity && entity.subCategories) {
       this.breadcrumbs.push(entity);
       this.currentItems = Object.values(entity.subCategories);
     }
 
+    this._selected = entity;
     this.selected.emit(entity);
   }
 

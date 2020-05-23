@@ -17,11 +17,15 @@ export class LocalizationModalComponent implements OnInit {
   formLanguage: Language;
   formCurrency: string;
 
+  languageOptions = [
+    { value: Language.ARABIC, label: 'عربى' },
+    { value: Language.ENGLISH, label: 'English' },
+  ];
+
   constructor(public modalRef: MDBModalRef) { }
 
   ngOnInit(): void {
   }
-
 
   onSave() {
     if (this.projectForm.valid) {
@@ -32,10 +36,5 @@ export class LocalizationModalComponent implements OnInit {
       Object.keys(controls).forEach( controlName => controls[controlName].markAsTouched());
     }
   }
-
-  languageOptions = [
-    { value: Language.ARABIC, label: 'عربى' },
-    { value: Language.ENGLISH, label: 'English' },
-  ];
 
 }

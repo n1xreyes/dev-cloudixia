@@ -2,7 +2,6 @@
   entityTitle="category.title"
   [form]="form"
   [entity]="entity"
-  [modalRef]="modalRef"
   (saved)="result.next($event)">
   <form [formGroup]="form">
     <app-input-wrapper
@@ -11,5 +10,9 @@
     <app-input-wrapper
       name="photoUrl"
       label="category.fields.photoUrl"></app-input-wrapper>
+    <app-input-wrapper
+      *ngFor="let lang of getLanguages()"
+      name="title_{{lang}}"
+      label="{{'category.fields.titleLang' | translate: {lang: lang} }}"></app-input-wrapper>
   </form>
 </app-crud-modal>
