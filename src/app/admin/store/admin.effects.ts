@@ -7,6 +7,7 @@ import { Listing } from 'src/app/shared/models/listing.model';
 import { of, combineLatest } from 'rxjs';
 import { MarketplaceService } from 'src/app/marketplace/services/marketplace.service';
 import { CategoryService } from '../services/category.service';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable()
 export class AdminEffects {
@@ -16,6 +17,7 @@ export class AdminEffects {
     private adminService: AdminService,
     private marketplaceService: MarketplaceService,
     private categoryService: CategoryService,
+    private fn: AngularFireFunctions,
   ) {}
 
   @Effect()
@@ -47,11 +49,11 @@ export class AdminEffects {
   approveUserProject$ = this.actions$.pipe(
     ofType(fromAdmin.AdminActionTypes.APPROVE_USER_PROJECT),
     map((action: fromAdmin.ApproveUserProject) => action.payload),
-    switchMap((payload: any) => this.adminService.approve(payload.listingUID)
-      .pipe(
-        catchError((error: any) => of(new fromAdmin.AdminError({ error })))
-      )
-    )
+    switchMap((payload) => {
+      return this.fn.functions.httpsCallable('approvePending')
+      ({ listing: payload.listing}).then();
+    }),
+    catchError((error: any) => of(new fromAdmin.AdminError({ error })))
   );
 
   @Effect({ dispatch: false })

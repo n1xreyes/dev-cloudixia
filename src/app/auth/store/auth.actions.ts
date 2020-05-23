@@ -58,7 +58,7 @@ export class SocialRegisterRequested implements Action {
 export class RegisterSuccess implements Action {
   readonly type = AuthActionTypes.REGISTER_SUCCESS;
 
-  constructor(public payload: {user: User}) {}
+  constructor(public payload: {user: User, userProfile: UserProfile}) {}
 }
 
 export class RegisterCompleted implements Action {
@@ -173,20 +173,20 @@ export class RecentChatLoaded implements Action {
 }
 
 export class NewChatMessage implements Action {
-  readonly type = AuthActionTypes.NEW_CHAT_MESSAGE;  
-  
+  readonly type = AuthActionTypes.NEW_CHAT_MESSAGE;
+
   constructor(public receiverId: string, public  message: string, public chatId: string) {}
 }
 
 export class GetChatMessages implements Action {
-  readonly type = AuthActionTypes.GET_CHAT_MESSAGES;  
-  
+  readonly type = AuthActionTypes.GET_CHAT_MESSAGES;
+
   constructor(public chatId: string) {}
 }
 
 export class GetChatMessagesLoaded implements Action {
-  readonly type = AuthActionTypes.GET_CHAT_MESSAGES_LOADED;  
-  
+  readonly type = AuthActionTypes.GET_CHAT_MESSAGES_LOADED;
+
   constructor(public chatId: string, public chatMessage: ChatMessage) {}
 }
 

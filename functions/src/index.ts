@@ -12,33 +12,30 @@ const client = algoliasearch(env.algolia.appid, env.algolia.apikey);
 const index = client.initIndex('dev_LISTINGS');
 
 exports.approvePending = functions.https.onCall(async (data, context) => {
-        if (!data) return;  // World blows up
+        if (!data || !data.listing) return;  // World blows up
 
-        // We ignore regular updates are fine
-        if (data.state !== 'ACTIVE') {
-            return;
-        }
+        const listingPayload = Object.assign({}, data.listing);
 
         // Only admins have access to make it this far - regular users are NOT alowed
         // to change the state of a pending listing, as per FireBase rules
-        delete data.state;
+        delete listingPayload.state;
 
-        const listingId = data.uid;
+        const listingId = listingPayload.uid;
         const batch = fs.batch();
         
         // Actual Objects
         const listing = fs.doc('listings/' + listingId);
-        batch.set(listing, data);
+        batch.set(listing, listingPayload);
 
         const pending = fs.doc('pendingListings/' + listingId);
         batch.delete(pending)
 
         // Reference IDs
-        const listingRef = fs.doc('userProfiles/' + data.userId)
+        const listingRef = fs.doc('userProfiles/' + listingPayload.userId)
         batch.update(listingRef, 
             { listings: admin.firestore.FieldValue.arrayUnion(listingId) });
         
-        const pendingRef = fs.doc('users/' + data.userId)
+        const pendingRef = fs.doc('users/' + listingPayload.userId)
         batch.update(pendingRef, 
             { pendingListings: admin.firestore.FieldValue.arrayRemove(listingId) });
 
@@ -46,7 +43,7 @@ exports.approvePending = functions.https.onCall(async (data, context) => {
         return batch.commit().then(() => {
             return index.saveObject({
             objectID: listingId,
-            ...data 
+            ...listingPayload 
         }).then( payload => { console.log ('did a thingy: ', payload)}) });
     });
 
@@ -119,3 +116,18 @@ exports.createNewChat = functions.https.onCall(async (data, context) => {
 
     return { message: "message sent."}
 });
+
+exports.createNewUser = functions.https.onCall(async (data, context) => {
+    const batch = fs.batch();
+
+    const userRef = fs.doc('/users/' + data.user.uid);
+    batch.set(userRef, data.user);
+
+    const userProfileRef = fs.doc('/userProfiles/' + data.user.uid);
+    batch.set(userProfileRef, data.userProfile);
+
+    return batch.commit().then( 
+        payload => console.log('Created chat: ', payload),
+        error => console.log('error: ', error)
+    );
+})

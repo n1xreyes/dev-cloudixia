@@ -35,7 +35,7 @@ export class DeletePendingUserProject implements Action {
 export class ApproveUserProject implements Action {
   readonly type = AdminActionTypes.APPROVE_USER_PROJECT;
 
-  constructor(public payload: { listingUID: string}) {}
+  constructor(public payload: { listing: Listing}) {}
 }
 export class AddAdminPrivileges implements Action {
   readonly type = AdminActionTypes.ADD_ADMIN_PRIVILEGES;

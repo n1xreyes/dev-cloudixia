@@ -78,7 +78,7 @@ export class ListingApprovalComponent implements OnInit {
         if (confirmation) {
           this.store.dispatch(
             new fromAdmin.ApproveUserProject({
-              listingUID: listing.uid
+              listing: listing
             })
           );
         } else if (!listing.userId) {
