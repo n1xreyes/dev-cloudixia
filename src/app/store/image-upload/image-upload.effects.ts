@@ -1,24 +1,11 @@
 import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import * as fromActions from 'src/app/store/image-upload/image-upload.actions';
 import { ToastrService } from 'ngx-toastr';
-import {FileMetadataModel} from '../../shared/models/file-metadata.model';
 import {Action} from '@ngrx/store';
 import {ImageUploadService} from './image-upload.service';
-
-export function buildFileUploadUrl() {
-    return `${environment.uploadImage.apiURL}/upload`;
-}
-
-export function buildFormData(file: File, fileMeta: FileMetadataModel) {
-    const formData: FormData = new FormData();
-    formData.append('file', file);
-    formData.append('Metadata', JSON.stringify(fileMeta));
-    return formData;
-}
 
 @Injectable()
 export class ImageUploadEffects {
@@ -41,16 +28,6 @@ export class ImageUploadEffects {
             )
         )
     );
-
-    // @Effect({dispatch: false })
-    // uploaded$ = this.actions.pipe(
-    //     ofType(fromActions.UPLOAD_IMAGE_RESPONSE),
-    //     map((action: fromActions.UploadImageResponse) => {
-    //         this.toastr.success('', 'Upload success');
-    //         return of(new fromActions.UploadImageResponse(action.payload));
-    //     })
-    //
-    // );
 
     constructor(private actions: Actions, private toastr: ToastrService, private imageUploadService: ImageUploadService) {}
 }

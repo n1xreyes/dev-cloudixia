@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import * as fromAuth from 'src/app/auth/store/auth.actions';
 import { Category } from './models/category.model';
 import { isObject } from 'lodash';
-import { ListringWithCategory } from './models/listing.model';
+import { ListingWithCategory } from './models/listing.model';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +67,7 @@ export class LanguageService {
     return '';
   }
 
-  public getTranslatedCategoryChainTitle(project: ListringWithCategory): string {
+  public getTranslatedCategoryChainTitle(project: ListingWithCategory): string {
     if (!isObject(project) || !project?.categories) {
       return '';
     }
