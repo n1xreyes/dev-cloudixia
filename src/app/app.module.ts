@@ -24,6 +24,7 @@ import { AdminModule } from './admin/admin.module';
 import { LanguageService } from './shared/language.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
+import {CurrencyPipe} from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -67,6 +68,7 @@ import {ToastrModule} from 'ngx-toastr';
     AdminModule,
   ],
   providers: [
+    CurrencyPipe,
     LanguageService
   ],
   bootstrap: [AppComponent]

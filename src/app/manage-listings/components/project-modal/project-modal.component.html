@@ -2,7 +2,7 @@
   entityTitle="project.title"
   [form]="form"
   [entity]="entity"
-  (saved)="result.next($event)">
+  (saved)=" transformPriceValue(); result.next($event)">
   <form [formGroup]="form">
     <app-input-wrapper
       name="title"
@@ -21,8 +21,10 @@
       <app-image-upload [isProfilePic]="false" [userInfo]="user" (photoSelected)="setSelectedPhoto($event)"></app-image-upload>
     </div>
     <app-input-wrapper
-      type="number"
       name="price"
-      label="project.fields.price"></app-input-wrapper>
+      label="project.fields.price"
+      placeholder="USD $0.00" 
+      (change)="formatCurrency()"
+      (input)="checkForLetters()"></app-input-wrapper>
   </form>
 </app-crud-modal>

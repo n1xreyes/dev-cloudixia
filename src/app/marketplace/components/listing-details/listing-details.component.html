@@ -26,7 +26,7 @@
 
         <div style="padding-bottom: 5%;">
             <a mdbBtn color="secondary" mdbWavesEffect [routerLink]="[ '/' ]">Back</a>
-            <a mdbBtn color="primary" mdbWavesEffect (click)="onDelete()">Continue ($5.90)</a>
+            <a mdbBtn color="primary" mdbWavesEffect (click)="onDelete()">Continue ({{"$ " + listing.price}})</a>
         </div>
     </div>
 </div>

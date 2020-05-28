@@ -36,5 +36,4 @@ export class AppComponent implements OnInit {
   onLogout(user: User) {
     this.store.dispatch(new fromAuth.LogoutRequested( { user }));
   }
-
 }

@@ -33,5 +33,4 @@ export class InputWrapperComponent extends InputWrapperBase implements OnInit {
     super.ngOnInit();
     this.isTextArea = this.type === 'textarea';
   }
-
 }

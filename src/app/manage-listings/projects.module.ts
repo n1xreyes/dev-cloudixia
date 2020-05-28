@@ -12,7 +12,6 @@ import { ProjectModalComponent } from './components/project-modal/project-modal.
 import { ProjectComponent } from './components/project/project.component';
 import { ProjectsListComponent } from './components/projects-list/projects-list.component';
 
-
 @NgModule({
   imports: [
     ModalModule,
