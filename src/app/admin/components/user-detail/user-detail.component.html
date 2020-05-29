@@ -6,13 +6,13 @@
     </div>
     <div class="d-flex flex-row justify-content-between flex-wrap">
       <div class="d-flex flex-row">
-        <div class="mr-4">
-          <img *ngIf="user.photoUrl" src="{{ user.photoUrl }}" height="90" width="90" class="rounded-circle z-depth-0"
-            alt="avatar image">
-        </div>
+<!--        <div class="mr-4">-->
+<!--          <img *ngIf="user.photoUrl" src="{{ user.photoUrl }}" height="90" width="90" class="rounded-circle z-depth-0"-->
+<!--            alt="avatar image">-->
+<!--        </div>-->
 
         <div class="pt-2">
-          <h4>{{ user.displayName }}</h4>
+          <h4>{{ user.firstName + ' ' + user.lastName }}</h4>
           <div>
             <span class="mr-2">
               <mdb-badge *ngIf="!user.isOnline" color="red">Offline</mdb-badge>

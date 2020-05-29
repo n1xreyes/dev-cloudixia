@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import {User} from '../../../auth/models/user.model';
 
 @Component({
   selector: 'app-user',
@@ -7,7 +8,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserComponent implements OnInit {
-  @Input() user: any;
+  @Input() user: User;
   @Output() userSelected = new EventEmitter<any>();
   @Output() addAdmin = new EventEmitter<any>();
   @Output() removeAdmin = new EventEmitter<any>();
