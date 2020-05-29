@@ -1,0 +1,11 @@
+<div class="userProfile">
+    <div class="avatar m-3" (click)="openUserProfile()">
+        <img *ngIf="userProfile.photoUrl"
+             src="{{ userProfile.photoUrl }}"
+             height="96"
+            width="96"
+            class="rounded-circle z-depth-0"
+            alt="avatar image">
+        <a class="mr-3 ml-3">{{ userProfile.displayName }}</a>
+    </div>
+</div>

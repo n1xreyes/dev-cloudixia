@@ -1,0 +1,34 @@
+<mdb-card class="order-card">
+  <!--Card image-->
+    <!-- <mdb-card-img
+      mdbWavesEffect
+      *ngIf="listing.photoUrl"
+      src="{{ listing.photoUrl }}" 
+      alt="Card image cap" 
+      class="waves-light"></mdb-card-img> -->
+  <!--Card content-->
+  <mdb-card-body>
+    <!--Title-->
+    <mdb-card-title>
+      <h4>{{ order.title }}</h4>
+    </mdb-card-title>
+
+    <div class="mr-2">
+      <mdb-badge color="red">
+        {{ order.status | enum: 'OrderStatus' | async}}
+      </mdb-badge>
+    </div>
+
+    <!--Text-->
+    <mdb-card-text>
+      <p>
+        {{ order.description }}
+      </p>
+    </mdb-card-text>
+
+    <hr>
+    <div class="text-right">
+      <a>$ {{ order.price }}</a>
+    </div>
+  </mdb-card-body>
+</mdb-card>

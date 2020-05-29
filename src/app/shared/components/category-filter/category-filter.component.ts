@@ -31,7 +31,7 @@ export class CategoryFilterComponent implements OnInit {
 
   currentItems: Category[];
   breadcrumbs: Category[] = [];
-  _selected: Category;
+  _selected: Category | null;
 
   constructor(private store: Store<AppState>) { }
 
@@ -58,10 +58,12 @@ export class CategoryFilterComponent implements OnInit {
       this.currentItems = this._items;
       this.breadcrumbs = [];
       this.selected.emit(undefined);
+      this._selected = null;
     } else {
       const parent: Category = this.breadcrumbs[index];
       this.currentItems = Object.values(parent.subCategories || {});
       this.breadcrumbs.splice(index + 1);
+      this._selected = parent;
       this.selected.emit(parent);
     }
   }

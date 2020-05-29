@@ -2,6 +2,8 @@ import { Component, OnInit, forwardRef, Input, Optional, Host, Attribute } from 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroupDirective, AbstractControl } from '@angular/forms';
 import { Category } from '../../models/category.model';
 import { isArray } from 'lodash';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { ArrayDataSource } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-category-selection',
@@ -25,6 +27,13 @@ export class CategorySelectionComponent implements OnInit, ControlValueAccessor 
   isDisabled: boolean;
   control: AbstractControl;
 
+  dataSource: ArrayDataSource<Category>;
+  treeControl: NestedTreeControl<Category> = new NestedTreeControl<Category>(
+    (node: Category) => {
+      return node.subCategories ? Object.values(node.subCategories) : null;
+    }
+  );
+
   private _onChange = (_: any) => { };
   private _onTouched = () => { };
 
@@ -38,6 +47,7 @@ export class CategorySelectionComponent implements OnInit, ControlValueAccessor 
   }
 
   ngOnInit(): void {
+    this.dataSource = new ArrayDataSource<Category>(this.items);
   }
 
   writeValue(value: Category | string[] | undefined): void {
@@ -85,6 +95,10 @@ export class CategorySelectionComponent implements OnInit, ControlValueAccessor 
 
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+  }
+
+  hasChild = (_: number, node: Category) => {
+    return !!node.subCategories && Object.keys(node.subCategories).length > 0;
   }
 
 }

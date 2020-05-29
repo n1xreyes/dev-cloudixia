@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ApplicationRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Language } from './models/language.enum';
 import { AppState } from '../reducers';
@@ -15,7 +15,8 @@ export class LanguageService {
 
   constructor(
     private translateService: TranslateService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private applicationRef: ApplicationRef
     ) {
     this.bootstrapLang();
    }
@@ -54,6 +55,7 @@ export class LanguageService {
   public setLanguage(lang: Language) {
      // set the actual transalter
      this.translateService.use(lang);
+     this.applicationRef.tick();
      // set the local storage
      localStorage.setItem('language', lang);
   }

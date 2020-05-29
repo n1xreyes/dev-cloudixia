@@ -3,7 +3,8 @@ import { LanguageService } from '../language.service';
 import { Category } from '../models/category.model';
 
 @Pipe({
-  name: 'categoryTitle'
+  name: 'categoryTitle',
+  pure: false
 })
 export class CategoryTitlePipe implements PipeTransform {
 

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import {Observable, of, from, Subject} from 'rxjs';
+import { Observable, of, from, Subject } from 'rxjs';
 import { Listing } from 'src/app/shared/models/listing.model';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { environment } from 'src/environments/environment';
 import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import {BuildFileMetadataService} from '../../shared/components/image-upload/build-file-metadata.service';
-import {ImageUploadState} from '../../store/image-upload/image-upload.reducers';
-import {ImageUploadService} from '../../store/image-upload/image-upload.service';
+import { BuildFileMetadataService } from '../../shared/components/image-upload/build-file-metadata.service';
+import { ImageUploadState } from '../../store/image-upload/image-upload.reducers';
+import { ImageUploadService } from '../../store/image-upload/image-upload.service';
 
 @Injectable({
   providedIn: 'root'

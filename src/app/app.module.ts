@@ -25,6 +25,7 @@ import { LanguageService } from './shared/language.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 import {CurrencyPipe} from '@angular/common';
+import { ErrorLogEffects } from './store/error-log/error-log.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -58,6 +59,7 @@ import {CurrencyPipe} from '@angular/common';
       }
     }),
     EffectsModule.forRoot([]),
+    EffectsModule.forFeature([ErrorLogEffects]),
     // mdb
     ModalModule.forRoot(),
     // custom

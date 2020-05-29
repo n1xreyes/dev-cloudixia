@@ -9,11 +9,13 @@ import * as fromAdmin from '../admin/store/admin.reducer';
 import * as fromMarketplace from '../marketplace/store/marketplace.reducer';
 import * as fromCategory from '../admin/store/category.reducer';
 import * as fromImageUpload from '../store/image-upload/image-upload.reducers';
+import * as fromOrders from '../orders/store/order.reducer';
 import { AuthState } from '../auth/store/auth.state';
 import { AdminState } from '../admin/store/admin.state';
 import { MarketplaceState } from '../marketplace/store/marketplace.state';
 import { CategoryState } from '../admin/store/category.state';
 import {ImageUploadState} from '../store/image-upload/image-upload.reducers';
+import { OrdersState } from '../orders/store/orders.state';
 
 export interface AppState {
   auth: AuthState;
@@ -21,6 +23,7 @@ export interface AppState {
   marketplace: MarketplaceState;
   category: CategoryState;
   imageUpload: ImageUploadState;
+  orders: OrdersState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
@@ -28,7 +31,8 @@ export const reducers: ActionReducerMap<AppState> = {
   admin: fromAdmin.adminReducer,
   marketplace: fromMarketplace.marketplaceReducer,
   category: fromCategory.categoryReducer,
-  imageUpload: fromImageUpload.imageUploadReducer
+  imageUpload: fromImageUpload.imageUploadReducer,
+  orders: fromOrders.ordersReducer
 };
 
 export function clearState(reducer: ActionReducer<AppState>): ActionReducer<AppState> {

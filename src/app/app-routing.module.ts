@@ -25,6 +25,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'orders',
+    loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'admin-panel',
     component: AdminComponent,
     canActivate: [AdminGuard]

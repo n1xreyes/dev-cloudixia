@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
-import { ModalModule, BadgeModule } from 'angular-bootstrap-md';
+import { ModalModule } from 'angular-bootstrap-md';
 import { ProjectsComponent } from './components/projects.component';
 import * as fromProjects from './store/projects.reducer';
 import { ProjectsEffects } from './store/projects.effects';
@@ -17,7 +17,6 @@ import { ProjectsListComponent } from './components/projects-list/projects-list.
     ModalModule,
     ProjectsRoutingModule,
     HttpClientModule,
-    BadgeModule,
     StoreModule.forFeature('projects', fromProjects.projectsReducer),
     EffectsModule.forFeature([ProjectsEffects]),
     // custom

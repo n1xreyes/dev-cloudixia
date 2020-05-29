@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { Observable, of, defer, EMPTY } from 'rxjs';
-import { map, switchMap, catchError, tap, take, withLatestFrom } from 'rxjs/operators';
+import { defer, EMPTY, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
 import * as firebase from 'firebase/app';
 import * as auth from './../store/auth.actions';
@@ -36,7 +36,7 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.registerWithEmail(payload.email, payload.password).pipe(
         map((fireCreds: firebase.auth.UserCredential) => {
-          const userObject = {
+          return {
             user: {
               uid: fireCreds.user?.uid || '',
               email: fireCreds.user?.email || '',
@@ -46,12 +46,12 @@ export class AuthEffects {
               pendingListings: []
             },
             userProfile: {
+              uid: fireCreds.user?.uid || '',
               photoUrl: fireCreds.user?.photoURL ||
-              'https://www.pngfind.com/pngs/m/568-5682880_rothenburg-james-fa-user-circle-icon-hd-png.png',
+                'https://www.pngfind.com/pngs/m/568-5682880_rothenburg-james-fa-user-circle-icon-hd-png.png',
               displayName: payload.firstName
             }
           };
-          return userObject;
         }),
         switchMap((userObject: any) => [new auth.RegisterSuccess(userObject)]),
         tap(() => this.router.navigateByUrl('')),
@@ -68,7 +68,7 @@ export class AuthEffects {
     map((action: auth.SocialRegisterRequested) => action.payload),
     switchMap(payload => this.authService.socialLogin(payload.authProvider).pipe(
       map((fireCreds: firebase.auth.UserCredential) => {
-        const userObject = {
+        return {
           user: {
             uid: fireCreds.user?.uid || '',
             email: fireCreds.user?.email || '',
@@ -83,7 +83,6 @@ export class AuthEffects {
             listings: []
           }
         };
-        return userObject;
       }),
       switchMap((userDetails: any) => [new auth.RegisterSuccess(userDetails)]),
       tap(() => this.router.navigateByUrl('')),
@@ -205,10 +204,9 @@ export class AuthEffects {
     switchMap(payload => this.authService.socialLogin(payload.authProvider)
       .pipe(
         map((res: any) => {
-          const user = {
+          return {
             uid: res.user.uid,
           };
-          return user;
         }),
         switchMap((user: User) =>
           [

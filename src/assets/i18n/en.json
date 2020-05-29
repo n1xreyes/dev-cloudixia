@@ -3,7 +3,8 @@
         "home": "Home",
         "addNew": "Add new",
         "edit": "Edit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "back": "Back"
     },
     "confirm": {
         "delete": {
@@ -18,11 +19,20 @@
     "header": {
         "links": {
             "marketplace": "Marketplace",
-            "yourListings": "Your Listings",
-            "adminPanel": "Admin",
+            "yourListings": "Your Listings"
+        },
+        "adminDropdown": {
+            "title": "Admin",
             "listingApproval": "Approve Listings",
             "categoryListing": "Categories",
             "userList": "User List"
+        },
+        "userDropdown": {
+            "annonymousUser": "Anonymous user",
+            "profile": "Profile",
+            "soldOrders": "Sold Orders",
+            "boughtOrders": "Bought Orders",
+            "logout": "Logout"
         }
     },
     "category": {
@@ -47,6 +57,18 @@
             "price": "Price"
         }
     },
+    "order": {
+        "fields": {
+            "title": "Title",
+            "description": "Description",
+            "price": "Price",
+            "status": "Status"
+        },
+        "virtualFields": {
+            "sellerName": "Seller Name",
+            "buyerName": "Buyer Name"
+        }
+    },
     "component": { 
         "messages" : {
             "header": "Messages",
@@ -64,5 +86,11 @@
         "email": "Not valid email format",
         "min": "Min value is {{min}}",
         "max": "Max value is {{max}}"
+    },
+    "enum": {
+        "OrderStatus": {
+            "ACTIVE": "Active",
+            "COMPLETE": "Complete"
+        }
     }
 }

@@ -1,0 +1,10 @@
+<button
+        mdbBtn
+        translate
+        type="button"
+        class="secondary"
+        *ngIf="customRouterService.canNavigateBack()"
+        (click)="customRouterService.back()"
+>
+    common.back
+</button>

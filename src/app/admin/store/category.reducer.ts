@@ -16,7 +16,8 @@ export function categoryReducer(state = categoryStateInitial, action: CategoryAc
     }
     case CategoryActionTypes.CATEGORY_ERROR: {
       return Object.assign({}, state, {
-        error: action.payload.error
+        error: action.payload.error,
+        loading: false
       });
     }
     default:

@@ -3,6 +3,9 @@ import { Listing } from 'src/app/shared/models/listing.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MarketplaceService } from '../../services/marketplace.service';
 import { UserProfile } from 'src/app/auth/models/user.model';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/reducers';
+import { MarketplacePurchase } from '../../store/marketplace.actions';
 
 @Component({
   selector: 'app-listing-details',
@@ -18,7 +21,8 @@ export class ListingDetailsComponent implements OnInit {
   constructor(
     private _route: ActivatedRoute,
     private router: Router,
-    private marketplaceService: MarketplaceService
+    private marketplaceService: MarketplaceService,
+    private store: Store<AppState>
   ) {
     this._route.params.subscribe(params => {
       this.marketplaceService.getListing(params.id).subscribe(
@@ -44,7 +48,9 @@ export class ListingDetailsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onDelete(): void {}
+  purchase(): void {
+    this.store.dispatch(new MarketplacePurchase({ listing: this.listing }));
+  }
 
   openUserProfile() {
     this.router.navigateByUrl('/user/' + this.listing.userId);

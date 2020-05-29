@@ -1,0 +1,28 @@
+<div class="white section-header">
+  <h3>{{ (isSeller ? 'header.userDropdown.soldOrders' : 'header.userDropdown.boughtOrders') | translate }}</h3>
+</div>
+<div class="container-fluid">
+  <table mdbTable hover="true" *ngIf="!(isLoading$ | async)">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th translate>order.fields.title</th>
+      <th translate>order.fields.description</th>
+      <th translate>order.fields.price</th>
+      <th translate>order.fields.status</th>
+      <th>{{ (isSeller ? 'order.virtualFields.buyerName' : 'order.virtualFields.sellerName') | translate }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr mdbTableRow *ngFor="let order of (orders$ | async); let i = index" (click)="navigate(order)">
+      <th scope="row">{{ i }}</th>
+      <td>{{ order.title }}</td>
+      <td>{{ order.description }}</td>
+      <td>{{ order.price }}</td>
+      <td>{{ order.status | enum: 'OrderStatus' | async }}</td>
+      <td>{{ isSeller ? order.buyer.displayName : order.seller.displayName }}</td>
+    </tr>
+    </tbody>
+  </table>
+  <app-loader [isLoading]="isLoading$ | async" [showNoRecordsMessage]="!(orders$ | async)?.length"></app-loader>
+</div>

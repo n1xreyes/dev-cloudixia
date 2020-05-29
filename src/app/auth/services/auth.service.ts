@@ -67,8 +67,12 @@ export class AuthService {
   }
 
   // get user in DB
-  getDBUser(uid: String): Observable<any> {
-    return this.fs.doc('users/' + uid).valueChanges();
+  getDBUser(uid: string) {
+    return this.fs.doc(`users/${uid}`).valueChanges();
+  }
+
+  getDBUserProfile(uid: string) {
+    return this.fs.doc(`userProfiles/${uid}`).valueChanges();
   }
 
   // Uses RTDB for online presence tracking
@@ -137,7 +141,6 @@ export class AuthService {
    *
    * @param receiverId Who are we sending a message to?
    * @param message The message to send
-   * @param timestamp A timestamp
    */
   createNewChat(receiverId: string, message: string) {
     this.fn.functions.httpsCallable('createNewChat')

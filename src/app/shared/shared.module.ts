@@ -10,7 +10,8 @@ import {
   InputUtilitiesModule,
   IconsModule,
   BreadcrumbModule,
-  WavesModule
+  WavesModule,
+  BadgeModule
 } from 'angular-bootstrap-md';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectWrapperComponent } from './components/ng-select-wrapper/ng-select-wrapper.component';
@@ -32,6 +33,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import * as fromImageUpload from '../store/image-upload/image-upload.reducers';
 import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
+import { EnumPipe } from './pipe/enum.pipe';
+import { BackButtonComponent } from './components/back-button/back-button.component';
+import { UserProfilePreviewComponent } from './components/user-profile-preview/user-profile-preview.component';
+import { CdkTreeModule } from '@angular/cdk/tree';
 
 @NgModule({
   declarations: [
@@ -50,6 +55,9 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     CategoryTitlePipe,
     ProjectCategoryTitlePipe,
     ImageUploadComponent,
+    EnumPipe,
+    BackButtonComponent,
+    UserProfilePreviewComponent,
   ],
   imports: [
     // angular
@@ -66,6 +74,8 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     CardsModule,
     BreadcrumbModule,
     WavesModule,
+    BadgeModule,
+    CdkTreeModule,
     // ng-select
     NgSelectModule,
     StoreModule.forFeature('imageUpload', fromImageUpload.imageUploadReducer),
@@ -85,6 +95,7 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     ButtonsModule,
     CardsModule,
     WavesModule,
+    BadgeModule,
     // ng-select
     NgSelectModule,
     // custom
@@ -98,7 +109,10 @@ import { ImageUploadEffects } from '../store/image-upload/image-upload.effects';
     CategoryCardComponent,
     LoaderComponent,
     CategoryTitlePipe,
-    ProjectCategoryTitlePipe
+    ProjectCategoryTitlePipe,
+    EnumPipe,
+    BackButtonComponent,
+    UserProfilePreviewComponent
   ],
   providers: [],
   entryComponents: [

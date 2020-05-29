@@ -6,7 +6,7 @@ import { map, withLatestFrom, mergeMap, switchMap } from 'rxjs/operators';
 import { ProjectsService } from '../services/projects.service';
 
 import * as fromProjects from './projects.actions';
-import { AppState } from '../../reducers/index';
+import { AppState } from '../../reducers';
 import { getUser } from '../../auth/store/auth.selectors';
 import { Listing } from 'src/app/shared/models/listing.model';
 import { ListingState } from 'src/app/shared/models/listing-state.enum';
@@ -18,7 +18,7 @@ import { combineLatest, of } from 'rxjs';
 import { User, UserProfile } from 'src/app/auth/models/user.model';
 
 // import {ImageUploadService} from '../../store/image-upload/image-upload.service';
-import {BuildFileMetadataService} from '../../shared/components/image-upload/build-file-metadata.service';
+import { BuildFileMetadataService } from '../../shared/components/image-upload/build-file-metadata.service';
 
 const PHOTO_URL_PREFIX = 'https://cloudixia-images.s3.us-east-2.amazonaws.com/';
 
@@ -52,13 +52,13 @@ export class ProjectsEffects {
               return this.marketplaceService.getListing(listingId)
                 .pipe(
                   switchMap((listingPayload: Listing) => {
-                    return    this.categoryService.get(listingPayload.categories[0])
-                    .pipe(
-                      map((categoryPayload) => ({
-                        category: categoryPayload.payload.data(),
-                        listing: listingPayload
-                      })
-                    ));
+                    return this.categoryService.get(listingPayload.categories[0])
+                      .pipe(
+                        map((categoryPayload) => ({
+                          category: categoryPayload.payload.data(),
+                          listing: listingPayload
+                        })
+                      ));
                   }
                   )
                 );
@@ -133,7 +133,7 @@ export class ProjectsEffects {
         // return of(project);
         return this.projectsService.add(project);
       } else {
-          if(project.file) {
+          if (project.file) {
             delete project.file;
           }
           return this.projectsService.add(project, projectPhoto);

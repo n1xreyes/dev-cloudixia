@@ -7,6 +7,7 @@ export enum MarketplaceActionTypes {
   MARKETPLACE_SEARCH = '[Marketplace] Marketplace Text Search',
   MARKETPLACE_ADDED = '[Marketplace] Marketplace added one',
   MARKETPLACE_LOADED = '[Marketplace] Marketplace loaded',
+  MARKETPLACE_PURCHASE = '[Marketplace] Marketplace purchase',
   MARKETPLACE_ERROR = '[Marketplace] Marketplace error'
 }
 
@@ -25,7 +26,13 @@ export class MarketplaceLoaded implements Action {
 export class MarketplaceAdded implements Action {
   readonly type = MarketplaceActionTypes.MARKETPLACE_ADDED;
 
-  constructor(public payload: { listing: Listing}) {}
+  constructor(public payload: { listing: Listing }) {}
+}
+
+export class MarketplacePurchase implements Action {
+  readonly type = MarketplaceActionTypes.MARKETPLACE_PURCHASE;
+
+  constructor(public payload: { listing: Listing }) {}
 }
 
 export class MarketplaceError implements Action {
@@ -38,4 +45,5 @@ export type MarketplaceActions =
   | MarketplaceSearch
   | MarketplaceAdded
   | MarketplaceLoaded
-  | MarketplaceError;
+  | MarketplaceError
+  | MarketplacePurchase;
