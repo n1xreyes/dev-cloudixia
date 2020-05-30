@@ -75,11 +75,11 @@ export class ProjectModalComponent implements OnInit {
   }
 
   getPriceNumericValue() {
-    return this.form.get('price')?.value.replace( /^\D+|,/g, '');
+    return ('' + this.form.get('price')?.value).replace( /^\D+|,/g, '')?.replace( /^\D+|,/g, '');
   }
 
   checkForLetters() {
-    this.form.get('price')?.setValue(this.form.get('price')?.value.replace(/\p{L}/u, ''));
+    ('' + this.form.get('price')?.value).replace( /^\D+|,/g, '')?.replace(/\p{L}/u, '');
   }
 
 }

@@ -31,6 +31,7 @@ export class AdminService {
 
   addAdminPrivileges(uid: string) {
     const adminsRef = this.fs.doc('admins/' + uid);
+    this.fs.doc('users/' + uid).update({isAdmin: true}).then();
     return from(adminsRef.set({isAdmin: true}));
   }
 

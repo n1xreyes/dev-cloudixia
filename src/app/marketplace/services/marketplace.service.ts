@@ -6,10 +6,10 @@ import { environment } from 'src/environments/environment';
 import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import {BuildFileMetadataService} from '../../shared/components/image-upload/build-file-metadata.service';
-import {ImageUploadState} from '../../store/image-upload/image-upload.reducers';
-import {ImageUploadService} from '../../store/image-upload/image-upload.service';
-import {FileFolderName} from '../../shared/models/file-metadata.model';
+import { BuildFileMetadataService } from '../../shared/components/image-upload/build-file-metadata.service';
+import { ImageUploadState } from '../../store/image-upload/image-upload.reducers';
+import { ImageUploadService } from '../../store/image-upload/image-upload.service';
+import { FileFolderName } from '../../shared/models/file-metadata.model';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +59,22 @@ export class MarketplaceService {
     );
 
     return batch.commit().then();
+  }
+
+  getUsersListings(userId: string) {
+    return this.fs.collection(
+        'listings',
+        ref => ref.where('userId', '==', userId)
+    )
+        .valueChanges();
+  }
+
+  getUsersPendingListings(userId: string) {
+    return this.fs.collection(
+        'pendingListings',
+        ref => ref.where('userId', '==', userId)
+    )
+        .valueChanges();
   }
 
   getListing(listingId: string) {

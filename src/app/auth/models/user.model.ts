@@ -13,16 +13,10 @@ export interface User {
   providerId: string;
   isNewUser?: boolean;
   userProfile: UserProfile;
-
-  // redundand?
-  pendingListings: string[];
 }
 
 export interface UserProfile {
   uid: string;
   photoUrl: string;
   displayName: string;
-
-  // redundand?
-  listings?: string[];
 }

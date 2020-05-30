@@ -79,7 +79,7 @@
         },
         "loader": {
             "loading": "Loading...",
-            "noRecords": "No records found"
+            "noRecords": "No orders purchased yet."
         }
     },
     "fieldError": {

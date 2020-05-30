@@ -37,22 +37,26 @@ export class OrdersEffects {
       if (payload.userId) {
         return this.ordersService.findOrdersByBuyerId(payload.userId, payload.type).pipe(
           switchMap((data: Order[]) => {
-            const orders$ = data.map((order: Order) => {
-              const isSeller: boolean = payload.type === OrdersSearchType.SELLER;
-              return this.authService.getDBUserProfile(isSeller ? order.buyerUid : order.sellerUid)
-                .pipe(
-                  map((user: UserProfile) => {
-                    if (isSeller) {
-                      (order as OrderWithUserProfiles).buyer = user;
-                    } else {
-                      (order as OrderWithUserProfiles).seller = user;
-                    }
-                    return order;
-                  }),
-                );
-            });
+              if (!data || !data.length) {
+                  return of([]);
+              }
 
-            return combineLatest(orders$);
+              const orders$ = data.map((order: Order) => {
+                  const isSeller: boolean = payload.type === OrdersSearchType.SELLER;
+                  return this.authService.getDBUserProfile(isSeller ? order.buyerUid : order.sellerUid)
+                      .pipe(
+                          map((user: UserProfile) => {
+                              if (isSeller) {
+                                  (order as OrderWithUserProfiles).buyer = user;
+                              } else {
+                                  (order as OrderWithUserProfiles).seller = user;
+                              }
+                              return order;
+                          }),
+                      );
+              });
+
+              return combineLatest(orders$);
           }),
           map((data: OrderWithUserProfiles[]) => new fromOrders.LoadOrdersSuccess({ data }))
         );

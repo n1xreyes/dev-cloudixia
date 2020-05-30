@@ -3,7 +3,7 @@ import { UserProfile } from 'src/app/auth/models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { MarketplaceService } from '../../services/marketplace.service';
 import { Listing } from 'src/app/shared/models/listing.model';
-import { combineLatest, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-profile',
@@ -23,27 +23,16 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private marketplaceService: MarketplaceService
   ) { }
 
-  // TODO: move this code to effect/selector/action all that ngrx crap
   ngOnInit(): void {
     this.subscriptions.push(
       this._route.params.subscribe(params => {
-        this.userProfileId = params.id;
-        this.marketplaceService.getUserProfile(params.id).subscribe(
-          userPayload => {
-            this.userProfile = userPayload;
-            if (!userPayload.listings || !userPayload.listings.length) {
-              this.listings = [];
-              return;
-            }
-
-            const listings$ = userPayload.listings.map((listingId: string) => {
-              return this.marketplaceService.getListing(listingId);
-            });
-            combineLatest(listings$).subscribe( (listingsPayload: any) => {
-              this.listings = listingsPayload;
-            });
-          }
-        );
+          this.userProfileId = params.id;
+          this.marketplaceService.getUserProfile(params.id).subscribe(userPayload => {
+              this.userProfile = userPayload;
+          });
+          this.marketplaceService.getUsersListings(params.id).subscribe((listings: Listing[]) => {
+              this.listings = listings;
+          });
       })
     );
   }

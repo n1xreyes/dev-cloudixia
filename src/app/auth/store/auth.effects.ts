@@ -145,16 +145,12 @@ export class AuthEffects {
   checkUserRole$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.CHECK_ADMIN_ROLE),
     map( (action: auth.CheckAdminRole) => action.payload),
-    switchMap( (payload: any) => this.authService.checkAdminRole(payload.uid)
-      .pipe(
+    switchMap( (payload: any) => this.authService.checkAdminRole(payload.uid).pipe(
         map( (firestorePayload: any) => {
-          return new auth.UpdateUserRole({ isAdmin: firestorePayload.isAdmin });
-        // map( (isAdmin: boolean) => {
-        //   return new auth.UpdateUserRole({ isAdmin });
-        }),
-        catchError( (error: any) => of(new auth.AuthError({ error })))
-      )
-    )
+            return new auth.UpdateUserRole({isAdmin: firestorePayload && firestorePayload.isAdmin});
+        })
+    )),
+    catchError( (error: any) => of(new auth.AuthError({ error })))
   );
 
   @Effect({dispatch: false})
