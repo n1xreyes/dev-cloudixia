@@ -11,7 +11,8 @@ import {
   IconsModule,
   BreadcrumbModule,
   WavesModule,
-  BadgeModule
+  BadgeModule,
+  DropdownModule
 } from 'angular-bootstrap-md';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectWrapperComponent } from './components/ng-select-wrapper/ng-select-wrapper.component';
@@ -21,7 +22,6 @@ import { InputWrapperComponent } from './components/input-wrapper/input-wrapper.
 import { InputErrorWrapperComponent } from './components/input-error-wrapper/input-error-wrapper.component';
 import { CrudModalComponent } from './components/crud-modal/crud-modal.component';
 import { CategorySelectionComponent } from './components/category-selection/category-selection.component';
-import { CategorySubSelectionComponent } from './components/category-sub-selection/category-sub-selection.component';
 import { CategoryFilterComponent } from './components/category-filter/category-filter.component';
 import { CategoryCardComponent } from './components/category-card/category-card.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -48,7 +48,6 @@ import { CdkTreeModule } from '@angular/cdk/tree';
     InputErrorWrapperComponent,
     CrudModalComponent,
     CategorySelectionComponent,
-    CategorySubSelectionComponent,
     CategoryFilterComponent,
     CategoryCardComponent,
     LoaderComponent,
@@ -76,6 +75,7 @@ import { CdkTreeModule } from '@angular/cdk/tree';
     WavesModule,
     BadgeModule,
     CdkTreeModule,
+    DropdownModule,
     // ng-select
     NgSelectModule,
     StoreModule.forFeature('imageUpload', fromImageUpload.imageUploadReducer),

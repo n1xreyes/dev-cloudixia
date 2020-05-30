@@ -25,7 +25,6 @@ export class CustomRouterService implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (event) => {
-            console.log((event[0] as RoutesRecognized).url);
             this.previousRoutePath = (event[0] as RoutesRecognized).url;
           }
         })

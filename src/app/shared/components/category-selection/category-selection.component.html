@@ -1,50 +1,47 @@
-<!--<div class="wrapper">-->
-<!--  <label translate>project.fields.category</label>-->
-<!--  <ul class="list-group">-->
-<!--    <li-->
-<!--      mdbWavesEffect-->
-<!--      *ngFor="let item of items; trackBy: trackByFunction" -->
-<!--      class="list-group-item"-->
-<!--      [ngClass]="{-->
-<!--        'active': value?.uid === item.uid,-->
-<!--        'disabled': isDisabled-->
-<!--      }">-->
-<!--      <div (click)="setValue(item)">{{item.title}}</div>-->
-<!--      <app-category-sub-selection-->
-<!--        *ngIf="item.subCategories"-->
-<!--        [items]="getSubcategories(item)"-->
-<!--        [value]="value"-->
-<!--        (setValue)="setValue($event)"></app-category-sub-selection>-->
-<!--    </li>-->
-<!--  </ul>-->
-<!--</div>-->
-<label translate>project.fields.category</label>
-<app-input-error-wrapper
-        [control]="control"
-        [validOnPristine]="validOnPristine"></app-input-error-wrapper>
-<cdk-tree [dataSource]="dataSource" [trackBy]="trackByFunction" [treeControl]="treeControl">
-  <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="example-tree-node">
-    <button mdbBtn disabled color="link" size="sm">
-      <mdb-icon fas></mdb-icon>
-    </button>
+<!-- TODO: add `container="body"` when https://github.com/mdbootstrap/Angular-Bootstrap-with-Material-Design/issues/135 is fixed -->
+<div class="md-form" mdbDropdown>
+  <label for="category-selection" translate>project.fields.category</label>
+  <input mdbInput
+         readonly
+         mdbDropdownToggle
+         type="text"
+         id="category-selection"
+         class="form-control"
+         [value]="value?.title" />
+  <app-input-error-wrapper
+          [control]="control"
+          [validOnPristine]="validOnPristine"></app-input-error-wrapper>
 
-    <span (click)="setValue(node)">
-      <mdb-icon fas [icon]="value?.uid === node.uid ? 'check' : ''"></mdb-icon>
-      {{ node.title }}
-    </span>
-  </cdk-nested-tree-node>
-  <cdk-nested-tree-node *cdkTreeNodeDef="let node; when: hasChild" class="example-tree-node">
-    <button mdbBtn cdkTreeNodeToggle color="link" size="sm">
-      <mdb-icon fas [icon]="treeControl.isExpanded(node) ? 'chevron-down' : 'chevron-right'"></mdb-icon>
-    </button>
+  <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary wrapper">
+    <cdk-tree [dataSource]="dataSource" [trackBy]="trackByFunction" [treeControl]="treeControl">
 
-    <span (click)="setValue(node)">
-      <mdb-icon fas [icon]="value?.uid === node.uid ? 'check' : ''"></mdb-icon>
-      {{ node.title }}
-    </span>
+      <!-- Node without children -->
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="categories-tree-node dropdown-item" mdbWavesEffect>
+        <button mdbBtn disabled color="link" size="sm" class="tree">
+          <mdb-icon fas icon="circle" size="sm"></mdb-icon>
+        </button>
 
-    <div [class.example-tree-invisible]="!treeControl.isExpanded(node)">
-      <ng-container cdkTreeNodeOutlet></ng-container>
-    </div>
-  </cdk-nested-tree-node>
-</cdk-tree>
+        <span (click)="setValue(node)">
+          <mdb-icon fas [icon]="value?.uid === node.uid ? 'check' : ''" size="sm"></mdb-icon>
+          {{ node.title }}
+        </span>
+      </cdk-nested-tree-node>
+
+      <!-- Node with children -->
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node; when: hasChild" class="categories-tree-node dropdown-item" mdbWavesEffect>
+        <button mdbBtn cdkTreeNodeToggle color="link" size="sm">
+          <mdb-icon fas [icon]="treeControl.isExpanded(node) ? 'chevron-down' : 'chevron-right'"></mdb-icon>
+        </button>
+
+        <span (click)="setValue(node)">
+          <mdb-icon fas [icon]="value?.uid === node.uid ? 'check' : ''" size="sm"></mdb-icon>
+          {{ node.title }}
+        </span>
+
+        <div [class.categories-tree-invisible]="!treeControl.isExpanded(node)">
+          <ng-container cdkTreeNodeOutlet></ng-container>
+        </div>
+      </cdk-nested-tree-node>
+    </cdk-tree>
+  </div>
+</div>

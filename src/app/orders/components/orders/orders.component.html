@@ -1,5 +1,5 @@
 <div class="white section-header">
-  <h3>{{ (isSeller ? 'header.userDropdown.soldOrders' : 'header.userDropdown.boughtOrders') | translate }}</h3>
+  <h3>{{ (isSeller ? 'header.sellerToolsDropdown.soldOrders' : 'header.sellerToolsDropdown.boughtOrders') | translate }}</h3>
 </div>
 <div class="container-fluid">
   <table mdbTable hover="true" *ngIf="!(isLoading$ | async)">

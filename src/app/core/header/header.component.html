@@ -36,7 +36,7 @@
       </li>
 
       <!-- Dropdown -->
-      <li mdbDropdown class="nav-item dropdown" dropdown *ngIf="isLoggedIn && !isLoading && isAdmin">
+      <li mdbDropdown class="nav-item dropdown" *ngIf="isLoggedIn && !isLoading && isAdmin">
         <a mdbDropdownToggle
            mdbWavesEffect
            translate
@@ -66,6 +66,27 @@
              routerLinkActive="active">header.adminDropdown.categoryListing</a>
         </div>
       </li>
+      <li mdbDropdown class="nav-item dropdown" *ngIf="isLoggedIn && !isLoading">
+        <a mdbDropdownToggle
+           mdbWavesEffect
+           translate
+           class="nav-link dropdown-toggle"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false">header.sellerToolsDropdown.title</a>
+        <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
+          <a mdbWavesEffect
+             translate
+             class="dropdown-item text-center waves-light"
+             routerLink="/orders/seller"
+             (click)="navbar.hide()">header.sellerToolsDropdown.soldOrders</a>
+          <a mdbWavesEffect
+             translate
+             class="dropdown-item text-center waves-light"
+             routerLink="/orders/buyer"
+             (click)="navbar.hide()">header.sellerToolsDropdown.boughtOrders</a>
+        </div>
+      </li>
     </ul>
     <!-- Links -->
 
@@ -90,8 +111,8 @@
         </a>
       </li>
   
-      <li *ngIf="userProfile" class="nav-item waves-light dropdown avatar p-0 avatar-dropdown" mdbDropdown>
-        <a mdbDropdownToggle mdbWavesEffect type="button" class="nav-link waves-light dropdown-toggle" mdbWavesEffect>
+      <li mdbDropdown *ngIf="userProfile" class="nav-item waves-light dropdown avatar p-0 avatar-dropdown">
+        <a mdbDropdownToggle mdbWavesEffect type="button" class="nav-link waves-light dropdown-toggle">
           <i class="fa-lg fas fa-user"></i>
         </a>
         <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-primary" role="menu">
@@ -103,16 +124,6 @@
              class="dropdown-item text-center waves-light"
              routerLink="/profile"
              (click)="navbar.hide()">header.userDropdown.profile</a>
-          <a mdbWavesEffect
-             translate
-             class="dropdown-item text-center waves-light"
-             routerLink="/orders/seller"
-             (click)="navbar.hide()">header.userDropdown.soldOrders</a>
-          <a mdbWavesEffect
-             translate
-             class="dropdown-item text-center waves-light"
-             routerLink="/orders/buyer"
-             (click)="navbar.hide()">header.userDropdown.boughtOrders</a>
           <a mdbWavesEffect
              translate
              class="dropdown-item text-center waves-light"

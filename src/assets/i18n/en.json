@@ -27,11 +27,14 @@
             "categoryListing": "Categories",
             "userList": "User List"
         },
+        "sellerToolsDropdown": {
+            "title": "Seller tools",
+            "soldOrders": "Sold Orders",
+            "boughtOrders": "Bought Orders"
+        },
         "userDropdown": {
             "annonymousUser": "Anonymous user",
             "profile": "Profile",
-            "soldOrders": "Sold Orders",
-            "boughtOrders": "Bought Orders",
             "logout": "Logout"
         }
     },
@@ -69,7 +72,7 @@
             "buyerName": "Buyer Name"
         }
     },
-    "component": { 
+    "component": {
         "messages" : {
             "header": "Messages",
             "subHeading": "check em boi"

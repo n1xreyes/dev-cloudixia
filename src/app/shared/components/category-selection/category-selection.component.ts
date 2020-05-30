@@ -8,7 +8,7 @@ import { ArrayDataSource } from '@angular/cdk/collections';
 @Component({
   selector: 'app-category-selection',
   templateUrl: './category-selection.component.html',
-  styleUrls: ['./category-selection.component.css'],
+  styleUrls: ['./category-selection.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -19,9 +19,18 @@ import { ArrayDataSource } from '@angular/cdk/collections';
 })
 export class CategorySelectionComponent implements OnInit, ControlValueAccessor {
 
-  @Input() items: Category[];
   @Input() returnUid: boolean;
   @Input() validOnPristine: boolean;
+
+  private _items: Category[];
+  @Input()
+  get items() {
+    return this._items;
+  }
+  set items(value: Category[]) {
+    this._items = value;
+    this.initDatasource();
+  }
 
   value: Category | undefined;
   isDisabled: boolean;
@@ -47,7 +56,6 @@ export class CategorySelectionComponent implements OnInit, ControlValueAccessor 
   }
 
   ngOnInit(): void {
-    this.dataSource = new ArrayDataSource<Category>(this.items);
   }
 
   writeValue(value: Category | string[] | undefined): void {
@@ -89,16 +97,16 @@ export class CategorySelectionComponent implements OnInit, ControlValueAccessor 
     }
   }
 
-  getSubcategories(item: Category): Category[] | undefined {
-    return item.subCategories && Object.values(item.subCategories);
-  }
-
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
   }
 
   hasChild = (_: number, node: Category) => {
     return !!node.subCategories && Object.keys(node.subCategories).length > 0;
+  }
+
+  private initDatasource() {
+    this.dataSource = new ArrayDataSource<Category>(this.items);
   }
 
 }
