@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Category } from 'src/app/shared/models/category.model';
+import {Category, CategoryWithPhoto} from 'src/app/shared/models/category.model';
 import { MDBModalService } from 'angular-bootstrap-md';
 import { take } from 'rxjs/operators';
 import { CategoryModalComponent } from '../category-modal/category-modal.component';
@@ -26,7 +26,7 @@ export class CategoryListingComponent implements OnInit {
     return element.uid;
   }
 
-  openModal(entity: Category = new Category()): void {
+  openModal(entity: CategoryWithPhoto = new CategoryWithPhoto()): void {
     this.modalService
       .show(CategoryModalComponent, {...DEFAULT_MODAL_CONFIG, data: {
         entity: {...entity}

@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {FileMetadataModel} from '../../shared/models/file-metadata.model';
-import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { FileMetadataModel } from '../../shared/models/file-metadata.model';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'

@@ -160,7 +160,7 @@ export class ProjectsEffects {
         const project = {...payload.project};
         delete project.file;
         if (payload.file) {
-            project.photoUrl = PHOTO_URL_PREFIX + this.buildFileMetadataService.getListingPhotoFileName(project.userId, project.uid);
+            project.photoUrl = PHOTO_URL_PREFIX + this.buildFileMetadataService.getListingPhotoFileName(project.uid);
             return this.projectsService.updateListing(project, payload.file);
         } else {
             return this.projectsService.updateListing(project);

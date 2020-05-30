@@ -3,6 +3,8 @@ import { Category } from 'src/app/shared/models/category.model';
 import { BaseCrudService } from 'src/app/core/service/base-crud.service';
 import { Observable } from 'rxjs';
 import { AngularFirestore, DocumentSnapshot, Action } from '@angular/fire/firestore';
+import {ImageUploadService} from '../../store/image-upload/image-upload.service';
+import {BuildFileMetadataService} from '../../shared/components/image-upload/build-file-metadata.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,9 @@ export class CategoryService extends BaseCrudService<Category> {
 
   protected dbCollectionName = 'categories';
 
-  constructor(protected fs: AngularFirestore) {
+  constructor(protected fs: AngularFirestore,
+              protected imageUploadService: ImageUploadService,
+              protected buildFileMetadataService: BuildFileMetadataService) {
     super();
   }
 

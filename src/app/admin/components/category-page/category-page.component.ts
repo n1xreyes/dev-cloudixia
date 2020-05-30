@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Category } from 'src/app/shared/models/category.model';
+import {Category, CategoryWithPhoto} from 'src/app/shared/models/category.model';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/reducers';
 import { getCategoryListLoading, getCategoryList } from '../../store/category.selectors';
@@ -26,7 +26,7 @@ export class CategoryPageComponent implements OnInit {
     this.store.dispatch(new fromCategory.GetCategoryList());
   }
 
-  onSaved(entity: Category): void {
+  onSaved(entity: CategoryWithPhoto): void {
         this.store.dispatch(!!entity.uid
           ? new fromCategory.CategoryEdited({ entity })
           : new fromCategory.CategoryAdded({ entity }));

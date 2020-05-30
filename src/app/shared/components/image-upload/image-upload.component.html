@@ -1,7 +1,7 @@
 <div class="row">
     <div class="button-box col">
         <input #fileInput class="d-none" type="file" (change)="fileSelectionChanged($event)" [accept]="acceptedFileType">
-        <div *ngIf="(!selectedFile && isProfilePic) && !isRequesting">
+        <div *ngIf="(!selectedFile && displayUploadButton) && !isRequesting">
             <div class="d-flex flex-column align-items-center">
                 <button class="btn btn-outline-primary d-flex align-items-center" (click)="fileInput.click()">
                     <span>Choose Photo</span>
@@ -10,7 +10,7 @@
             <div *ngIf="!fileSizeError" class="text-info mt-2">Max file size: 10 MB</div>
             <div *ngIf="fileSizeError" class="text-danger mt-2">That file is too big. Try reducing it to 10 MB or less and then try again.</div>
         </div>
-        <ng-template [ngIf]="isProfilePic" [ngIfElse]="projectMode">
+        <ng-template [ngIf]="displayUploadButton" [ngIfElse]="projectMode">
             <div *ngIf="selectedFile && !isRequesting" class="d-flex flex-column align-items-center">
                 <div class="d-flex align-items-center pb-2">
                     <span class="mr-3">{{formatBytes(selectedFile.size)}}</span>

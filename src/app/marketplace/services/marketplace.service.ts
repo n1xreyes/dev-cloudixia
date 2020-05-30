@@ -6,9 +6,10 @@ import { environment } from 'src/environments/environment';
 import { MarketplaceListingPayload } from '../models/marketplace-listing-payload.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { BuildFileMetadataService } from '../../shared/components/image-upload/build-file-metadata.service';
-import { ImageUploadState } from '../../store/image-upload/image-upload.reducers';
-import { ImageUploadService } from '../../store/image-upload/image-upload.service';
+import {BuildFileMetadataService} from '../../shared/components/image-upload/build-file-metadata.service';
+import {ImageUploadState} from '../../store/image-upload/image-upload.reducers';
+import {ImageUploadService} from '../../store/image-upload/image-upload.service';
+import {FileFolderName} from '../../shared/models/file-metadata.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class MarketplaceService {
   async update(project: Listing, file?: File) {
     if (file) {
       // build fileMetadata
-      const fileMeta = this.buildFileMetadataService.buildFileMetadata(project.userId, project.uid);
+      const fileMeta = this.buildFileMetadataService.buildFileMetadata(FileFolderName.LISTING, project.uid);
       // get photoURL
       await this.imageUploadService.uploadImage(file, fileMeta).toPromise().then((payload: any) => {
         if (payload.URL) {
@@ -85,7 +86,7 @@ export class MarketplaceService {
 
     if (file) {
       // build fileMetadata
-      const fileMeta = this.buildFileMetadataService.buildFileMetadata(listing.userId, listing.uid);
+      const fileMeta = this.buildFileMetadataService.buildFileMetadata(FileFolderName.LISTING, listing.uid);
       // get photoURL
       await this.imageUploadService.uploadImage(file, fileMeta).toPromise().then((payload: any) => {
         if (payload.URL) {
@@ -111,7 +112,7 @@ export class MarketplaceService {
   async updatePending(project: Listing, file?: File) {
     if (file) {
       // build fileMetadata
-      const fileMeta = this.buildFileMetadataService.buildFileMetadata(project.userId, project.uid);
+      const fileMeta = this.buildFileMetadataService.buildFileMetadata(FileFolderName.LISTING, project.uid);
       // get photoURL
       await this.imageUploadService.uploadImage(file, fileMeta).toPromise().then((payload: any) => {
         if (payload.URL) {

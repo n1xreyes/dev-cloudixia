@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Category } from 'src/app/shared/models/category.model';
+import {Category, CategoryWithPhoto} from 'src/app/shared/models/category.model';
 
 export enum CategoryPostChangedType {
   ADDED, EDITED, DELETED
@@ -35,13 +35,13 @@ export class CategoryError implements Action {
 export class CategoryAdded implements Action {
   readonly type = CategoryActionTypes.CATEGORY_ADDED;
 
-  constructor(public payload: {entity: Category}) {}
+  constructor(public payload: {entity: CategoryWithPhoto}) {}
 }
 
 export class CategoryEdited implements Action {
   readonly type = CategoryActionTypes.CATEGORY_EDITED;
 
-  constructor(public payload: {entity: Category}) {}
+  constructor(public payload: {entity: CategoryWithPhoto}) {}
 }
 
 export class CategoryDeleted implements Action {

@@ -30,3 +30,7 @@ export class Category implements IDomain {
   }
 
 }
+
+export class CategoryWithPhoto extends Category {
+  file?: File;
+}

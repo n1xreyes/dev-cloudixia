@@ -13,7 +13,7 @@ import {
   CategoryPostChanged,
   CategoryPostChangedType
 } from './category.actions';
-import { Category } from 'src/app/shared/models/category.model';
+import { CategoryWithPhoto } from 'src/app/shared/models/category.model';
 import { DEFAULT_PHOTO_URL } from 'src/app/core/service/util.service';
 
 @Injectable()
@@ -40,24 +40,26 @@ export class CategoryEffects {
     )
   );
 
-  @Effect()
+  @Effect({dispatch: false})
   added$ = this.actions$.pipe(
     ofType(CategoryActionTypes.CATEGORY_ADDED),
     map((action: CategoryAdded) => action.payload),
     switchMap((payload) => {
-      const entity: Category = {...payload.entity};
+      const entity: CategoryWithPhoto = {...payload.entity};
 
       if (!entity.photoUrl) {
         entity.photoUrl = DEFAULT_PHOTO_URL;
       }
 
       return this.categoryService.add(entity)
-        .pipe(
-          map((newUid: string) => new CategoryPostChanged({
-            uid: newUid,
-            type: CategoryPostChangedType.ADDED
-          }))
-        );
+          .then((resultObservable) => {
+            resultObservable.subscribe(value => value),
+                map((newUid: string) => new CategoryPostChanged({
+                    uid: newUid,
+                    type: CategoryPostChangedType.ADDED
+                }));
+          });
+
     }),
     catchError((error: any) => of(new CategoryError({ error })))
   );
@@ -67,18 +69,17 @@ export class CategoryEffects {
     ofType(CategoryActionTypes.CATEGORY_EDITED),
     map((action: CategoryEdited) => action.payload),
     switchMap((payload) => {
-      const entity: Category = {...payload.entity};
+      const entity: CategoryWithPhoto = {...payload.entity};
 
       if (!entity.photoUrl) {
         entity.photoUrl = DEFAULT_PHOTO_URL;
       }
 
       return this.categoryService.update(entity)
-        .pipe(
-          map(() => new CategoryPostChanged({
+        .then(() => new CategoryPostChanged({
             uid: entity.uid,
             type: CategoryPostChangedType.EDITED
-          }))
+          })
         );
     }),
     catchError((error: any) => of(new CategoryError({ error })))

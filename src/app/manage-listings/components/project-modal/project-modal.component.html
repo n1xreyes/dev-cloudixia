@@ -18,7 +18,7 @@
       [returnUid]="true"></app-category-selection>
     <div class="md-form">
       <input type="hidden" id="photo" class="form-control" name="photoUrl" [formControl]="form.controls.photoUrl" mdbInput>
-      <app-image-upload [isProfilePic]="false" [userInfo]="user" (photoSelected)="setSelectedPhoto($event)"></app-image-upload>
+      <app-image-upload [displayUploadButton]="false" [userInfo]="user" (photoSelected)="setSelectedPhoto($event)"></app-image-upload>
     </div>
     <app-input-wrapper
       name="price"

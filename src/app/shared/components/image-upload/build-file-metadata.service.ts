@@ -1,6 +1,9 @@
 import {Injectable} from '@angular/core';
 import {AuthService} from '../../../auth/services/auth.service';
 import {generateUID} from '../../../../utils/uid-generator';
+import {User} from 'firebase';
+import {FileFolderName} from '../../models/file-metadata.model';
+
 // import {generateUID} from '../../../../utils/uid-generator';
 
 @Injectable({
@@ -8,10 +11,12 @@ import {generateUID} from '../../../../utils/uid-generator';
 })
 export class BuildFileMetadataService {
     authToken: string;
+    user: User;
 
     constructor(private authService: AuthService) {
         this.authService.getAuthState().subscribe((user) => {
             if (user) {
+                this.user = user;
                 user.getIdToken().then(idToken => {
                     this.authToken = idToken;
                 });
@@ -19,15 +24,27 @@ export class BuildFileMetadataService {
         });
     }
 
-    buildFileMetadata(userId: any, listingId?: string) {
+    buildFileMetadata(folderName: FileFolderName, metaId?: string) {
         let fileName = '';
 
-        if (listingId) {
-            // tslint:disable-next-line:max-line-length
-            fileName = this.getListingPhotoFileName(userId, listingId);
-        } else {
-            // no listing object, so this must be profile
-            fileName = this.getProfilePhotoFileName(userId);
+        switch (folderName) {
+            case FileFolderName.PROFILE: {
+                fileName = this.getProfilePhotoFileName();
+                break;
+            }
+            case FileFolderName.LISTING: {
+                if (metaId != null) {
+                    fileName = this.getListingPhotoFileName(metaId);
+                }
+                break;
+            }
+            case FileFolderName.CATEGORY: {
+                if (metaId != null) {
+                    fileName = this.getCategoryPhotoFileName(metaId);
+                }
+                break;
+            }
+
         }
 
         const fileMetadata = {
@@ -38,11 +55,15 @@ export class BuildFileMetadataService {
         return fileMetadata;
     }
 
-    getListingPhotoFileName(userId: string, listingId: string) {
-        return userId + '/listing/' + listingId + generateUID() + '.jpg';
+    getListingPhotoFileName(listingId: string) {
+        return this.user.uid + '/listing/' + listingId + generateUID() + '.jpg';
     }
 
-    getProfilePhotoFileName(userId: string) {
-        return userId + '/profile/' + userId + generateUID() + '.jpg';
+    getProfilePhotoFileName() {
+        return this.user.uid + '/profile/' + this.user.uid + generateUID() + '.jpg';
+    }
+
+    getCategoryPhotoFileName(categoryId: string) {
+        return this.user.uid + '/category/' + categoryId + generateUID() + '.jpg';
     }
 }

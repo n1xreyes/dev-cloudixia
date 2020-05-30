@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Category } from 'src/app/shared/models/category.model';
+import {CategoryWithPhoto} from 'src/app/shared/models/category.model';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Language } from 'src/app/shared/models/language.enum';
@@ -12,9 +12,9 @@ import { Language } from 'src/app/shared/models/language.enum';
 export class CategoryModalComponent implements OnInit {
 
   // Input
-  entity: Category;
+  entity: CategoryWithPhoto;
 
-  result: Subject<Category> = new Subject<Category>();
+  result: Subject<CategoryWithPhoto> = new Subject<CategoryWithPhoto>();
 
   form: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -32,6 +32,10 @@ export class CategoryModalComponent implements OnInit {
 
   getLanguages(): string[] {
     return Object.values(Language);
+  }
+
+  setSelectedPhoto(file: File) {
+    this.entity.file = file;
   }
 
 }
