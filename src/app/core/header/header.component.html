@@ -28,11 +28,10 @@
       </li>
       <li *ngIf="isLoggedIn && !isLoading" class="nav-item">
         <a mdbWavesEffect
-           translate
-           (click)="navbar.hide()"
-           class="nav-link waves-light"
-           routerLink="/projects"
-           routerLinkActive="active">header.links.yourListings</a>
+        translate
+        class="nav-link waves-light"
+        routerLink="/orders/buyer"
+        (click)="navbar.hide()">header.sellerToolsDropdown.boughtOrders</a>
       </li>
 
       <!-- Dropdown -->
@@ -77,14 +76,15 @@
         <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
           <a mdbWavesEffect
              translate
-             class="dropdown-item text-center waves-light"
+             class="nav-link waves-light"
              routerLink="/orders/seller"
              (click)="navbar.hide()">header.sellerToolsDropdown.soldOrders</a>
-          <a mdbWavesEffect
+             <a mdbWavesEffect
              translate
-             class="dropdown-item text-center waves-light"
-             routerLink="/orders/buyer"
-             (click)="navbar.hide()">header.sellerToolsDropdown.boughtOrders</a>
+             (click)="navbar.hide()"
+             class="nav-link waves-light"
+             routerLink="/projects"
+             routerLinkActive="active">header.links.yourListings</a>
         </div>
       </li>
     </ul>

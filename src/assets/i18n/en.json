@@ -30,7 +30,7 @@
         "sellerToolsDropdown": {
             "title": "Seller tools",
             "soldOrders": "Sold Orders",
-            "boughtOrders": "Bought Orders"
+            "boughtOrders": "Orders"
         },
         "userDropdown": {
             "annonymousUser": "Anonymous user",
