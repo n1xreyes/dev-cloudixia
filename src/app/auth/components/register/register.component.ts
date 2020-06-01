@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AppState } from '../../../reducers/index';
+import { AppState } from '../../../reducers';
 import { Store, select } from '@ngrx/store';
 import * as actions from './../../store/auth.actions';
 import { getError } from '../../store/auth.selectors';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -14,12 +15,20 @@ import { map } from 'rxjs/operators';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
+  type: string;
 
   error$: Observable<string | null>;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(
+    private store: Store<AppState>,
+    private activeRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    this.activeRoute.queryParams.subscribe((params) => {
+      this.type = params.type;
+    });
+
     this.registerForm = new FormGroup({
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
@@ -36,7 +45,7 @@ export class RegisterComponent implements OnInit {
               return error.message;
             } else if (error.code === 'auth/email-already-in-use') {
               return 'User with this email address already exist';
-            } else if (error.code === "auth/invalid-email") {
+            } else if (error.code === 'auth/invalid-email') {
               return 'Email address is invalid';
             }
           } else {
@@ -57,19 +66,21 @@ export class RegisterComponent implements OnInit {
     const email = this.registerForm.value.email;
     const password = this.registerForm.value.password;
     if (this.registerForm.valid) {
+      if (this.type === 'seller') {
+        this.store.dispatch(new actions.SellerEmailRegisterRequested({ firstName, lastName, email, password }));
+        return;
+      }
+
       this.store.dispatch(new actions.EmailRegisterRequested({ firstName, lastName, email, password }));
     }
   }
 
-  onGoogleLogin(authProvider: string) {
-    this.store.dispatch(new actions.SocialRegisterRequested({ authProvider }));
-  }
+  onSocialLogin(authProvider: string) {
+    if (this.type === 'seller') {
+      this.store.dispatch(new actions.SellerSocialRegisterRequested({ authProvider }));
+      return;
+    }
 
-  onFacebookLogin(authProvider: string) {
-    this.store.dispatch(new actions.SocialRegisterRequested({ authProvider }));
-  }
-
-  onTwitterLogin(authProvider: string) {
     this.store.dispatch(new actions.SocialRegisterRequested({ authProvider }));
   }
 

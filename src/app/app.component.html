@@ -1,8 +1,14 @@
 <div [ngClass]="{'rtl': (language$ | async) === 'ar'}">
 
   <header>
-    <app-header [userProfile]="userProfile$ | async" [isLoggedIn]="isLoggedIn$ | async" [isLoading]="isLoading$ | async"
-      [isAdmin]="isAdmin$ | async" [language]="language$ | async" (logout)="onLogout($event)"></app-header>
+    <app-header
+            [userProfile]="userProfile$ | async"
+            [isLoggedIn]="isLoggedIn$ | async"
+            [isLoading]="isLoading$ | async"
+            [isAdmin]="isAdmin$ | async"
+            [isSeller]="isSeller$ | async"
+            [language]="language$ | async"
+            (logout)="onLogout($event)"></app-header>
   </header>
 
   <main>

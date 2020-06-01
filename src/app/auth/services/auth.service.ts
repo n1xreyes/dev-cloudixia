@@ -87,6 +87,10 @@ export class AuthService {
     return this.fs.doc('admins/' + uid).valueChanges();
   }
 
+  checkSellerRole(uid: string) {
+    return this.fs.doc('sellers/' + uid).valueChanges();
+  }
+
   getAuthState() {
     return this.afAuth.authState;
   }

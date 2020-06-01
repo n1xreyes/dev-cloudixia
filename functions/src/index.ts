@@ -163,3 +163,21 @@ exports.createNewUser = functions.https.onCall(async (data, context) => {
         error => console.log('error: ', error)
     );
 })
+
+exports.createNewSellerUser = functions.https.onCall(async (data, context) => {
+	const batch = fs.batch();
+
+	const userRef = fs.doc('/users/' + data.user.uid);
+	batch.set(userRef, data.user);
+
+	const userProfileRef = fs.doc('/userProfiles/' + data.user.uid);
+	batch.set(userProfileRef, data.userProfile);
+
+	const sellerRef = fs.doc('/sellers/' + data.user.uid);
+	batch.set(sellerRef, {isSeller: true});
+
+	return batch.commit().then(
+			payload => console.log('Created chat: ', payload),
+			error => console.log('error: ', error)
+	);
+})

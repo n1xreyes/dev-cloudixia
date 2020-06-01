@@ -20,6 +20,7 @@ export class HeaderComponent implements OnInit {
   @Input() isLoggedIn: boolean;
   @Input() isLoading: boolean;
   @Input() isAdmin: boolean;
+  @Input() isSeller: boolean;
   @Input() language: Language;
 
   @Output() logout = new EventEmitter<User>();

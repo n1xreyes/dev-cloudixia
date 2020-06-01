@@ -65,7 +65,7 @@
              routerLinkActive="active">header.adminDropdown.categoryListing</a>
         </div>
       </li>
-      <li mdbDropdown class="nav-item dropdown" *ngIf="isLoggedIn && !isLoading">
+      <li mdbDropdown class="nav-item dropdown" *ngIf="isLoggedIn && !isLoading && isSeller">
         <a mdbDropdownToggle
            mdbWavesEffect
            translate
@@ -93,7 +93,7 @@
     <!-- Anonymous User Actions -->
     <ul class="navbar-nav" *ngIf="!isLoggedIn && !isLoading">
       <li class="nav-item waves-light">
-        <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/implement-me" mdbWavesEffect>Become a Freelancer</a>
+        <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/register" [queryParams]="{type: 'seller'}" mdbWavesEffect>Become a Freelancer</a>
       </li>
       <li class="nav-item waves-light">
         <a (click)="navbar.hide()" class="nav-link waves-light" routerLink="/login" mdbWavesEffect>Login</a>

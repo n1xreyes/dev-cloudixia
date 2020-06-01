@@ -28,31 +28,46 @@ export class AuthEffects {
     private store: Store<AppState>
   ) {}
 
-  // buyer - reg user
+  mapEmailRegisterToUserUserProfile = (fireCreds: any, payload: any, isSeller?: boolean) => {
+    return {
+      user: {
+        uid: fireCreds.user?.uid || '',
+        email: fireCreds.user?.email || '',
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        providerId: fireCreds.user?.providerId || '',
+        isSeller
+      },
+      userProfile: {
+        uid: fireCreds.user?.uid || '',
+        photoUrl: fireCreds.user?.photoURL ||
+            'https://www.pngfind.com/pngs/m/568-5682880_rothenburg-james-fa-user-circle-icon-hd-png.png',
+        displayName: payload.firstName
+      }
+    };
+  }
+
+  @Effect()
+  sellerEmailRegisterAction$ = this.actions$.pipe(
+      ofType(auth.AuthActionTypes.SELLER_EMAIL_REGISTER_REQUESTED),
+      map((action: auth.SellerEmailRegisterRequested) => action.payload),
+      switchMap(payload =>
+          this.authService.registerWithEmail(payload.email, payload.password).pipe(
+              map((fireCreds: firebase.auth.UserCredential) => this.mapEmailRegisterToUserUserProfile(fireCreds, payload, true)),
+              switchMap((userObject: any) => [new auth.SellerRegisterSuccess(userObject)]),
+              tap(() => this.router.navigateByUrl('')),
+              catchError(error => of(new auth.AuthError({ error })))
+          ),
+      )
+  );
+
   @Effect()
   emailRegisterAction$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.EMAIL_REGISTER_REQUESTED),
     map((action: auth.EmailRegisterRequested) => action.payload),
     switchMap(payload =>
       this.authService.registerWithEmail(payload.email, payload.password).pipe(
-        map((fireCreds: firebase.auth.UserCredential) => {
-          return {
-            user: {
-              uid: fireCreds.user?.uid || '',
-              email: fireCreds.user?.email || '',
-              firstName: payload.firstName,
-              lastName: payload.lastName,
-              providerId: fireCreds.user?.providerId || '',
-              pendingListings: []
-            },
-            userProfile: {
-              uid: fireCreds.user?.uid || '',
-              photoUrl: fireCreds.user?.photoURL ||
-                'https://www.pngfind.com/pngs/m/568-5682880_rothenburg-james-fa-user-circle-icon-hd-png.png',
-              displayName: payload.firstName
-            }
-          };
-        }),
+        map((fireCreds: firebase.auth.UserCredential) => this.mapEmailRegisterToUserUserProfile(fireCreds, payload)),
         switchMap((userObject: any) => [new auth.RegisterSuccess(userObject)]),
         tap(() => this.router.navigateByUrl('')),
         catchError(error => of(new auth.AuthError({ error })))
@@ -60,30 +75,43 @@ export class AuthEffects {
     )
   );
 
-  // buyer - reg user
-  // todo: better way to parse social reg first+last name
+	// todo: better way to parse social reg first+last name
+  mapSocialRegisterToUserUserProfile = (fireCreds: firebase.auth.UserCredential, isSeller?: boolean) => {
+    return {
+      user: {
+        uid: fireCreds.user?.uid || '',
+        email: fireCreds.user?.email || '',
+        firstName: fireCreds.user?.displayName?.split(' ')[0] || '',
+        lastName: fireCreds.user?.displayName?.split(' ')[1],
+        providerId: fireCreds.user?.providerId || '',
+        isSeller
+      },
+      userProfile: {
+        photoUrl: fireCreds.user?.photoURL || '',
+        displayName: fireCreds.user?.displayName?.split(' ')[0] || '',
+        listings: []
+      }
+    };
+  }
+
   @Effect()
-  SocialRegisterAction$ = this.actions$.pipe(
+  sellerSocialRegisterAction$ = this.actions$.pipe(
+      ofType(auth.AuthActionTypes.SELLER_SOCIAL_REGISTER_REQUESTED),
+      map((action: auth.SellerSocialRegisterRequested) => action.payload),
+      switchMap(payload => this.authService.socialLogin(payload.authProvider).pipe(
+          map((fireCreds: firebase.auth.UserCredential) => this.mapSocialRegisterToUserUserProfile(fireCreds, true)),
+          switchMap((userDetails: any) => [new auth.SellerRegisterSuccess(userDetails)]),
+          tap(() => this.router.navigateByUrl('')),
+          catchError(error => of(new auth.AuthError({ error })))
+      ))
+  );
+
+  @Effect()
+  socialRegisterAction$ = this.actions$.pipe(
     ofType(auth.AuthActionTypes.SOCIAL_REGISTER_REQUESTED),
     map((action: auth.SocialRegisterRequested) => action.payload),
     switchMap(payload => this.authService.socialLogin(payload.authProvider).pipe(
-      map((fireCreds: firebase.auth.UserCredential) => {
-        return {
-          user: {
-            uid: fireCreds.user?.uid || '',
-            email: fireCreds.user?.email || '',
-            firstName: fireCreds.user?.displayName?.split(' ')[0] || '',
-            lastName: fireCreds.user?.displayName?.split(' ')[1],
-            providerId: fireCreds.user?.providerId || '',
-            pendingListings: []
-          },
-          userProfile: {
-            photoUrl: fireCreds.user?.photoURL || '',
-            displayName: fireCreds.user?.displayName?.split(' ')[0] || '',
-            listings: []
-          }
-        };
-      }),
+      map((fireCreds: firebase.auth.UserCredential) => this.mapSocialRegisterToUserUserProfile(fireCreds)),
       switchMap((userDetails: any) => [new auth.RegisterSuccess(userDetails)]),
       tap(() => this.router.navigateByUrl('')),
       catchError(error => of(new auth.AuthError({ error })))
@@ -103,6 +131,23 @@ export class AuthEffects {
       return [
         new auth.LoginSuccess({ user: payload.user }),
         new auth.GotUserProfile({ userProfile: payload.userProfile})
+      ];
+    })
+  );
+
+  @Effect()
+  sellerRegisterSuccess$ = this.actions$.pipe(
+    ofType(auth.AuthActionTypes.SELLER_REGISTER_SUCCESS),
+    map((action: auth.SellerRegisterSuccess) => action.payload),
+    switchMap((payload: { user: User, userProfile: UserProfile }) => {
+      this.fn.functions.httpsCallable('createNewSellerUser')
+      ({
+          user: payload.user,
+          userProfile: payload.userProfile,
+      });
+      return [
+          new auth.LoginSuccess({user: payload.user}),
+          new auth.GotUserProfile({userProfile: payload.userProfile})
       ];
     })
   );

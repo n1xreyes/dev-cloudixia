@@ -4,9 +4,12 @@ import { Language } from '../../shared/models/language.enum';
 import { ChatData, ChatMessage } from 'src/app/shared/models/chat.model';
 
 export enum AuthActionTypes {
+  SELLER_EMAIL_REGISTER_REQUESTED = '[Auth] Seller - EMAIL REGISTER Requested',
   EMAIL_REGISTER_REQUESTED = '[Auth] EMAIL REGISTER Requested',
+  SELLER_SOCIAL_REGISTER_REQUESTED = '[Auth] Seller - SOCIAL REGISTER Requested',
   SOCIAL_REGISTER_REQUESTED = '[Auth] SOCIAL REGISTER Requested',
   REGISTER_SUCCESS = '[Auth] REGISTER Success',
+  SELLER_REGISTER_SUCCESS = '[Auth] Seller Register Success',
   REGISTER_COMPLETED = '[Auth] REGISTER Completed',
   REGISTER_FAILED = '[Auth] REGISTER Failed',
 
@@ -44,10 +47,23 @@ export enum AuthActionTypes {
   AUTH_ERROR = '[Auth] Error'
 }
 
+export class SellerEmailRegisterRequested implements Action {
+  readonly type = AuthActionTypes.SELLER_EMAIL_REGISTER_REQUESTED;
+
+  constructor(public payload: { firstName: string, lastName: string, email: string; password: string }) {}
+}
+
+
 export class EmailRegisterRequested implements Action {
   readonly type = AuthActionTypes.EMAIL_REGISTER_REQUESTED;
 
   constructor(public payload: { firstName: string, lastName: string, email: string; password: string }) {}
+}
+
+export class SellerSocialRegisterRequested implements Action {
+  readonly type = AuthActionTypes.SELLER_SOCIAL_REGISTER_REQUESTED;
+
+  constructor(public payload: { authProvider: string }) {}
 }
 
 export class SocialRegisterRequested implements Action {
@@ -58,6 +74,12 @@ export class SocialRegisterRequested implements Action {
 
 export class RegisterSuccess implements Action {
   readonly type = AuthActionTypes.REGISTER_SUCCESS;
+
+  constructor(public payload: {user: User, userProfile: UserProfile}) {}
+}
+
+export class SellerRegisterSuccess implements Action {
+  readonly type = AuthActionTypes.SELLER_REGISTER_SUCCESS;
 
   constructor(public payload: {user: User, userProfile: UserProfile}) {}
 }
@@ -204,8 +226,11 @@ export class AuthError implements Action {
 }
 
 export type AuthAction =
+  | SellerEmailRegisterRequested
   | EmailRegisterRequested
+  | SellerSocialRegisterRequested
   | SocialRegisterRequested
+  | SellerRegisterSuccess
   | RegisterSuccess
   | RegisterCompleted
   | RegisterFailed

@@ -3,6 +3,7 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { RegisterComponent } from './auth/components/register/register.component';
 import { LoginComponent } from './auth/components/login/login.component';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { SellerGuard } from './auth/guards/seller.guard';
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
 import { AdminComponent } from './admin/containers/admin/admin.component';
 import { AdminGuard } from './admin/guard/admin.guard';
@@ -17,7 +18,7 @@ const routes: Routes = [
   {
     path: 'projects',
     loadChildren: () => import('./manage-listings/projects.module').then(m => m.ProjectsModule),
-    canActivate: [AuthGuard]
+    canActivate: [SellerGuard]
   },
   {
     path: 'profile',
