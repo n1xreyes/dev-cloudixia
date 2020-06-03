@@ -40,6 +40,7 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: develop
+        FOLDER: dist
 
     - name: Deploy Production
       if: github.ref == 'refs/heads/master'
@@ -47,3 +48,4 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: master
+        FOLDER: dist
