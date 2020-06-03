@@ -1,0 +1,45 @@
+{
+    "common": {
+        "home": "أول",
+        "addNew": "Add new",
+        "edit": "Edit",
+        "delete": "Delete",
+        "back": "Back"
+    },
+    "confirm": {
+        "delete": {
+            "heading": "Delete item?",
+            "description": "Are you sure you want to delete this item?"
+        }
+    },
+    "marketplace.componentHeader": "المتجر",
+    "marketplace.componentSubHeading": "استأجر محترف اليوم! البحث عن خدمات مستقلة مثالية لعملك" ,
+    "marketplace.mainSearch": "بحث",
+    "marketplace.mainSearchDescription": "ابحث عن خدمة",
+    "header": {
+        "links": {
+            "marketplace": "المتجر",
+            "yourListings": "خدماتك",
+            "adminPanel": "مشرف",
+            "listingApproval": "خدمة جديدة",
+            "categoryListing": "Categories"
+        },
+        "adminDropdown": {
+            "title": "مشرف",
+            "listingApproval": "خدمات جديدة",
+            "categoryListing": "Categories",
+            "userList": "الأشخاص"
+        },
+        "sellerToolsDropdown": {
+            "title": "يبيع",
+            "soldOrders": "مشاريع",
+            "boughtOrders": "مشاريع"
+        }
+    },
+    "component": { 
+        "messages" : {
+            "header": "الرسائل",
+            "subHeading": "سلم على العالم"
+        }
+    }
+}
