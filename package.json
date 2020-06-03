@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-staging": "ng build --configuration=staging --baseHref=https://sedkis.github.io",
+    "build-prod": "ng build --configuration=production --baseHref=https://sedkis.github.io",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e --no-webdriver-update --port=4201"
