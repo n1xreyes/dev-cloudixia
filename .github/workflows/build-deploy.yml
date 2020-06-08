@@ -49,7 +49,7 @@ jobs:
       if: github.ref == 'refs/heads/develop'
       uses: ad-m/github-push-action@master
       with:
-        github_token: 9d58644bbd5b3351c628f3229c881cf4aa5c2243
+        github_token: 5cf43ea47def709aa5033005b2c4c29351e31a25
         force: true
         repository: n1xreyes/dev-cloudixia
 
