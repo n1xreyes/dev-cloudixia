@@ -50,6 +50,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: 9d58644bbd5b3351c628f3229c881cf4aa5c2243
+        force: true
         repository: n1xreyes/dev-cloudixia
 
     - name: Deploy Production
