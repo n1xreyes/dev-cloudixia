@@ -1,3 +1,0 @@
-<div *ngIf="!validOnPristine || control.dirty || control.touched" class="app-input-error-wrapper">
-  <mdb-error *ngFor="let error of (control?.errors | fieldErrors)">{{error | async}}</mdb-error>
-</div>

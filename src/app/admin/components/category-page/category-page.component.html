@@ -1,9 +1,0 @@
-<div class="white px-4 section-header">
-  <h3 translate>category.header</h3>
-  <p class="grey-text pt-3" translate>category.subHeader</p>
-</div>
-
-<app-category-listing
-  [list]="categoryList$ | async"
-  (saved)="onSaved($event)"
-  (deleted)="onDeleted($event)"></app-category-listing>
